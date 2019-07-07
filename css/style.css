@@ -1,0 +1,27 @@
+body{
+    overflow-y: hidden;
+}
+.conditions .hp, .conditions .mana{
+    width: 300px;
+    
+}
+.conditions .hp .fill, .conditions .mana .fill{
+    padding: 10px 0;
+    padding-left: 15px;
+}
+.conditions .hp{
+    background: rgba(129, 0, 0, 0.973);
+    color: white;
+}
+.conditions .hp .fill{
+    background: rgb(255, 0, 0);
+    width: 80%;
+}
+.conditions .mana{
+    background: rgb(19, 0, 88);
+    color: white;
+}
+.conditions .mana .fill{
+    background: rgb(4, 0, 228);
+    width: 80%;
+}

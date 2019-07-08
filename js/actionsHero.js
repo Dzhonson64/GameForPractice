@@ -6,113 +6,78 @@ export default class ActionsHero {
         this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
         this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
         this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
-        this.button;                // запоминает какая кнопка была нажата
-        this.flagUp = false;        // флаг, отвечающий за касания верхней границы прыжка героя
-        this.flagDown = false;      // флаг, отвечающий за касания нижней границы прыжка героя
-        this.flagStopJump = true;   // флаг, отвечающий за остоновку прыжка
+        this.processJump = false;   // флаг указывающий, что начался ли прыжок или нет
+        this.jumpPress = false;     // флаг, отвечающий за нажатие кнопки прыжка
+        this.rightPress = false;    // флаг, отвечающий за нажатие кнопки вправо
+        this.leftPress  = false;    // флаг, отвечающий за нажатие кнопки влево
+        this.jumpCount = 0;
+        this.jumpLength = 50;       // высота прыжка
         document.onkeydown = (elem) => {
-            this.button = elem.code;            
             if (elem.code == "KeyA"){
                 /* Нажата кнопка A */
-                
-                modules.hero.heroImg.frameY = 1;        // переходим на нужную строку картинов в спрайте
-                this.flag++;
-                modules.hero.dx = modules.hero.speedX;  // увеличиваем кол-во нажатых кнопок
-                this.moving();                          // начинаем перемещение
+                this.leftPress = true;
+                modules.hero.heroImg.frameY = 1;
             }
             if (elem.code == "KeyD"){
+                 /* Нажата кнопка D */
+                this.rightPress = true;
                 modules.hero.heroImg.frameY = 2;
-                this.flag++;
-                modules.hero.dx = modules.hero.speedX;
-                this.moving();
             }
             if (elem.code == "Space"){
-                //this.flag++; 
-                modules.hero.dy = modules.hero.speedY;               
-                this.jump();
+                 /* Нажата кнопка Space */
+                this.jumpPress = true;
+                this.processJump = true;
             }
-            document.onkeyup = (elem) => {
-                if (elem.code == "KeyA"){
-                    /* Отжата кнопка A */
-                    this.flag = 0; // кол-во нажатых кнопок обнуляем
-                    clearInterval(this.intervalAnimMove);   // обнуляем setIntereval
-                }
-                if (elem.code == "KeyD"){
-                    this.flag = 0;
-                    clearInterval(this.intervalAnimMove);
-                }
-                if (elem.code == "Space"){
-                    clearInterval(this.intervalAnimMove);
-                }
+        }
+           
+        document.onkeyup = (elem) => {
+            if (elem.code == "KeyA"){
+                /* Отжата кнопка A */
+                this.leftPress = false;
+            }
+            if (elem.code == "KeyD"){
+                 /* Отжата кнопка D */
+                this.rightPress = false;
             }
         }
     }
     /* Перемещение героя */
     moving(){
-       
-        if (this.flag < 2){            
-            /* Кол-во нажатых кнопока - 1 */
-            this.intervalAnimMove = setInterval(function() {  //запускаем интервал перемещения 
-                
-                if (this.button == "KeyA"){
-                    /* Была нажата кнопка A */
-                    if (modules.hero.coordinate.x - modules.hero.dx > 0){
-                        /* Не произошло столкновение с левой границы карты */
-                        modules.hero.coordinate.x -= modules.hero.dx;
-                    }                    
-                }
-                if (this.button == "KeyD"){
-                    /* Была нажата кнопка D */
-                    if (modules.hero.coordinate.x + modules.hero.dx + modules.hero.width < modules.game.width){
-                       /* Не произошло столкновение с правой границы карты */
-                        modules.hero.coordinate.x += modules.hero.dx;
-                    }
-                }
 
-                if (modules.hero.width * (modules.hero.heroImg.frameX + 1) < modules.hero.heroImg.image.width) { //для смены позиции изображения
-                    modules.hero.heroImg.frameX += 1;   // если дошли до конца спрайта
-                } else {
-                    modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
-                }
+        if (this.leftPress && modules.hero.coordinate.x - modules.hero.dx > 0){
+            /* Нажата кнопка движения влево и не упирается в левую границу карты */
 
-            }.bind(this) , 1000/24)
+            modules.hero.coordinate.x -= modules.hero.dx; // перемещается влево
+
+            /* Смена изображений в спрайте для анимации */
+            if (modules.hero.width * (modules.hero.heroImg.frameX + 1) < modules.hero.heroImg.image.width) { 
+                modules.hero.heroImg.frameX += 1;   // если дошли до конца спрайта
+            } else {
+                modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
+            }
         }
-    }
+        else if (this.rightPress && modules.hero.coordinate.x + modules.hero.dx + modules.hero.width < modules.game.width){
+           /* Нажата кнопка движения вправо и не упирается в правую границу карты */
 
-    /* Обработка прыжка персонажа */
-    jump(){
-        if (this.flagStopJump){
-            /* Прыжок ещё не начинался или он уже был закончен */
-            
-            this.flagStopJump = false; // указываем, что прыжок может начаться
-            this.intervalAnimJump = setInterval(function() {                       
-                
-                if (!this.flagUp && !this.flagDown && !this.flagStopJump){
-                    /* Персонаж не каснулся верхней и нижней границы прыжка и прыжок не остановлен */
-                    modules.hero.coordinate.y -= modules.hero.dy; // пермещаем персонажа вверх
-                    
-                    if (modules.hero.coordinate.y <= modules.game.ceilingCoordinate - modules.hero.sizeJump){
-                        /* Верхний предел прыжка достигнут */
-                       this.flagUp = true; 
-                    }
-                }else if (this.flagUp && !this.flagDown){
-                    /* Верхний предел прыжка достигнут, но не достигнут нижний предел */
-                    modules.hero.coordinate.y += modules.hero.dy; // пермещаем персонажа вниз
-    
-                    if (modules.hero.coordinate.y >= modules.game.floorCoordinate){
-                        /* Нижний предел прыжка достигнут */
-                        this.flagDown = true;
-                    }
-                }else if (this.flagUp && this.flagDown){
-                    /*Нижний и верхний предел достигнут */
-                    clearInterval(this.intervalAnimJump); // останавливаем анимацию прыжок
-                    this.flagStopJump = true;
-                    this.flagUp = false;
-                    this.flagDown = false;
-                }
-                
-            }.bind(this) , 1000/24)
+            modules.hero.coordinate.x += modules.hero.dx; // перемещается впарво
+
+            /* Смена изображений в спрайте для анимации */
+            if (modules.hero.width * (modules.hero.heroImg.frameX + 1) < modules.hero.heroImg.image.width) {
+                modules.hero.heroImg.frameX += 1;   // если дошли до конца спрайта
+            } else {
+                modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
+            }
         }
-        
+        if(this.jumpPress && this.processJump){
+            /* Нажата кнопка прыжка и процес прыжка - true */
+            this.jumpCount++;
+            modules.hero.coordinate.y = -(3 * this.jumpLength * Math.sin(Math.PI * this.jumpCount / this.jumpLength)) +  modules.game.floorCoordinate ;
+        }
+        if(this.jumpCount > this.jumpLength){
+            this.jumpCount = 0;
+            this.jumpPress = false;
+            modules.hero.coordinate.y = modules.game.floorCoordinate;
+            this.processJump = false;
+        }
     }
 }

@@ -11,10 +11,8 @@ export default class Hero{
         this.heroImg = new Images("../img/hero-test.png", 4);
         this.width = 32;    // длина картинки в спрайте
         this.height = 48;   // ширина картинки в спрайте
-        this.speedX = 5;
-        this.speedY = 15;
-        this.dx;        // скорость изменения положения по X
-        this.dy;       // скорость изменения положения по Y
+        this.dx = 5;        // скорость изменения положения по X
+        this.dy = 15;       // скорость изменения положения по Y
         this.sizeJump = 50; // макс. высота прыжка
         this.coordinate = { // координаты персонажа
             x: startX,

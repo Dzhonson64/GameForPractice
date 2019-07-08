@@ -54,6 +54,7 @@ export default class Render{
             this.evils.forEach( (elem) => {
                 elem.health();
             })
+            modules.actHero.moving();
             this.processGame();
         }, this);
     }

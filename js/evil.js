@@ -11,9 +11,9 @@ export default class Evil {
         this.evilImg = new Images("../img/hero-test.png", 4); // картинка врага
         this.width = 32;                                      // длина картинки 
         this.height = 48;                                     // высота картинки 
-        this.speed = 0.1;                                     // скорость пермещения врага
+        this.speed = 2;                                     // скорость пермещения врага
         this.dx;                                              // изменение координаты по X
-        this.dy = 1.5;                                        // изменение координаты по Y
+        this.dy = 2;                                        // изменение координаты по Y
 
         this.coordinate = { // начальные координаты персонажа
             x: startX,

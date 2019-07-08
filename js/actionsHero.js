@@ -3,29 +3,32 @@ export default class ActionsHero {
 /* Описание действий персонажа-героя */
 
     constructor(){
-        this.flag = 0;          // кол-во нажатых кнопок, отвечающих за перемещение
-        this.intervalAnimMove;  // переменная, хранящая setInterval перемещения
-        this.intervalAnimJump;  // переменная, хранящая setInterval прыжка
-        this.button;            // запоминает какая кнопка была нажата
-        this.flagUp = false;    // флаг, отвечающий за касания верхней границы прыжка героя
-        this.flagDown = false;  // флаг, отвечающий за касания нижней границы прыжка героя
-        this.flagStopJump;      // флаг, отвечающий за остоновку прыжка
+        this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
+        this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
+        this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
+        this.button;                // запоминает какая кнопка была нажата
+        this.flagUp = false;        // флаг, отвечающий за касания верхней границы прыжка героя
+        this.flagDown = false;      // флаг, отвечающий за касания нижней границы прыжка героя
+        this.flagStopJump = true;   // флаг, отвечающий за остоновку прыжка
         document.onkeydown = (elem) => {
             this.button = elem.code;            
             if (elem.code == "KeyA"){
                 /* Нажата кнопка A */
                 
-                modules.hero.heroImg.frameY = 1;    // переходим на нужную строку картинов в спрайте
-                this.flag++;                        // увеличиваем кол-во нажатых кнопок
-                this.moving();                      // начинаем перемещение
+                modules.hero.heroImg.frameY = 1;        // переходим на нужную строку картинов в спрайте
+                this.flag++;
+                modules.hero.dx = modules.hero.speedX;  // увеличиваем кол-во нажатых кнопок
+                this.moving();                          // начинаем перемещение
             }
             if (elem.code == "KeyD"){
                 modules.hero.heroImg.frameY = 2;
-                this.flag++; 
+                this.flag++;
+                modules.hero.dx = modules.hero.speedX;
                 this.moving();
             }
             if (elem.code == "Space"){
-                //this.flag++;                
+                //this.flag++; 
+                modules.hero.dy = modules.hero.speedY;               
                 this.jump();
             }
             document.onkeyup = (elem) => {
@@ -39,7 +42,6 @@ export default class ActionsHero {
                     clearInterval(this.intervalAnimMove);
                 }
                 if (elem.code == "Space"){
-                    //this.flag = 0;
                     clearInterval(this.intervalAnimMove);
                 }
             }
@@ -79,33 +81,38 @@ export default class ActionsHero {
 
     /* Обработка прыжка персонажа */
     jump(){
-        this.flagStopJump = false; // указываем, что прыжок может начаться
-        this.intervalAnimJump = setInterval(function() {                       
+        if (this.flagStopJump){
+            /* Прыжок ещё не начинался или он уже был закончен */
             
-            if (!this.flagUp && !this.flagDown && !this.flagStopJump){
-                /* Персонаж не каснулся верхней и нижней границы прыжка и прыжок не остановлен */
-                modules.hero.coordinate.y -= modules.hero.dy; // пермещаем персонажа вверх
+            this.flagStopJump = false; // указываем, что прыжок может начаться
+            this.intervalAnimJump = setInterval(function() {                       
                 
-                if (modules.hero.coordinate.y <= modules.game.ceilingCoordinate - modules.hero.sizeJump){
-                    /* Верхний предел прыжка достигнут */
-                   this.flagUp = true; 
+                if (!this.flagUp && !this.flagDown && !this.flagStopJump){
+                    /* Персонаж не каснулся верхней и нижней границы прыжка и прыжок не остановлен */
+                    modules.hero.coordinate.y -= modules.hero.dy; // пермещаем персонажа вверх
+                    
+                    if (modules.hero.coordinate.y <= modules.game.ceilingCoordinate - modules.hero.sizeJump){
+                        /* Верхний предел прыжка достигнут */
+                       this.flagUp = true; 
+                    }
+                }else if (this.flagUp && !this.flagDown){
+                    /* Верхний предел прыжка достигнут, но не достигнут нижний предел */
+                    modules.hero.coordinate.y += modules.hero.dy; // пермещаем персонажа вниз
+    
+                    if (modules.hero.coordinate.y >= modules.game.floorCoordinate){
+                        /* Нижний предел прыжка достигнут */
+                        this.flagDown = true;
+                    }
+                }else if (this.flagUp && this.flagDown){
+                    /*Нижний и верхний предел достигнут */
+                    clearInterval(this.intervalAnimJump); // останавливаем анимацию прыжок
+                    this.flagStopJump = true;
+                    this.flagUp = false;
+                    this.flagDown = false;
                 }
-            }else if (this.flagUp && !this.flagDown){
-                /* Верхний предел прыжка достигнут, но не достигнут нижний предел */
-                modules.hero.coordinate.y += modules.hero.dy; // пермещаем персонажа вниз
-
-                if (modules.hero.coordinate.y >= modules.game.floorCoordinate){
-                    /* Нижний предел прыжка достигнут */
-                    this.flagDown = true;
-                }
-            }else if (this.flagUp && this.flagDown){
-                /*Нижний и верхний предел достигнут */
-                clearInterval(this.intervalAnimJump); // останавливаем анимацию прыжок
-                this.flagStopJump = true;
-                this.flagUp = false;
-                this.flagDown = false;
-            }
-            
-        }.bind(this) , 1000/24)
+                
+            }.bind(this) , 1000/24)
+        }
+        
     }
 }

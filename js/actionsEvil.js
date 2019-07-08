@@ -34,7 +34,6 @@ export default class ActionsEvil{
                 this.movingRight(elem);
             }else {
                 /* Произошло столкновение с игроком */
-                //console.log(this.intervalAnimMoveLeft);
                 elem.dx = 0;
                 
                 clearInterval(this.intervalAnimMoveLeft);
@@ -49,7 +48,7 @@ export default class ActionsEvil{
     movingLeft(obj){
         if (this.left){
             this.intervalAnimMoveLeft = setInterval(function() {  //запускаем интервал перемещения 
-                //console.log("Left");
+                
                 if (obj.coordinate.x - obj.dx > 0){
                     /* Слева нет границы карты */
                     obj.coordinate.x -= obj.dx;
@@ -71,7 +70,7 @@ export default class ActionsEvil{
     movingRight(obj){
         if (this.right){
             this.intervalAnimMoveRight = setInterval(function() {  //запускаем интервал перемещения 
-                //console.log("Right");
+                
                 if (obj.coordinate.x + obj.dx + obj.width < modules.game.width){
                     /* Справа нет границы карты */
                     obj.coordinate.x += obj.dx;

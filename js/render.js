@@ -17,7 +17,6 @@ export default class Render{
             0,
             modules.game.width,
             modules.game.height
-<<<<<<< HEAD
         );
         
         // Отрисовка фона
@@ -27,16 +26,6 @@ export default class Render{
             modules.backrg.y - modules.game.height
         );
 
-=======
-        ); 
-        modules.game.ctx.drawImage(
-            modules.background.bgImg.image,
-            0, 
-            0,
-            modules.background.bgImg.image.width,
-            modules.background.bgImg.image.height
-        )
->>>>>>> move background
         /* Отрисовка героя */
         modules.game.ctx.drawImage(
             modules.hero.heroImg.image,
@@ -49,13 +38,10 @@ export default class Render{
             modules.hero.width,
             modules.hero.height
         )
-<<<<<<< HEAD
         
         
         
-=======
-       
->>>>>>> move background
+
         /* Отрисовка врагов */
         this.evils.forEach( (elem) => {
             modules.game.ctx.drawImage(
@@ -76,13 +62,6 @@ export default class Render{
         
         /* обновление игоровго процесса, относительно которого будут перересовывать изображения с помощью метод  drawImages() */
         window.requestAnimationFrame(() => {
-<<<<<<< HEAD
-=======
-            var delta = Math.abs((this.nowTime  - this.nextTime) / 1000);
-            this.nextTime = this.nowTime;
-            this.nowTime = performance.now();
-            
->>>>>>> move background
             this.drawImages();
             
             
@@ -91,7 +70,7 @@ export default class Render{
                 elem.health();
             })
             modules.actHero.moving();
-            modules.background.draw(delta);
+            //modules.background.draw(delta);
             this.processGame();
             
         }, this);

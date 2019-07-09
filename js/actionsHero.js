@@ -47,7 +47,6 @@ export default class ActionsHero {
 
     /* Перемещение героя */
     moving(){
-<<<<<<< HEAD
         // console.log('move', modules.game.width / 2, -modules.backrg.x);
 
         /* 200 - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
@@ -86,11 +85,6 @@ export default class ActionsHero {
             }else if((modules.backrg.endBackgr || modules.backrg.x == 0) && modules.hero.coordinate.x > 0){
                 modules.hero.coordinate.x -= modules.hero.dx; // Движение !персонажа влево
             }
-=======
-        if (this.leftPress && modules.hero.coordinate.x - modules.hero.dx > 0){
-            /* Нажата кнопка движения влево и не упирается в левую границу карты */
-            modules.hero.coordinate.x -= modules.hero.dx; // перемещается влево
->>>>>>> move background
 
             /* Смена изображений в спрайте для анимации */
             if (modules.hero.width * (modules.hero.heroImg.frameX + 1) < modules.hero.heroImg.image.width) { 
@@ -99,12 +93,6 @@ export default class ActionsHero {
                 modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
             }
         }
-<<<<<<< HEAD
-=======
-        
-        else if (this.rightPress && modules.hero.coordinate.x + modules.hero.dx + modules.hero.width < modules.background.bgImg.image.width){
-           /* Нажата кнопка движения вправо и не упирается в правую границу карты */
->>>>>>> move background
 
         else if (this.rightPress){
             // console.log('r', modules.backrg.endBackgr, -modules.backrg.x + 200 < modules.game.width && !modules.backrg.endBackgr, (modules.backrg.endBackgr || -modules.backrg.x + 200 == modules.game.width), modules.hero.coordinate.x + modules.hero.width, modules.game.canvasField.width);

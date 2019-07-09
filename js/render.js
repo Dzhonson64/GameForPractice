@@ -16,7 +16,8 @@ export default class Render{
             modules.game.width,
             modules.game.height
         );
-
+        
+        // Отрисовка фона
         modules.game.ctx.drawImage(
             modules.backrg.backImg.image,
             modules.backrg.x,

@@ -94,7 +94,7 @@ export default class ActionsHero {
             }
         }
 
-        else if (this.rightPress){
+        else if (this.rightPress){ //если движется вправо
             // console.log('r', modules.backrg.endBackgr, -modules.backrg.x + 200 < modules.game.width && !modules.backrg.endBackgr, (modules.backrg.endBackgr || -modules.backrg.x + 200 == modules.game.width), modules.hero.coordinate.x + modules.hero.width, modules.game.canvasField.width);
 
             /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы холста 1000. Тут работает магическое число 200, 

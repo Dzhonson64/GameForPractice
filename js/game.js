@@ -7,16 +7,17 @@ export default class Game{
         this.ctx = this.canvasField.getContext("2d");
         
         /* Размеры игрового поля */
-        this.width = 1000;
-        this.height = 320;
-
+        this.canvasField.width = 1000;
+        this.canvasField.height = 320;
         this.ceilingCoordinate = floor - 100;
         this.floorCoordinate = floor;
         
         /* Установка разморов игрового поля */
-        this.canvasField.setAttribute("width", this.width + "px");
-        this.canvasField.setAttribute("height", this.height + "px");
+        // this.canvasField.setAttribute("width", this.width + "px");
+        // this.canvasField.setAttribute("height", this.height + "px");
 
+        // ctx.beginPath();
+        // ctx.strokeRect(0, 0, )
     
     }
 }

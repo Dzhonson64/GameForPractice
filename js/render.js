@@ -17,6 +17,12 @@ export default class Render{
             modules.game.height
         );
 
+        modules.game.ctx.drawImage(
+            modules.backrg.backImg.image,
+            modules.backrg.x,
+            modules.backrg.y - modules.game.height
+        );
+
         /* Отрисовка героя */
         modules.game.ctx.drawImage(
             modules.hero.heroImg.image,
@@ -29,6 +35,9 @@ export default class Render{
             modules.hero.width,
             modules.hero.height
         )
+        
+        
+        
         /* Отрисовка врагов */
         this.evils.forEach( (elem) => {
             modules.game.ctx.drawImage(
@@ -48,7 +57,6 @@ export default class Render{
     processGame(){
         /* обновление игоровго процесса, относительно которого будут перересовывать изображения с помощью метод  drawImages() */
         window.requestAnimationFrame(() => {
-           
             this.drawImages();
             modules.actEvil.selectSide();
             this.evils.forEach( (elem) => {

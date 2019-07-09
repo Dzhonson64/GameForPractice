@@ -13,7 +13,7 @@ export default class ActionsEvil{
         modules.render.evils.forEach((elem) => {
             /* Пробегаемся по каждому врагу */
 
-            if (modules.hero.coordinate.x + modules.hero.width < elem.coordinate.x){
+            if (modules.hero.coordinate.x + modules.hero.width  < elem.coordinate.x){
                 /* Игрок находится слева */
             
                 elem.dx = elem.speed;       // присваиваем скорость пермещения

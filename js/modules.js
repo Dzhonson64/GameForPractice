@@ -6,7 +6,9 @@ import Render from "./render.js";
 import Hero from "./hero.js";
 import ActionsHero from "./actionsHero.js";
 import ActionsEvil from "./actionsEvil.js";
+import Background from "./backgound.js";
 
+export let backrg = new Background("../img/test_back.png");
 export let game = new Game(200);
 export let render = new Render();
 export let hero = new Hero(200, game.floorCoordinate);

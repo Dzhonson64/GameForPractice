@@ -10,6 +10,7 @@ export default class ActionsHero {
         this.jumpPress = false;     // флаг, отвечающий за нажатие кнопки прыжка
         this.rightPress = false;    // флаг, отвечающий за нажатие кнопки вправо
         this.leftPress  = false;    // флаг, отвечающий за нажатие кнопки влево
+        
         this.jumpCount = 0;
         this.jumpLength = 50;       // высота прыжка
         // modules.backrg.y = modules.game.floorCoordinate;
@@ -42,38 +43,78 @@ export default class ActionsHero {
             }
         }
     }
+    
+
     /* Перемещение героя */
     moving(){
+        // console.log('move', modules.game.width / 2, -modules.backrg.x);
 
-        if (this.leftPress && modules.backrg.x < 0){
-            
-            /* Нажата кнопка движения влево и не упирается в левую границу карты */
+        /* 200 - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
+            Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
 
-            // modules.hero.coordinate.x -= modules.hero.dx; // перемещается влево
+            Условие ниже определяет конец фона, но оно не корректно опеделяет флаг на при координате персонажа 200, 
+            поэтому далее выстанавливаем вспомогательные условия (помечены комментарии с приставкой [1]). Место костылей, рассматриваем варианты замены */
+
+        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= 200 && modules.game.width / 2 > -modules.backrg.x || // левая граница фона
+           -modules.backrg.x + 200 <= modules.game.width && modules.hero.coordinate.x <= 200 && modules.game.width / 2 <= -modules.backrg.x){ // правая граница фона
+                modules.backrg.endBackgr = false; // Можно двигать фон (кроме некоторых случаев, которые помечены комментариями с приставкой [1])
+        }else{
+            modules.backrg.endBackgr = true;    // Нельзя двигать фон
+        }
+        //console.log(modules.backrg.endBackgr);
+
+
+
+        //---! Движение фона обратно движению персонажа !---
+        
+        if (this.leftPress){ //Если движемся влево
+            // console.log('l', modules.backrg.endBackgr, -modules.backrg.x, modules.backrg.x < 0 && !modules.backrg.endBackgr, modules.backrg.endBackgr && modules.hero.coordinate.x - modules.hero.dx > 0, modules.hero.coordinate.x);
             
-            //! движение фона обратно движению персонажа !
-            
+            /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до левой границы холста 0 */
+            if(modules.backrg.x < 0 && !modules.backrg.endBackgr){  
+
+                // движение !фона
+                modules.backrg.x += modules.backrg.k * modules.hero.dx;
+
+                // движение !врагов относительно движения персонажа
+                modules.render.evils.forEach((elem) => {
+                    elem.coordinate.x += modules.hero.dx;
+                })
+
+            /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до левой границы холста 0 */
+            }else if((modules.backrg.endBackgr || modules.backrg.x == 0) && modules.hero.coordinate.x > 0){
+                modules.hero.coordinate.x -= modules.hero.dx; // Движение !персонажа влево
+            }
+
             /* Смена изображений в спрайте для анимации */
             if (modules.hero.width * (modules.hero.heroImg.frameX + 1) < modules.hero.heroImg.image.width) { 
                 modules.hero.heroImg.frameX += 1;   // если дошли до конца спрайта
             } else {
                 modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
             }
-
-
-            // движение фона
-            modules.backrg.x += modules.backrg.k * modules.hero.dx;
-
-
-            // движение врагов относительно движения персонажа
-            modules.render.evils.forEach((elem) => {
-                elem.coordinate.x += modules.hero.dx;
-            })
         }
-        else if (this.rightPress && -modules.backrg.x < modules.game.width){
-           /* Нажата кнопка движения вправо и не упирается в правую границу карты */
 
-            // modules.hero.coordinate.x += modules.hero.dx; // перемещается впарво
+        else if (this.rightPress){
+            // console.log('r', modules.backrg.endBackgr, -modules.backrg.x + 200 < modules.game.width && !modules.backrg.endBackgr, (modules.backrg.endBackgr || -modules.backrg.x + 200 == modules.game.width), modules.hero.coordinate.x + modules.hero.width, modules.game.canvasField.width);
+
+            /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы холста 1000. Тут работает магическое число 200, 
+                    т. к. персонаж смещён от начала фона и образуется пустота при подходе вправо (если не ставить число 200) */
+
+            if(-modules.backrg.x + 200 < modules.game.width && !modules.backrg.endBackgr){
+
+                // движение !фона
+                modules.backrg.x -= modules.hero.dx;
+
+
+                // движение !врагов относительно движения персонажа
+                modules.render.evils.forEach((elem) => {
+                    elem.coordinate.x -= modules.backrg.k * modules.hero.dx;
+                })
+
+            /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до правой границы холста 1000, учитывая длину персонажа */
+            }else if((modules.backrg.endBackgr || -modules.backrg.x + 200 == modules.game.width) && modules.hero.coordinate.x + modules.hero.width < modules.game.canvasField.width){
+                modules.hero.coordinate.x += modules.hero.dx; // Движение !персонажа влево
+            }
 
             /* Смена изображений в спрайте для анимации */
             if (modules.hero.width * (modules.hero.heroImg.frameX + 1) < modules.hero.heroImg.image.width) {
@@ -82,15 +123,6 @@ export default class ActionsHero {
                 modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
             }
 
-
-            // движение фона
-            modules.backrg.x -= modules.hero.dx;
-
-
-            // движение врагов относительно движения персонажа
-            modules.render.evils.forEach((elem) => {
-                elem.coordinate.x -= modules.backrg.k * modules.hero.dx;
-            })
         }
         if(this.jumpPress && this.processJump){
             /* Нажата кнопка прыжка и процес прыжка - true */

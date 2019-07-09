@@ -7,5 +7,6 @@ export default class Background{
         this.aspect = 1920 / 1200; // соотношение сторон фона
         this.x = 0; this.y = 0; // координаты фона
         this.k = 1; // коэффициент движения фона относительно движения персонажа
+        this.endBackgr = false;     //флаг, проверяющий конец фона
     }
 }

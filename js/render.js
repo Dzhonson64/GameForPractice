@@ -5,8 +5,6 @@ export default class Render{
     constructor(){
         this.evils = [];
         this.evils.push(new Evil(400, modules.game.floorCoordinate));
-        // this.xx = new Images("../img/road_forest.png");
-        
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -26,7 +24,7 @@ export default class Render{
         modules.game.ctx.drawImage(
             modules.backrg.backImg.image,
             modules.backrg.x,
-            modules.backrg.y - modules.game.height,
+            modules.backrg.y,
             modules.game.height * modules.backrg.aspect,
             modules.game.height
         );

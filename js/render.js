@@ -4,9 +4,7 @@ export default class Render{
     /* Рендер карты, который отвечает за отрисовку объектов */
     constructor(){
         this.evils = [];
-        this.evils.push(new Evil(400, modules.game.floorCoordinate));
-        this.nowTime = performance.now();
-        this.nextTime = 0;
+        this.evils.push(new Evil(modules.game.floorCoordinate, 1920, 1700));
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -41,7 +39,6 @@ export default class Render{
         
         
         
-
         /* Отрисовка врагов */
         this.evils.forEach( (elem) => {
             modules.game.ctx.drawImage(
@@ -59,20 +56,18 @@ export default class Render{
     }
 
     processGame(){
-        
         /* обновление игоровго процесса, относительно которого будут перересовывать изображения с помощью метод  drawImages() */
         window.requestAnimationFrame(() => {
             this.drawImages();
-            
-            
-            modules.actEvil.selectSide();
+            modules.actEvil.quiteMove();
             this.evils.forEach( (elem) => {
                 elem.health();
+                modules.actEvil.jump(elem);
             })
+            modules.actEvil.isCollisionWithHero(this.evils[0]);
             modules.actHero.moving();
-            //modules.background.draw(delta);
+            //console.log(elem.coordinate.x - modules.backrg.x + modules.hero.offset - );
             this.processGame();
-            
         }, this);
     }
 

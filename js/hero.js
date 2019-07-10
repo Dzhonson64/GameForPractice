@@ -19,6 +19,9 @@ export default class Hero{
             y: startY
         }
         this.hp = 200;      // ХП
+        this.orientation;
+        this.offset = startX ? startX : 0;
     }
+
    
 }

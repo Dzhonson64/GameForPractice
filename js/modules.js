@@ -8,16 +8,10 @@ import ActionsHero from "./actionsHero.js";
 import ActionsEvil from "./actionsEvil.js";
 import Background from "./backgound.js";
 
-
 export let backrg = new Background("../img/test_back.png");
 export let game = new Game(200);
 export let render = new Render();
 export let hero = new Hero(200, game.floorCoordinate);
 export let actHero = new ActionsHero();
 export let actEvil = new ActionsEvil();
-export let background = new Background();
-window.addEventListener("load", function(){
-//game.ctx.translate(-2000, 0);
 render.processGame();
-});
-

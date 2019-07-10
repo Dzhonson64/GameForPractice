@@ -55,27 +55,6 @@ export default class Render{
             }
         });
 
-
-        // console.log(this.xx.image);
-        // for(let my = 0; my < modules.mapCol.heightInTile; my++){
-        //     for(let mx = 0; mx < modules.mapCol.widthInTile; mx++){
-        //         if(modules.mapCol.mapcc[my][mx] !== 0){
-        //             // console.log(modules.mapCol.mapcc[my][mx], my, mx, modules.mapCol.tileType[modules.mapCol.mapcc[my][mx] - 1]);
-        //             // console.log(mx);
-                    
-        //             modules.game.ctx.drawImage(
-        //                 modules.mapCol.tileType[modules.mapCol.mapcc[my][mx] - 1].image,
-        //                 mx * 10,
-        //                 my * 10,
-        //                 10, 10
-        //             );
-        //             // console.log(modules.mapCol.mapcc[my][mx] - 1);
-        //         }
-        //     }
-        // }
-        
-
-
         /* Отрисовка героя */
         modules.game.ctx.drawImage(
             modules.hero.heroImg.image,

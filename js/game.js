@@ -7,8 +7,8 @@ export default class Game{
         this.ctx = this.canvasField.getContext("2d");
         
         /* Размеры игрового поля */
-        this.width = 1500;
-        this.height = 520;
+        this.width = 1200;
+        this.height = 320;
 
         //this.widthMap = modules.backrg.backImg.image.width - 118;
        

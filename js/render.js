@@ -104,7 +104,7 @@ export default class Render{
                 elem.health();
                 
             })
-            console.log(this.weapons)
+            // console.log(this.weapons)
             modules.actEvil.isCollisionWithHero(this.evils[0]);
             modules.actHero.moving();
             modules.game.ctx.fillStyle = "green";

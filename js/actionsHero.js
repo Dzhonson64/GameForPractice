@@ -74,11 +74,17 @@ export default class ActionsHero extends Gravity{
     /* Проверка на столкноввение с противником */
     isCollisionWithEvil(){
         for (let i in modules.render.evils){
-            if (modules.hero.orientation == 1 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x > 0 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x <= modules.render.evils[i].width){
+            if (modules.hero.orientation == 1 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x > 0 && 
+                modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x <= modules.render.evils[i].width && 
+                modules.hero.coordinate.y + modules.hero.height >= modules.render.evils[i].coordinate.y &&
+                modules.hero.coordinate.y <= modules.render.evils[i].coordinate.y + modules.render.evils[i].height){
                 /* Если игрок был справа и разница координат игрока и координта проивника положительна и меньше длины картинки врага */
 
                 return true;
-            }else if (modules.hero.orientation == -1 && modules.hero.coordinate.x - (modules.render.evils[i].coordinate.x  + modules.render.evils[i].width) < 0 && modules.hero.coordinate.x - modules.render.evils[i].coordinate.x  + modules.render.evils[i].width >= modules.render.evils[i].width){
+            }else if (modules.hero.orientation == -1 && modules.hero.coordinate.x - (modules.render.evils[i].coordinate.x  + modules.render.evils[i].width) < 0 &&
+             modules.hero.coordinate.x - modules.render.evils[i].coordinate.x  + modules.render.evils[i].width >= modules.render.evils[i].width && 
+             modules.hero.coordinate.y + modules.hero.height >= modules.render.evils[i].coordinate.y &&
+             modules.hero.coordinate.y <= modules.render.evils[i].coordinate.y + modules.render.evils[i].height){
                /* Если игрок был слева и разница координат игрока и координта проивника отрицательна и больше длины картинки врага */
 
                 return true;
@@ -115,7 +121,7 @@ export default class ActionsHero extends Gravity{
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
                     elem.coordinate.x += modules.hero.dx;
-                    if (coordinateHeroOnMapX >= elem.borderMoveL && coordinateHeroOnMapX <= elem.borderMoveR){
+                    if (modules.hero.coordinateHeroOnMapX >= elem.borderMoveL && modules.hero.coordinateHeroOnMapX <= elem.borderMoveR){
                     }
                 })
 
@@ -146,7 +152,7 @@ export default class ActionsHero extends Gravity{
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
                     elem.coordinate.x -= modules.backrg.k * modules.hero.dx;
-                    if (coordinateHeroOnMapX >= elem.borderMoveL && coordinateHeroOnMapX <= elem.borderMoveR){
+                    if (modules.hero.coordinateHeroOnMapX >= elem.borderMoveL && modules.hero.coordinateHeroOnMapX <= elem.borderMoveR){
                     }
                 })
 

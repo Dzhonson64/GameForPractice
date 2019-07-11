@@ -7,6 +7,7 @@ export default class Images{
     constructor(url, maxImagesX = 1){
         this.image = new Image(); // создание объекта спрайта
         this.image.src = url;   // присваивание адреса
+        
 
         /* Представим спрайт с картинками, как двумерный массив, где */
         this.frameX = 0;   // номер картинки по X из спрайта

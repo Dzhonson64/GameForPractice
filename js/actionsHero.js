@@ -1,4 +1,5 @@
 import * as modules from "./modules.js";
+import Armor from './weapon.js'
 export default class ActionsHero {
 /* Описание действий персонажа-героя */
 
@@ -40,6 +41,31 @@ export default class ActionsHero {
                 this.rightPress = false;
             }
         }
+
+        document.onclick = (elem) =>{
+            let weapon = new Armor();
+            modules.render.weapons.push(weapon);
+            console.log("C");
+            //document.onmousemove  = (elem) =>{
+                var x1 = elem.clientX;
+                var y1 = elem.clientY;
+                var x2 = modules.hero.coordinate.x + modules.hero.width / 2;
+                var y2 = modules.hero.coordinate.y + modules.hero.height / 2;
+
+                //console.log(x1, y1);
+                //console.log(x2, modules.hero.coordinate.y + modules.hero.height / 2);
+                //var k = ((y2 - y1) - x1*y2 + x1*y1) / ((x2 - x1)- x2*y1 + x1*y1)
+                var katetX = Math.round(this.widthLine(x1, y2, x2, y2));
+                var katetY = Math.round(this.widthLine(x1, y1, x1, y2));
+                console.log(katetX, katetY);
+                var k = katetY / katetX;
+                if (x1 < x2){
+                    k = -k;
+                }
+                console.log(k);
+            //}
+        }
+        
     }
     /* Проверка на столкноввение с противником */
     isCollisionWithEvil(){
@@ -61,13 +87,13 @@ export default class ActionsHero {
     /* Перемещение героя */
     moving(){
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
-        /* 200 - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
+        /* 200 (modules.hero.offset) - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
             поэтому далее выстанавливаем вспомогательные условия (помечены комментарии с приставкой [1]). Место костылей, рассматриваем варианты замены */
 
-        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= 200 && modules.game.width / 2 > -modules.backrg.x || // левая граница фона
-           -modules.backrg.x + 200 <= modules.game.width && modules.hero.coordinate.x <= 200 && modules.game.width / 2 <= -modules.backrg.x){ // правая граница фона
+        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= modules.hero.offset && modules.game.width / 2 > -modules.backrg.x || // левая граница фона
+           -modules.backrg.x + modules.hero.offset <= modules.game.width && modules.hero.coordinate.x <= modules.hero.offset && modules.game.width / 2 <= -modules.backrg.x){ // правая граница фона
                 modules.backrg.endBackgr = false; // Можно двигать фон (кроме некоторых случаев, которые помечены комментариями с приставкой [1])
         }else{
             modules.backrg.endBackgr = true;    // Нельзя двигать фон
@@ -106,7 +132,7 @@ export default class ActionsHero {
             /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы холста 1000. Тут работает магическое число 200, 
                     т. к. персонаж смещён от начала фона и образуется пустота при подходе вправо (если не ставить число 200) */
 
-            if(-modules.backrg.x + 200 < modules.game.width && !modules.backrg.endBackgr ){
+            if(-modules.backrg.x + modules.hero.offset < modules.game.width && !modules.backrg.endBackgr ){
 
                 // движение !фона
                 modules.backrg.x -= modules.hero.dx;
@@ -120,7 +146,7 @@ export default class ActionsHero {
                 })
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до правой границы холста 1000, учитывая длину персонажа */
-            }else if((modules.backrg.endBackgr || -modules.backrg.x + 200 == modules.game.width) && modules.hero.coordinate.x + modules.hero.width < modules.game.canvasField.width){
+            }else if((modules.backrg.endBackgr || -modules.backrg.x + modules.hero.offset == modules.game.width) && modules.hero.coordinate.x + modules.hero.width < modules.game.canvasField.width){
                 modules.hero.coordinate.x += modules.hero.dx; // Движение !персонажа влево
             }
 
@@ -146,5 +172,9 @@ export default class ActionsHero {
             this.processJump = false;
         }
     }
-    
+    widthLine(x1, y1, x2, y2){
+        return Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+    }
+    radToDeg (rad) { return rad / Math.PI * 180; }
+
 }

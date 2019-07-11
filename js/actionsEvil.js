@@ -55,7 +55,7 @@ export default class ActionsEvil{
                 elem.dx = 0;
             }
 
-            if (coordinateEvilOnMapX + elem.width == elem.borderMoveR){
+            if (coordinateEvilOnMapX + elem.width * 3/2 == elem.borderMoveR){
                 elem.evilImg.frameY = 1;
                 this.rightMove = false;
                 this.leftMove = true;
@@ -106,8 +106,7 @@ export default class ActionsEvil{
         obj.orientation = 1;
         
         if (this.rightMove){
-            
-            if (coordinateEvilOnMapX + obj.dx + obj.width <= modules.backrg.backImg.image.width){
+            if (coordinateEvilOnMapX + obj.dx + 3/2 * obj.width <= modules.backrg.backImg.image.width){
                 /* Справа нет границы карты */
 
                 if (this.isCollisionWithHero(obj) && !this.processJump){

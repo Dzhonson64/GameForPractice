@@ -4,6 +4,7 @@ import * as modules from "./modules.js";
 export default class Gravity{
     constructor(gravobj){
         this.gravObj = gravobj; // Ссылка на объект с гравитацией
+        this.kg = 1; // Небольшое ускорение при падении, чтобы не мозолить глаза. Физика падения не соответствует реальности, но, пока это незаменто, всё хорошо.
     }
     grav(activity = -1){ // Функция отвечающая за гравитацию объекта
         // У объектов с гравитацией должен быть параметр coordinate, который является словарём с координатами объекта
@@ -14,9 +15,11 @@ export default class Gravity{
                 2: у-координата тайла, который находится под объектом (тоже нужно перевести в тайлы)
         */
         if(modules.mapCol.doesOnVoid(Math.floor((this.gravObj.coordinate.x + this.gravObj.width - modules.backrg.x) / 10), (this.gravObj.coordinate.y + 10) / 10)){
-            this.gravObj.coordinate.y += 10; // Для шустроты, двигаются объекты 1 тайл за фрейм
+            this.gravObj.coordinate.y += 10 * (this.kg >= 5 ? 1.5: 1); // Для шустроты, двигаются объекты 1 тайл за фрейм и умножаем на ускорение
+            this.kg++;
             
         }else if(activity !== -1 && activity.jumpPress){ // Если у объекта есть активити и он в прыжке (случай прописан для персонажа)
+            this.kg = 1;
             activity.upperPoint = false; // Делаем флаги верхней точки и прыжка ложными
             activity.jumpPress = false;
         }

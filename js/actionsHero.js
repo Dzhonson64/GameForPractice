@@ -129,10 +129,11 @@ export default class ActionsHero {
         }
 
         else if (this.rightPress && !this.isCollisionWithEvil() || this.rightPress && this.processJump ){ //если движется вправо
-            /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы холста 1000. Тут работает магическое число 200, 
+
+            /* Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы карты. Тут работает магическое число 200, 
                     т. к. персонаж смещён от начала фона и образуется пустота при подходе вправо (если не ставить число 200) */
 
-            if(-modules.backrg.x + modules.hero.offset < modules.game.width && !modules.backrg.endBackgr ){
+            if(-modules.backrg.x + modules.game.width < modules.mapCol.widthInTile * 10 && !modules.backrg.endBackgr){
 
                 // движение !фона
                 modules.backrg.x -= modules.hero.dx;
@@ -146,7 +147,8 @@ export default class ActionsHero {
                 })
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до правой границы холста 1000, учитывая длину персонажа */
-            }else if((modules.backrg.endBackgr || -modules.backrg.x + modules.hero.offset == modules.game.width) && modules.hero.coordinate.x + modules.hero.width < modules.game.canvasField.width){
+            }else if((modules.backrg.endBackgr || -modules.backrg.x + modules.game.width == modules.mapCol.widthInTile * 10) && 
+                    modules.hero.coordinate.x + modules.hero.width < modules.game.width){
                 modules.hero.coordinate.x += modules.hero.dx; // Движение !персонажа влево
             }
 

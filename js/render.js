@@ -8,7 +8,7 @@ export default class Render{
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
-
+        
         /* Очистка области canvas для отрисовки нового состояние */
         modules.game.ctx.clearRect(
             0,
@@ -17,12 +17,41 @@ export default class Render{
             modules.game.height
         );
         
+
+
         // Отрисовка фона
+
         modules.game.ctx.drawImage(
             modules.backrg.backImg.image,
             modules.backrg.x,
-            modules.backrg.y - modules.game.height
+            modules.backrg.y,
+            modules.game.height * modules.backrg.aspect,
+            modules.game.height
         );
+
+        //Отрисовка местности
+
+        modules.mapCol.mapCollision.forEach( (elem) => {
+            let y1 = Number(elem[0].slice(0, elem[0].indexOf('.'))),
+                y2 = Number(elem[0].slice(elem[0].indexOf('.') + 1));
+
+            for(let x = 1, kx = 0; x < elem.length; x++){
+                // console.log(x);
+                let x1 = Number(elem[x].slice(0, elem[x].indexOf("*"))),
+                    x2 = Number(elem[x].slice(elem[x].indexOf("*") + 1));
+                    
+                if(x1 !== 0){
+                    modules.game.ctx.drawImage(
+                        modules.mapCol.tileType[x1 - 1].image,
+                        kx * 10 + modules.backrg.x,
+                        y1 * 10 + modules.backrg.y,
+                        x2 * 10,
+                        (y2 - y1) * 10 // 10 - размер стороны тайла
+                    );
+                }
+                kx += x2;
+            }
+        });
 
         /* Отрисовка героя */
         modules.game.ctx.drawImage(
@@ -36,8 +65,6 @@ export default class Render{
             modules.hero.width,
             modules.hero.height
         )
-        
-        
         
         /* Отрисовка врагов */
         this.evils.forEach( (elem) => {

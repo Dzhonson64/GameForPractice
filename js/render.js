@@ -4,7 +4,8 @@ export default class Render{
     /* Рендер карты, который отвечает за отрисовку объектов */
     constructor(){
         this.evils = [];
-        this.evils.push(new Evil(400, modules.game.floorCoordinate));
+        this.evils.push(new Evil(modules.game.floorCoordinate, 1920, 1700));
+        this.weapons = [];
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -36,7 +37,6 @@ export default class Render{
                 y2 = Number(elem[0].slice(elem[0].indexOf('.') + 1));
 
             for(let x = 1, kx = 0; x < elem.length; x++){
-                // console.log(x);
                 let x1 = Number(elem[x].slice(0, elem[x].indexOf("*"))),
                     x2 = Number(elem[x].slice(elem[x].indexOf("*") + 1));
                     
@@ -80,17 +80,35 @@ export default class Render{
                 elem.height
             )
         })
+
+        /* Отрисовка стрелы */
+        this.weapons.forEach( (elem) => {
+            console.log(modules.hero.coordinate.x, modules.hero.coordinate.y);
+            modules.game.ctx.drawImage(
+                elem.weaponImg.image,
+                modules.hero.coordinate.x,
+                modules.hero.coordinate.y,
+                elem.width,
+                elem.height,
+            )
+        })
     }
 
     processGame(){
         /* обновление игоровго процесса, относительно которого будут перересовывать изображения с помощью метод  drawImages() */
         window.requestAnimationFrame(() => {
+           modules.game.ctx.strokeRect(0, 0, modules.game.width, modules.game.height);
             this.drawImages();
-            modules.actEvil.selectSide();
+            modules.actEvil.quiteMove();
             this.evils.forEach( (elem) => {
                 elem.health();
+                
             })
+            console.log(this.weapons)
+            modules.actEvil.isCollisionWithHero(this.evils[0]);
             modules.actHero.moving();
+            modules.game.ctx.fillStyle = "green";
+            
             this.processGame();
         }, this);
     }

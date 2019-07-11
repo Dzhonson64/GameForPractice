@@ -1,4 +1,5 @@
 import * as modules from "./modules.js";
+import Armor from './weapon.js'
 import Gravity from "./gravity.js";
 export default class ActionsHero extends Gravity{
 /* Описание действий персонажа-героя */
@@ -20,11 +21,13 @@ export default class ActionsHero extends Gravity{
                 /* Нажата кнопка A */
                 this.leftPress = true;
                 modules.hero.heroImg.frameY = 1;
+                modules.hero.orientation = -1;
             }
             if (elem.code == "KeyD"){
                  /* Нажата кнопка D */
                 this.rightPress = true;
                 modules.hero.heroImg.frameY = 2;
+                modules.hero.orientation = 1;
             }
             if (elem.code == "Space"){
                  /* Нажата кнопка Space */
@@ -42,33 +45,68 @@ export default class ActionsHero extends Gravity{
                 this.rightPress = false;
             }
         }
+
+        document.onclick = (elem) =>{
+            let weapon = new Armor();
+            modules.render.weapons.push(weapon);
+            console.log("C");
+            //document.onmousemove  = (elem) =>{
+                var x1 = elem.clientX;
+                var y1 = elem.clientY;
+                var x2 = modules.hero.coordinate.x + modules.hero.width / 2;
+                var y2 = modules.hero.coordinate.y + modules.hero.height / 2;
+
+                //console.log(x1, y1);
+                //console.log(x2, modules.hero.coordinate.y + modules.hero.height / 2);
+                //var k = ((y2 - y1) - x1*y2 + x1*y1) / ((x2 - x1)- x2*y1 + x1*y1)
+                var katetX = Math.round(this.widthLine(x1, y2, x2, y2));
+                var katetY = Math.round(this.widthLine(x1, y1, x1, y2));
+                console.log(katetX, katetY);
+                var k = katetY / katetX;
+                if (x1 < x2){
+                    k = -k;
+                }
+                console.log(k);
+            //}
+        }
+        
     }
-    
+    /* Проверка на столкноввение с противником */
+    isCollisionWithEvil(){
+        for (let i in modules.render.evils){
+            if (modules.hero.orientation == 1 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x > 0 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x <= modules.render.evils[i].width){
+                /* Если игрок был справа и разница координат игрока и координта проивника положительна и меньше длины картинки врага */
+
+                return true;
+            }else if (modules.hero.orientation == -1 && modules.hero.coordinate.x - (modules.render.evils[i].coordinate.x  + modules.render.evils[i].width) < 0 && modules.hero.coordinate.x - modules.render.evils[i].coordinate.x  + modules.render.evils[i].width >= modules.render.evils[i].width){
+               /* Если игрок был слева и разница координат игрока и координта проивника отрицательна и больше длины картинки врага */
+
+                return true;
+            }
+        }
+        return false;
+       
+    }
 
     /* Перемещение героя */
     moving(){
         
         /* 200 - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
-
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
             поэтому далее выстанавливаем вспомогательные условия (помечены комментарии с приставкой [1]). Место костылей, рассматриваем варианты замены */
 
-        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= 200 && modules.backrg.difference / 2 > -modules.backrg.x // Смотрим на уменьшенную разницу вдвое и положением фона по х
-            || // левая граница фона
-            -modules.backrg.x + modules.game.width <= modules.mapCol.widthInTile * 10 /* Так как позиция фона отсчитывается от левой границы камеры, то прибавляем ширину камеры и 
-            сравниваем с шириной всей карты */
-             && modules.hero.coordinate.x <= 200 && modules.backrg.difference / 2 <= -modules.backrg.x) // Смотрим на уменьшенную разницу вдвое и положением фона по х
-            { // правая граница фона
+        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= modules.hero.offset && modules.game.width / 2 > -modules.backrg.x || // левая граница фона
+           -modules.backrg.x + modules.hero.offset <= modules.game.width && modules.hero.coordinate.x <= modules.hero.offset && modules.game.width / 2 <= -modules.backrg.x){ // правая граница фона
                 modules.backrg.endBackgr = false; // Можно двигать фон (кроме некоторых случаев, которые помечены комментариями с приставкой [1])
         }else{
             modules.backrg.endBackgr = true;    // Нельзя двигать фон
         }
 
         //---! Движение фона обратно движению персонажа !---
-        
-        if (this.leftPress){ //Если движемся влево
-            /* Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до левой границы холста 0 */
+        if (this.leftPress && !this.isCollisionWithEvil() || this.leftPress && this.processJump){ //Если движемся влево
+
+            /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до левой границы холста 0 */
             if(modules.backrg.x < 0 && !modules.backrg.endBackgr){  
 
                 // движение !фона
@@ -77,6 +115,8 @@ export default class ActionsHero extends Gravity{
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
                     elem.coordinate.x += modules.hero.dx;
+                    if (coordinateHeroOnMapX >= elem.borderMoveL && coordinateHeroOnMapX <= elem.borderMoveR){
+                    }
                 })
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до левой границы холста 0 */
@@ -92,7 +132,7 @@ export default class ActionsHero extends Gravity{
             }
         }
 
-        else if (this.rightPress){ //если движется вправо
+        else if (this.rightPress && !this.isCollisionWithEvil() || this.rightPress && this.processJump ){ //если движется вправо
 
             /* Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы карты. Тут работает магическое число 200, 
                     т. к. персонаж смещён от начала фона и образуется пустота при подходе вправо (если не ставить число 200) */
@@ -106,6 +146,8 @@ export default class ActionsHero extends Gravity{
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
                     elem.coordinate.x -= modules.backrg.k * modules.hero.dx;
+                    if (coordinateHeroOnMapX >= elem.borderMoveL && coordinateHeroOnMapX <= elem.borderMoveR){
+                    }
                 })
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до правой границы холста 1000, учитывая длину персонажа */
@@ -139,5 +181,9 @@ export default class ActionsHero extends Gravity{
             this.grav(this);
         }
     }
-}
+    widthLine(x1, y1, x2, y2){
+        return Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+    }
+    radToDeg (rad) { return rad / Math.PI * 180; }
 
+}

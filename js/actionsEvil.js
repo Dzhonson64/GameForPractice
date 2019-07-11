@@ -7,12 +7,14 @@ export default class ActionsEvil{
         this.intervalAnimMoveRight; // переменная, хранящая setInterval перемещения вправо
         this.leftMove = false;      // флаг движения влево
         this.rightMove = false;     // флаг движения вправо
+        this.processJump = false;
+        this.jumpCount = 0;
+        this.jumpLength = 50;       // высота прыжка
     }
     /* Выбор направления движения */
-    selectSide(){
+    attackMove(){
         modules.render.evils.forEach((elem) => {
             /* Пробегаемся по каждому врагу */
-
             if (modules.hero.coordinate.x + modules.hero.width  < elem.coordinate.x){
                 /* Игрок находится слева */
             
@@ -30,9 +32,41 @@ export default class ActionsEvil{
                 this.rightMove = true;
                 this.leftMove = false;
                 this.movingRight(elem);
+            }
+        })
+    }
+    quiteMove(){
+        modules.render.evils.forEach((elem) => {
+            
+            var coordinateEvilOnMapX = elem.coordinate.x - modules.backrg.x;
+            elem.dx = elem.speed;       // присваиваем скорость пермещения
+            if (elem.orientation == 1 && coordinateEvilOnMapX + elem.width < elem.borderMoveR){
+                elem.evilImg.frameY = 2;    // изменяем положения картинки в спрайте
+                this.rightMove = true;     // останавливаем движение вправо
+                this.leftMove = false;       // включаем движение влево
+                this.movingRight(elem);
+            }else if (elem.orientation == -1 && coordinateEvilOnMapX > elem.borderMoveL){
+                elem.evilImg.frameY = 1;
+                this.rightMove = false;
+                this.leftMove = true;
+                this.movingLeft(elem);
             }else {
                 /* Произошло столкновение с игроком */
                 elem.dx = 0;
+            }
+
+            if (coordinateEvilOnMapX + elem.width * 3/2 == elem.borderMoveR){
+                elem.evilImg.frameY = 1;
+                this.rightMove = false;
+                this.leftMove = true;
+                elem.coordinate.x -= 10;
+                this.movingLeft(elem);
+            }else if (coordinateEvilOnMapX == elem.borderMoveL){
+                elem.evilImg.frameY = 2;    // изменяем положения картинки в спрайте
+                this.rightMove = true;     // останавливаем движение вправо
+                this.leftMove = false;       // включаем движение влево
+                elem.coordinate.x += 10;
+                this.movingRight(elem);
             }
         })
     }
@@ -41,16 +75,23 @@ export default class ActionsEvil{
         obj - объект врага (object)
     */
     movingLeft(obj){
-        if (this.leftMove){
-            if (obj.coordinate.x - obj.dx > 0){
+        var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
+        obj.orientation = -1;
+       if (this.leftMove){
+            if (coordinateEvilOnMapX - obj.dx > 0){
                 /* Слева нет границы карты */
-                obj.coordinate.x -= obj.dx;
-            }
-
-            if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения
-                obj.evilImg.frameX += 1;   // если дошли до конца спрайта
-            } else {
-                obj.evilImg.frameX = 0;    // то возвращаемся к началу
+                if (this.isCollisionWithHero(obj) && !this.processJump){
+                    obj.dx = 0;
+                }else {
+                    obj.dx = obj.speed;
+                    obj.coordinate.x -= obj.dx;
+                    if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения
+                        obj.evilImg.frameX += 1;   // если дошли до конца спрайта
+                    } else {
+                        obj.evilImg.frameX = 0;    // то возвращаемся к началу
+                    }
+                }
+                
             }
         }
         
@@ -60,17 +101,51 @@ export default class ActionsEvil{
         obj - объект врага (object)
     */
     movingRight(obj){
+        var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
+        var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
+        obj.orientation = 1;
+        
         if (this.rightMove){
-            if (obj.coordinate.x + obj.dx + obj.width < modules.game.width){
+            if (coordinateEvilOnMapX + obj.dx + 3/2 * obj.width <= modules.backrg.backImg.image.width){
                 /* Справа нет границы карты */
-                obj.coordinate.x += obj.dx;
+
+                if (this.isCollisionWithHero(obj) && !this.processJump){
+                    obj.dx = 0;
+                }else{
+                    obj.dx = obj.speed;
+                    obj.coordinate.x += obj.dx;
+                    if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения
+                        obj.evilImg.frameX += 1;   // если дошли до конца спрайта
+                    } else {
+                        obj.evilImg.frameX = 0;    // то возвращаемся к началу
+                    }
+                }
             }
 
-            if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения
-                obj.evilImg.frameX += 1;   // если дошли до конца спрайта
-            } else {
-                obj.evilImg.frameX = 0;    // то возвращаемся к началу
-            }
-        }        
+            
+       }        
     }
+    isCollisionWithHero(obj){
+        if (obj.orientation == -1 && modules.hero.coordinate.x + modules.hero.width - obj.coordinate.x > 0 && modules.hero.coordinate.x + modules.hero.width - obj.coordinate.x <= obj.width){
+            /* Если игрок был справа и разница координат игрока и координта проивника положительна и меньше длины картинки врага */
+
+            return true;
+        }else if (obj.orientation == 1 && modules.hero.coordinate.x - (obj.coordinate.x  + obj.width) < 0 && modules.hero.coordinate.x - obj.coordinate.x  + obj.width >= obj.width){
+           /* Если игрок был слева и разница координат игрока и координта проивника отрицательна и больше длины картинки врага */
+           
+            return true;
+        }
+    }
+    jump(obj){
+        this.processJump = true;
+        this.jumpCount++;
+        obj.coordinate.y = -(3 * this.jumpLength * Math.sin(Math.PI * this.jumpCount / this.jumpLength)) +  modules.game.floorCoordinate;
+        if(this.jumpCount > this.jumpLength){
+            this.jumpCount = 0;
+            this.jumpPress = false;
+            obj.y = modules.game.floorCoordinate;
+            this.processJump = false;
+        }
+    }
+    
 }

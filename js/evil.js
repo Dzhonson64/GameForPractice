@@ -7,19 +7,22 @@ export default class Evil {
         startX - начальная координата по X (number),
         startY - начальная координата по Y (number),
     */
-    constructor(startX, startY){
+    constructor(startY, borderR, borderL){
         this.evilImg = new Images("../img/hero-test.png", 4); // картинка врага
         this.width = 32;                                      // длина картинки 
         this.height = 48;                                     // высота картинки 
         this.speed = 2;                                     // скорость пермещения врага
         this.dx;                                              // изменение координаты по X
         this.dy = 2;                                        // изменение координаты по Y
-
+        this.borderMoveR = borderR;
+        this.borderMoveL = borderL;
         this.coordinate = { // начальные координаты персонажа
-            x: startX,
+            x: (borderR + borderL) / 2,
             y: startY
         }
+        this.isAttack = false;
         this.hp = 200;                                      // ХП
+        this.orientation = 1;
     }
     /* Отображение ХП */
     health(){

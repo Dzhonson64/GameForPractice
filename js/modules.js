@@ -11,7 +11,7 @@ import Map from "./map.js";
 
 export let game = new Game(210);
 export let render = new Render();
-export let hero = new Hero(200, game.floorCoordinate);
+export let hero = new Hero(100, game.floorCoordinate);
 export let mapCol = new Map(1);
 export let backrg = new Background("../img/test_back.png");
 export let actHero = new ActionsHero();

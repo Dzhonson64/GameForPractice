@@ -6,7 +6,7 @@ import Render from "./render.js";
 import Hero from "./hero.js";
 import ActionsHero from "./actionsHero.js";
 import ActionsEvil from "./actionsEvil.js";
-import Background from "./backgound.js";
+import Background from "./backgoundg.js";
 import Map from "./map.js";
 
 export let game = new Game(200);

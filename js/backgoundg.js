@@ -9,5 +9,14 @@ export default class Background{
         this.k = 1; // коэффициент движения фона относительно движения персонажа
         this.endBackgr = false;     //флаг, проверяющий конец фона
         this.difference = modules.mapCol.widthInTile * 10 - modules.game.width; // Разница между шириной всей карты и шириной видимой области
+
+
+
+        /*  Зачем нужна разница выше: представим координатную прямую 
+        
+        
+
+        */
+
     }
 }

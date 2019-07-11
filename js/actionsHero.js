@@ -1,19 +1,20 @@
 import * as modules from "./modules.js";
-export default class ActionsHero {
+import Gravity from "./gravity.js";
+export default class ActionsHero extends Gravity{
 /* Описание действий персонажа-героя */
 
     constructor(){
+        super(modules.hero);
         this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
         this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
         this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
-        this.processJump = false;   // флаг указывающий, что начался ли прыжок или нет
         this.jumpPress = false;     // флаг, отвечающий за нажатие кнопки прыжка
         this.rightPress = false;    // флаг, отвечающий за нажатие кнопки вправо
         this.leftPress  = false;    // флаг, отвечающий за нажатие кнопки влево
+        this.upperPoint = false;    // достиг ли персонаж верхней точеи своего прыжка
+        this.jumpStatus = 0;        // статус прыжка, в данном случае, путь до верхней точки при прыжке составляет 15 фреймов
+        this.jumpLength = 15;       // высота прыжка
         
-        this.jumpCount = 0;
-        this.jumpLength = 50;       // высота прыжка
-        // modules.backrg.y = modules.game.floorCoordinate;
         document.onkeydown = (elem) => {
             if (elem.code == "KeyA"){
                 /* Нажата кнопка A */
@@ -28,7 +29,6 @@ export default class ActionsHero {
             if (elem.code == "Space"){
                  /* Нажата кнопка Space */
                 this.jumpPress = true;
-                this.processJump = true;
             }
         }
            
@@ -47,7 +47,6 @@ export default class ActionsHero {
 
     /* Перемещение героя */
     moving(){
-        
         
         /* 200 - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
@@ -123,18 +122,22 @@ export default class ActionsHero {
             }
 
         }
-        if(this.jumpPress && this.processJump){
-            /* Нажата кнопка прыжка и процес прыжка - true */
-            this.jumpCount++;
-            modules.hero.coordinate.y = -(3 * this.jumpLength * Math.sin(Math.PI * this.jumpCount / this.jumpLength)) +  modules.game.floorCoordinate;
-            // modules.backrg.y =  (3 * this.jumpLength * Math.sin(Math.PI * this.jumpCount / this.jumpLength)) +  modules.game.floorCoordinate;
+
+        if(this.jumpPress && !this.upperPoint){
+            /* Нажата кнопка прыжка и не достиг ли верхней точки */
+            
+            if(this.jumpStatus >= this.jumpLength){ // Если статус больше длины, то сбатываем его и поднимаем флаг верхней точки
+                this.jumpStatus = 0;
+                this.upperPoint = true;
+            }else{ // Увелививаем статус и поднимаем персонажа
+                this.jumpStatus++;
+                modules.hero.coordinate.y-=10;
+            }
         }
-        if(this.jumpCount > this.jumpLength){
-            this.jumpCount = 0;
-            this.jumpPress = false;
-            modules.hero.coordinate.y = modules.game.floorCoordinate;
-            // modules.backrg.y = modules.game.floorCoordinate;
-            this.processJump = false;
+       
+        if(!this.jumpPress || this.upperPoint){ // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
+            this.grav(this);
         }
     }
 }
+

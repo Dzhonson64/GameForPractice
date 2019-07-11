@@ -6,10 +6,10 @@ import Render from "./render.js";
 import Hero from "./hero.js";
 import ActionsHero from "./actionsHero.js";
 import ActionsEvil from "./actionsEvil.js";
-import Background from "./backgoundg.js";
+import Background from "./background.js";
 import Map from "./map.js";
 
-export let game = new Game(200);
+export let game = new Game(210);
 export let render = new Render();
 export let hero = new Hero(200, game.floorCoordinate);
 export let mapCol = new Map(1);

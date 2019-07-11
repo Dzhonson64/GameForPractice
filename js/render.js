@@ -43,10 +43,10 @@ export default class Render{
                 if(x1 !== 0){
                     modules.game.ctx.drawImage(
                         modules.mapCol.tileType[x1 - 1].image,
-                        kx * 10 + modules.backrg.x,
+                        kx * 10 + modules.backrg.x, 
                         y1 * 10 + modules.backrg.y,
                         x2 * 10,
-                        (y2 - y1) * 10 // 10 - размер стороны тайла
+                        (y2 - y1) * 10 + 10 // 10 - размер стороны тайла
                     );
                 }
                 kx += x2;

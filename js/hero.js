@@ -21,7 +21,7 @@ export default class Hero{
         this.hp = 200;      // ХП
         this.orientation;
         this.offset = startX ? startX : 0;
-        this.coordinateHeroOnMapX = this.coordinate.x - modules.backrg.x;
+        //this.coordinateHeroOnMapX = this.coordinate.x - modules.backrg.x;
     }
 
    

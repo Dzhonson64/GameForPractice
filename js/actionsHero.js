@@ -43,27 +43,30 @@ export default class ActionsHero {
         }
 
         document.onclick = (elem) =>{
-            let weapon = new Armor();
+            let weapon = new Armor(modules.hero.coordinate.x, modules.hero.coordinate.y);
             modules.render.weapons.push(weapon);
             console.log("C");
-            //document.onmousemove  = (elem) =>{
-                var x1 = elem.clientX;
-                var y1 = elem.clientY;
-                var x2 = modules.hero.coordinate.x + modules.hero.width / 2;
-                var y2 = modules.hero.coordinate.y + modules.hero.height / 2;
+            var x1 = elem.clientX;
+            var y1 = elem.clientY;
+            var x2 = modules.hero.coordinate.x + modules.hero.width / 2;
+            var y2 = modules.hero.coordinate.y + modules.hero.height / 2;
 
-                //console.log(x1, y1);
-                //console.log(x2, modules.hero.coordinate.y + modules.hero.height / 2);
-                //var k = ((y2 - y1) - x1*y2 + x1*y1) / ((x2 - x1)- x2*y1 + x1*y1)
-                var katetX = Math.round(this.widthLine(x1, y2, x2, y2));
-                var katetY = Math.round(this.widthLine(x1, y1, x1, y2));
-                console.log(katetX, katetY);
-                var k = katetY / katetX;
-                if (x1 < x2){
-                    k = -k;
-                }
-                console.log(k);
-            //}
+            //console.log(x1, y1);
+            //console.log(x2, modules.hero.coordinate.y + modules.hero.height / 2);
+            
+            modules.game.ctx.moveTo(x2, y2);
+            modules.game.ctx.lineTo(x1, y1);
+            modules.game.ctx.stroke();
+            var katetX = Math.round(this.widthLine(x1, y2, x2, y2));
+            var katetY = Math.round(this.widthLine(x1, y1, x1, y2));
+            console.log(katetX, katetY);
+            var k = katetY / katetX;
+            if (x1 < x2){
+                k = -k;
+            }
+            weapon.k = k;
+            weapon.move();
+            console.log(k);
         }
         
     }
@@ -142,8 +145,6 @@ export default class ActionsHero {
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
                     elem.coordinate.x -= modules.backrg.k * modules.hero.dx;
-                    if (coordinateHeroOnMapX >= elem.borderMoveL && coordinateHeroOnMapX <= elem.borderMoveR){
-                    }
                 })
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до правой границы холста 1000, учитывая длину персонажа */

@@ -83,11 +83,10 @@ export default class Render{
 
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
-            console.log(modules.hero.coordinate.x, modules.hero.coordinate.y);
             modules.game.ctx.drawImage(
                 elem.weaponImg.image,
-                modules.hero.coordinate.x,
-                modules.hero.coordinate.y,
+                elem.coordinate.x,
+                elem.coordinate.y,
                 elem.width,
                 elem.height,
             )
@@ -108,7 +107,9 @@ export default class Render{
             modules.actEvil.isCollisionWithHero(this.evils[0]);
             modules.actHero.moving();
             modules.game.ctx.fillStyle = "green";
-            
+            this.weapons.forEach( (elem) => {
+                elem.move();
+            })
             this.processGame();
         }, this);
     }

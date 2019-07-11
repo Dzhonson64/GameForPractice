@@ -47,29 +47,33 @@ export default class ActionsHero {
 
     /* Перемещение героя */
     moving(){
-        // console.log('move', modules.game.width / 2, -modules.backrg.x);
-
+        
+        
         /* 200 - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
 
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
             поэтому далее выстанавливаем вспомогательные условия (помечены комментарии с приставкой [1]). Место костылей, рассматриваем варианты замены */
 
-        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= 200 && modules.game.width / 2 > -modules.backrg.x || // левая граница фона
-           -modules.backrg.x + 200 <= modules.game.width && modules.hero.coordinate.x <= 200 && modules.game.width / 2 <= -modules.backrg.x){ // правая граница фона
+        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= 200 && modules.backrg.difference / 2 > -modules.backrg.x || // левая граница фона
+            -modules.backrg.x + modules.game.width <= modules.mapCol.widthInTile * 10 && modules.hero.coordinate.x <= 200 && 
+            modules.backrg.difference / 2 <= -modules.backrg.x){ // правая граница фона
                 modules.backrg.endBackgr = false; // Можно двигать фон (кроме некоторых случаев, которые помечены комментариями с приставкой [1])
         }else{
             modules.backrg.endBackgr = true;    // Нельзя двигать фон
         }
         //console.log(modules.backrg.endBackgr);
 
-
+        console.log('move', modules.backrg.endBackgr, 'leftend', modules.backrg.x <= 0, modules.hero.coordinate.x >= 200, modules.game.width / 2 > -modules.backrg.x, 
+        '\nrightend', modules.mapCol.widthInTile * 10, -modules.backrg.x + modules.game.width, 
+        -modules.backrg.x + modules.game.width <= modules.mapCol.widthInTile * 10, modules.hero.coordinate.x <= 200, 
+        modules.game.width / 2, -modules.backrg.x + modules.game.width);
 
         //---! Движение фона обратно движению персонажа !---
         
         if (this.leftPress){ //Если движемся влево
             // console.log('l', modules.backrg.endBackgr, -modules.backrg.x, modules.backrg.x < 0 && !modules.backrg.endBackgr, modules.backrg.endBackgr && modules.hero.coordinate.x - modules.hero.dx > 0, modules.hero.coordinate.x);
-            
+            // console.log('left', modules.backrg.endBackgr, modules.hero.coordinate.x > 0);
             /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до левой границы холста 0 */
             if(modules.backrg.x < 0 && !modules.backrg.endBackgr){  
 
@@ -100,7 +104,7 @@ export default class ActionsHero {
             /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы холста 1000. Тут работает магическое число 200, 
                     т. к. персонаж смещён от начала фона и образуется пустота при подходе вправо (если не ставить число 200) */
 
-            if(-modules.backrg.x + 200 < modules.game.width && !modules.backrg.endBackgr){
+            if(-modules.backrg.x + modules.game.width < modules.mapCol.widthInTile * 10 && !modules.backrg.endBackgr){
 
                 // движение !фона
                 modules.backrg.x -= modules.hero.dx;
@@ -112,7 +116,8 @@ export default class ActionsHero {
                 })
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до правой границы холста 1000, учитывая длину персонажа */
-            }else if((modules.backrg.endBackgr || -modules.backrg.x + 200 == modules.game.width) && modules.hero.coordinate.x + modules.hero.width < modules.game.canvasField.width){
+            }else if((modules.backrg.endBackgr || -modules.backrg.x + modules.game.width == modules.mapCol.widthInTile * 10) && 
+                    modules.hero.coordinate.x + modules.hero.width < modules.game.width){
                 modules.hero.coordinate.x += modules.hero.dx; // Движение !персонажа влево
             }
 

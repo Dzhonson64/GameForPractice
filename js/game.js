@@ -7,7 +7,7 @@ export default class Game{
         this.ctx = this.canvasField.getContext("2d");
         
         /* Размеры игрового поля */
-        this.width = 1000;
+        this.width = 800;
         this.height = 320;
 
         this.ceilingCoordinate = floor - 100;

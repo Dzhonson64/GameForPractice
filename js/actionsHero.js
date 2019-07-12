@@ -1,11 +1,10 @@
 import * as modules from "./modules.js";
-import Armor from './weapon.js'
+import Weapon from './weapon.js'
 import Gravity from "./gravity.js";
-export default class ActionsHero extends Gravity{
+export default class ActionsHero{
 /* Описание действий персонажа-героя */
 
     constructor(){
-        super(modules.hero);
         this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
         this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
         this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
@@ -15,6 +14,7 @@ export default class ActionsHero extends Gravity{
         this.upperPoint = false;    // достиг ли персонаж верхней точеи своего прыжка
         this.jumpStatus = 0;        // статус прыжка, в данном случае, путь до верхней точки при прыжке составляет 15 фреймов
         this.jumpLength = 15;       // высота прыжка
+        this.gravAct = new Gravity(modules.hero, this);
         
         document.onkeydown = (elem) => {
             if (elem.code == "KeyA"){
@@ -47,7 +47,7 @@ export default class ActionsHero extends Gravity{
         }
 
         document.onclick = (elem) =>{
-            let weapon = new Armor();
+            let weapon = new Weapon();
             modules.render.weapons.push(weapon);
             console.log("C");
             //document.onmousemove  = (elem) =>{
@@ -184,7 +184,7 @@ export default class ActionsHero extends Gravity{
         }
        
         if(!this.jumpPress || this.upperPoint){ // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
-            this.grav(this);
+            this.gravAct.grav(this);
         }
     }
     widthLine(x1, y1, x2, y2){

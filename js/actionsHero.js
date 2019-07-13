@@ -58,24 +58,14 @@ export default class ActionsHero{
             var gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY);  // вычисление длины гипотенцзы
             
             
-            if (x1 < x2 && y1 < y2 || x1 < x2 && y1 > y2 ){ // II и III четверть
-                katetX = -katetX;
-                weapon.coefficient = -1;
-            }
-            if (x1 < x2 && y1 > y2 || x1 > x2 && y1 > y2){ // III и IV четверть
-                katetY = -katetY;
-            }
-            var k = katetY / katetX;                    // вычисление коэффициент угла наклона через тангенс
-            var sin = katetY / gipotenyza;              // вычисляем синус угла
-            var angel = Math.asin(sin) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и мышкой
             
-            if (x1 < x2 && y1 < y2 ){ // II четверть
-                angel = 180 - angel ;
-            }
-            if (x1 < x2 && y1 > y2){  // III четверть
-                angel = -180 - angel;
-            }
-            weapon.k = k;
+            var sinY = katetY / gipotenyza * (y1 >= y2 ? 1: -1), // вычисляем синус угла
+                cosY = katetX / gipotenyza * (x1 >= x2 ? 1: -1); // вычисляем косинус угла   
+            var angel = Math.asin(sinY) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и мышкой 
+            weapon.sin = sinY;
+            weapon.cos = cosY;
+            // console.log(angel, weapon.k, weapon.coefficient);
+            
 
             
             weapon.image.onload = function () {
@@ -121,7 +111,7 @@ export default class ActionsHero{
     /* Перемещение героя */
     moving(){
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
-        console.log(coordinateHeroOnMapX);
+        // console.log(coordinateHeroOnMapX);
         /* 200 (modules.hero.offset) - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 

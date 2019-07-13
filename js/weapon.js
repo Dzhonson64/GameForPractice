@@ -8,20 +8,19 @@ export default class Weapon{
         this.weaponImg = new Images("../img/arrow.png");
         this.width = 30;         
         this.height = 10;
-        this.k; // коэффиуиент угла наклона  
+        this.sin;       // синус угла между осью х и положением прямой, проходящей через персонажа и мышку  
+        this.cos;       // косинус угла между осью х и положением прямой, проходящей через персонажа и мышку 
+        this.dg = 10;   // скорость стрелы в 1 фрейм 
 
         this.coordinate = {
             x: x,
             y: y
         }
-        this.dx = 2;            // скорость изменения положения по X
-        this.coefficient = 1;   /* коэффициент, который небходим для правильного направления, 
-                                    т.к. у нас не правильня декартовая система, т.к. положительный Y идёт вниз*/
     }
     /* Перемещение стрелы */
     move(){
-        this.coordinate.x += this.dx * this.coefficient;
-        this.coordinate.y -= this.k * this.dx * this.coefficient;
+        this.coordinate.x += this.dg * this.cos; // Получаем составляющую скорости по х и прибавляем к текущему положению стрелю по х
+        this.coordinate.y += this.dg * this.sin; // Получаем составляющую скорости по у и прибавляем к текущему положению стрелю по у
     }
     /* Проверка на выход стрелы за границу холста */
     isOutOfBordersCanvas(){

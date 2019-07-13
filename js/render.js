@@ -84,7 +84,7 @@ export default class Render{
 
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
-            console.log(elem.coordinate.x, modules.backrg.x);
+            // console.log(elem.coordinate.x, modules.backrg.x);
             modules.game.ctx.drawImage(
                 elem.weaponImg.image,
                 elem.coordinate.x + modules.backrg.x,

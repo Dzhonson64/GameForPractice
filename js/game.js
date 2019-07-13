@@ -8,6 +8,9 @@ export default class Game{
     constructor(floor){
         this.canvasField = document.getElementById("canvas");
         this.ctx = this.canvasField.getContext("2d");
+        this.heroHp = document.querySelector(".conditions .hp .fill");
+        this.heroMp = document.querySelector(".conditions .mp .fill span");
+        console.log(this.heroMp);
         
         /* Размеры игрового поля */
         this.width = 1000;

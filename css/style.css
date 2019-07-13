@@ -1,49 +1,56 @@
-body{
-    overflow-y: hidden;
+.conditions{
+    width: 300px;
+    padding: 0;
 }
 .infoBlock {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
 }
-.infoBlock .bonuses {
+.bonuses {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
 }
-.infoBlock .bonuses .bonus{
+.bonuses .bonus{
     cursor: pointer;
     margin: 10px;
     
 }
-.infoBlock .bonuses .bonus.active{
+.bonuses .bonus.active{
     box-shadow: 0 0 8px black;
 }
-.conditions .hp, .conditions .mana{
-    width: 300px;
+.conditions .hp, .conditions .mp{
+    width: 100%;
     position: relative;
-    
+    margin: 0%;
+    padding: 0;
+    display: inline-block;
+    z-index: 0;
 }
-.conditions .hp .fill, .conditions .mana .fill{
+
+.conditions .hp .fill, .conditions .mp .fill{
+    width: 100%;
+    display: inline-block;
     padding: 10px 0;
-    
-    
 }
-.conditions .hp .fill span, .conditions .mana .fill span{
+.conditions .hp .fill span, .conditions .mp .fill span{
     padding-left: 15px;
+    text-indent: 15px;
+    z-index: 10;
 }
-.conditions .hp{
+.hp{
     background: rgba(129, 0, 0, 0.973);
     color: white;
 }
-.conditions .hp .fill{
+.hp .fill{
     background: rgb(255, 0, 0);
 }
-.conditions .mana{
+.mp{
     background: rgb(19, 0, 88);
     color: white;
 }
-.conditions .mana .fill{
+.mp .fill{
     background: rgb(4, 0, 228);
 }
 .fps, .score, .timer {

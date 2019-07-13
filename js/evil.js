@@ -7,12 +7,12 @@ export default class Evil {
         startX - начальная координата по X (number),
         startY - начальная координата по Y (number),
     */
-    constructor(startY, borderL, borderR){
+    constructor(startY, borderL, borderR, attack = 5, attackDelay = 50){
         this.evilImg = new Images("../img/hero-test.png", 4);   // картинка врага
         this.width = 32;                                        // длина картинки 
         this.height = 48;                                       // высота картинки 
         this.speed = 2;                                         // скорость пермещения врага
-    this.dx;                                                    // изменение координаты по X
+        this.dx;                                                    // изменение координаты по X
         this.dy = 2;                                            // изменение координаты по Y
         this.borderMoveR = borderR;                             // прававая границы патрулирования
         this.borderMoveL = borderL;                             // левая границы патрулирования
@@ -24,6 +24,12 @@ export default class Evil {
         this.hp = 200;                                      // ХП
         this.orientation = 1;                               // ориентация персонажа (1 - вправо, -1 - влево)
         this.isAlive = true;                                // флага, указыающий на то, что жив герой или нет
+        this.cooldown = 0;                                  // статус врага, может ли ударить
+        this.attackDelay = attackDelay;                     // промежуток, раз в который выполняется атака
+        this.attackPower = attack;                          // сила атаки
+        this.orient = 1;                                    // ориентация отхода назад при cooldown
+        this.mode = 0;                                      // режим врагов(0 - патруль, 1 - агрессия)
+        this.radiusVisible = 500;                           // радиус, в котором враг видит по х при mode = 1
     }
     /* Отображение ХП */
     health(){

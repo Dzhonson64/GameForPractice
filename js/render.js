@@ -5,7 +5,7 @@ export default class Render{
     
     constructor(){
         this.evils = [];    // массив врагов
-        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 600));
+        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900));
         this.weapons = [];  // массив стрел
         this.nowTime = performance.now();
         this.nextTime;
@@ -90,7 +90,6 @@ export default class Render{
 
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
-            // console.log(elem.coordinate.x, modules.backrg.x);
             modules.game.ctx.save();
             modules.game.ctx.translate(elem.coordinate.x + modules.backrg.x, elem.coordinate.y);
             /* Мы знаем коодинаты стрелы по х и у, и чтобы повернуть стрелу в нужное напрвление, надо переместить 
@@ -112,19 +111,49 @@ export default class Render{
         /* обновление игоровго процесса, относительно которого будут перересовывать изображения с помощью метод  drawImages() */
         window.requestAnimationFrame(() => {
             this.drawImages();              // отбражение всех картинок
-            modules.actEvil.quiteMove();    // враги патрулируют
+            
             for (let i in this.evils){
+                if(this.evils[i].mode === 0){ // если враг патрулирует
+                    modules.actEvil.quiteMove(this.evils[i]);
+                    // проверяем, не появился ли персонаж в зоне патрулирования
+                    if(this.evils[i].borderMoveL + modules.backrg.x <= modules.hero.coordinate.x && this.evils[i].borderMoveR + modules.backrg.x >= modules.hero.coordinate.x
+                        && Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height){
+                        this.evils[i].mode = 1; 
+                    }
+                }else if(this.evils[i].mode == 1){ // если враг агрессирует
+                    modules.actEvil.attackMove(this.evils[i]);
+                    // если персонаж пропал из зоны видимости
+                    if(this.evils[i].radiusVisible < Math.abs(modules.hero.coordinate.x - this.evils[i].coordinate.x)
+                        || Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) > this.evils[i].height){
+                        this.evils[i].mode = 0;
+                    }
+                }
                 modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение с врага с героем
                 this.evils[i].health();                             // вывод жизней врага
+                // проверяем cooldown, и если он запущен (не равен 0), то увеличиваем его
+                if(this.evils[i].cooldown !== 0){
+                    
+                    this.evils[i].cooldown += 1;
+                }
+                // если cooldown подошёл к концу, то обнуляем его
+                if(this.evils[i].cooldown >= this.evils[i].attackDelay){
+                    this.evils[i].cooldown = 0;
+                    this.evils[i].orient = 1;
+                }
                 
                 for (let j in this.weapons){
-                    if(this.weapons[j].isHit(this.evils[i])){
+                    var flagHit = this.weapons[j].isHit(this.evils[i]);
+                    if(flagHit){
                         /* Стрела попала в врага */
-                        var oldScore = Number($("#score").text());
-                        $("#score").text( oldScore += 1 );
-                        this.evils[i].isAlive = false; // говорим, что враг мёртв
+                        this.evils[i].hp -= modules.hero.hit;
+                        console.log("Hit");
+                        
+                        if (this.evils[i].hp == 0){
+                            this.evils[i].isAlive = false; // говорим, что враг мёртв
+                        }
+                        
                     }
-                    if (this.weapons[j].isOutOfBordersCanvas() || this.weapons[j].isHit(this.evils[i])){
+                    if (this.weapons[j].isOutOfBordersCanvas() || flagHit){
                         /* Если стерела вылетела за границы холста или попала во врага */
 
                         this.weapons.splice(j, 1);  // удаляем стрелу
@@ -133,6 +162,8 @@ export default class Render{
 
                 if (!this.evils[i].isAlive){
                     /* Враг мёртв */
+                    var oldScore = Number($("#score").text());
+                    $("#score").text( oldScore += 1 );
                     this.evils.splice(i, 1); // удалем врага
                 }
             }
@@ -170,8 +201,14 @@ export default class Render{
                     seconds = 59;
                 }
                 /* Обновляем отображаемое вермя */
-                document.getElementById("secondTimer").innerText = seconds;
+                if (seconds < 10){
+                    document.getElementById("secondTimer").innerText = "0" + seconds;
+                }else{
+                    document.getElementById("secondTimer").innerText = seconds;
+                }
+                
                 document.getElementById("minutesTimer").innerText = minutes;
+                
                 setTimeout(run, 1000);
             }
         }, 1000)

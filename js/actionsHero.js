@@ -77,16 +77,12 @@ export default class ActionsHero{
             }
             weapon.k = k;
 
-            
-            weapon.image.onload = function () {
-                modules.game.ctx.save();
-                modules.game.ctx.rotate(angel * Math.PI / 180);
+            //weapon.addEventListener("load", function(){
+                //modules.game.ctx.rotate(angel * Math.PI / 180);                
+                weapon.drawRotated(100, 100, angel, 100, 100);
                 
-                weapon.draw();
-                modules.game.ctx.restore();
                 
-            }
-            
+            //})
             
             
             weapon.move();
@@ -121,7 +117,6 @@ export default class ActionsHero{
     /* Перемещение героя */
     moving(){
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
-        console.log(coordinateHeroOnMapX);
         /* 200 (modules.hero.offset) - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 

@@ -18,5 +18,6 @@ export let hero = new Hero(100, game.floorCoordinate);
 
 export let actHero = new ActionsHero();
 export let actEvil = new ActionsEvil();
-
-render.processGame();
+window.addEventListener("load", function(){
+    render.processGame();
+})

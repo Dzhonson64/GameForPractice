@@ -58,4 +58,17 @@ export default class Weapon{
             this.height,
         )
     }
+    drawRotated(offsetX, oofsetY, angel, x, y) {
+        // context.save();
+        // context.translate(x + image.width / 2, y + image.height / 2);
+        // context.rotate(rotation * Math.PI / 180);
+        // context.drawImage(this.weaponImg, -image.width / 2, -image.height / 2);
+        // context.restore();
+
+        modules.game.ctx.save();
+        modules.game.ctx.translate(offsetX, oofsetY);
+        modules.game.ctx.rotate(angel);
+        modules.game.ctx.drawImage(this.weaponImg.image,x, y);
+        modules.game.ctx.restore();
+      }
 }

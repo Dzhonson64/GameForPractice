@@ -109,14 +109,16 @@ export default class Render{
             
             for (let i in this.evils){
                 // console.log(this.evils[i].mode, Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height);
-                if(this.evils[i].mode === 0){
+                if(this.evils[i].mode === 0){ // если враг патрулирует
                     modules.actEvil.quiteMove(this.evils[i]);
+                    // проверяем, не появился ли персонаж в зоне патрулирования
                     if(this.evils[i].borderMoveL + modules.backrg.x <= modules.hero.coordinate.x && this.evils[i].borderMoveR + modules.backrg.x >= modules.hero.coordinate.x
                         && Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height){
-                        this.evils[i].mode = 1;
+                        this.evils[i].mode = 1; 
                     }
-                }else if(this.evils[i].mode == 1){
+                }else if(this.evils[i].mode == 1){ // если враг агрессирует
                     modules.actEvil.attackMove(this.evils[i]);
+                    // если персонаж пропал из зоны видимости
                     if(this.evils[i].radiusVisible < Math.abs(modules.hero.coordinate.x - this.evils[i].coordinate.x)
                         || Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) > this.evils[i].height){
                         this.evils[i].mode = 0;
@@ -124,11 +126,12 @@ export default class Render{
                 }
                 modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение с врага с героем
                 this.evils[i].health();                             // вывод жизней врага
-                // console.log(this.evils[i].cooldown >= this.evils[i].attackDelay, this.evils[i].orient);
+                // проверяем cooldown, и если он запущен (не равен 0), то увеличиваем его
                 if(this.evils[i].cooldown !== 0){
                     
                     this.evils[i].cooldown += 1;
                 }
+                // если cooldown подошёл к концу, то обнуляем его
                 if(this.evils[i].cooldown >= this.evils[i].attackDelay){
                     this.evils[i].cooldown = 0;
                     this.evils[i].orient = 1;

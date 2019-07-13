@@ -11,7 +11,7 @@ export default class Game{
         
         /* Размеры игрового поля */
         this.width = 1600;
-        this.height = 900;
+        this.height = 500;
 
         //this.widthMap = modules.backrg.backImg.image.width - 118;
        

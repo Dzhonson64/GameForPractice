@@ -1,12 +1,35 @@
 body{
     overflow-y: hidden;
 }
+.infoBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.infoBlock .bonuses {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+.infoBlock .bonuses .bonus{
+    cursor: pointer;
+    margin: 10px;
+    
+}
+.infoBlock .bonuses .bonus.active{
+    box-shadow: 0 0 8px black;
+}
 .conditions .hp, .conditions .mana{
     width: 300px;
+    position: relative;
     
 }
 .conditions .hp .fill, .conditions .mana .fill{
     padding: 10px 0;
+    
+    
+}
+.conditions .hp .fill span, .conditions .mana .fill span{
     padding-left: 15px;
 }
 .conditions .hp{
@@ -15,7 +38,6 @@ body{
 }
 .conditions .hp .fill{
     background: rgb(255, 0, 0);
-    width: 80%;
 }
 .conditions .mana{
     background: rgb(19, 0, 88);
@@ -23,5 +45,18 @@ body{
 }
 .conditions .mana .fill{
     background: rgb(4, 0, 228);
-    width: 80%;
+}
+.fps, .score, .timer {
+    font-size: 22px;
+    background-color: #365025;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #ffffff;
+}
+.seconds {
+    display: none;
+    position: absolute;
+    color: #000000;
+    top: 10px;
+    right: -60px;
 }

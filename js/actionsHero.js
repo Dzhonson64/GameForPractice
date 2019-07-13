@@ -15,6 +15,8 @@ export default class ActionsHero{
         this.jumpStatus = 0;        // статус прыжка, в данном случае, путь до верхней точки при прыжке составляет 15 фреймов
         this.jumpLength = 15;       // высота прыжка
         this.gravAct = new Gravity(modules.hero, this);
+        this.intervalNewMana;
+        
         
         document.onkeydown = (elem) => {
             if (elem.code == "KeyA"){
@@ -47,46 +49,76 @@ export default class ActionsHero{
         }
 
         document.onclick = (elem) =>{
-            let weapon = new Weapon(modules.hero.coordinate.x - modules.backrg.x, modules.hero.coordinate.y);
-            modules.render.weapons.push(weapon);
-            var x1 = elem.clientX;  // кординаты мыши по X
-            var y1 = elem.clientY;  // кординаты мыши по Y
-            var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
-            var y2 = modules.hero.coordinate.y + modules.hero.height / 2;   // кординаты персонажа по Y
-            var katetX = Math.round(this.widthLine(x1, y2, x2, y2));        // вычисление длины катета, который лежит на оси X
-            var katetY = Math.round(this.widthLine(x1, y1, x1, y2));        // вычисление длины катета, который лежит на оси Y
-            var gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY);  // вычисление длины гипотенцзы
             
             
-            if (x1 < x2 && y1 < y2 || x1 < x2 && y1 > y2 ){ // II и III четверть
-                katetX = -katetX;
-                weapon.coefficient = -1;
-            }
-            if (x1 < x2 && y1 > y2 || x1 > x2 && y1 > y2){ // III и IV четверть
-                katetY = -katetY;
-            }
-            var k = katetY / katetX;                    // вычисление коэффициент угла наклона через тангенс
-            var sin = katetY / gipotenyza;              // вычисляем синус угла
-            var angel = Math.asin(sin) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и мышкой
-            
-            if (x1 < x2 && y1 < y2 ){ // II четверть
-                angel = 180 - angel ;
-            }
-            if (x1 < x2 && y1 > y2){  // III четверть
-                angel = -180 - angel;
-            }
-            weapon.k = k;
 
-            //weapon.addEventListener("load", function(){
-                //modules.game.ctx.rotate(angel * Math.PI / 180);                
-                weapon.drawRotated(100, 100, angel, 100, 100);
-                
-                
-            //})
+            var manaBlock = document.getElementById("mana");
+            var parentManaBlock = manaBlock.parentElement;
             
-            
-            weapon.move();
-           
+
+            if (Number(manaBlock.querySelector("span").innerText) > 0) {
+                let weapon = new Weapon(modules.hero.coordinate.x - modules.backrg.x, modules.hero.coordinate.y);
+                var x1 = elem.clientX;  // кординаты мыши по X
+                var y1 = elem.clientY;  // кординаты мыши по Y
+               
+                clearInterval(this.intervalNewMana);
+                if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
+                    var dMana = parentManaBlock.offsetWidth * modules.hero.deltaMana / 200;
+                    manaBlock.querySelector("span").innerText -= modules.hero.deltaMana;
+                    $("#mana").css("width", manaBlock.offsetWidth - dMana);
+    
+                    modules.render.weapons.push(weapon);
+
+                    var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
+                    var y2 = modules.hero.coordinate.y + modules.hero.height / 2;   // кординаты персонажа по Y
+                    var katetX = Math.round(this.widthLine(x1, y2, x2, y2));        // вычисление длины катета, который лежит на оси X
+                    var katetY = Math.round(this.widthLine(x1, y1, x1, y2));        // вычисление длины катета, который лежит на оси Y
+                    var gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY);  // вычисление длины гипотенцзы
+                   
+                    
+                    if (x1 < x2 && y1 < y2 || x1 < x2 && y1 > y2 ){ // II и III четверть
+                        katetX = -katetX;
+                        weapon.coefficient = -1;
+                    }
+                    if (x1 < x2 && y1 > y2 || x1 > x2 && y1 > y2){ // III и IV четверть
+                        katetY = -katetY;
+                    }
+                    var k = katetY / katetX;                    // вычисление коэффициент угла наклона через тангенс
+                    var sin = katetY / gipotenyza;              // вычисляем синус угла
+                    var angel = Math.asin(sin) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и мышкой
+                    
+                    if (x1 < x2 && y1 < y2 ){ // II четверть
+                        angel = 180 - angel ;
+                    }
+                    if (x1 < x2 && y1 > y2){  // III четверть
+                        angel = -180 - angel;
+                    }
+                    weapon.k = k;
+                    var time = 2.0;
+                    var timer = setTimeout(function delay(){
+                        if (time <= 0.0){
+                            manaBlock.querySelector("span").innerText = Number(manaBlock.querySelector("span").innerText) + modules.hero.deltaMana;
+                            $("#mana").css("width", manaBlock.offsetWidth + dMana);
+                            clearTimeout(timer);
+                        }else{
+                            time -= 1;
+                            setTimeout(delay, 1000);
+                        }
+                        
+                    }, 1000)               
+                    weapon.drawRotated(100, 100, angel, 100, 100);
+                    /*this.intervalNewMana = setInterval(() =>{
+                        manaBlock.querySelector("span").innerText = Number(manaBlock.querySelector("span").innerText) + modules.hero.deltaMana;
+                        $("#mana").css("width", manaBlock.offsetWidth + dMana);
+                    }, 2000)*/
+                    
+                    
+                    
+                    
+                    weapon.move();
+                }
+                
+            }
         }
         
     }

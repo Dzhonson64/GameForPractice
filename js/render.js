@@ -7,6 +7,12 @@ export default class Render{
         this.evils = [];    // массив врагов
         this.evils.push(new Evil(modules.game.floorCoordinate, 500, 600));
         this.weapons = [];  // массив стрел
+        this.nowTime = performance.now();
+        this.nextTime;
+        this.flagFPS = true;
+        this.timeGame = true;
+        
+        
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -84,7 +90,6 @@ export default class Render{
 
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
-            console.log(elem.coordinate.x, modules.backrg.x);
             modules.game.ctx.drawImage(
                 elem.weaponImg.image,
                 elem.coordinate.x + modules.backrg.x,
@@ -106,8 +111,9 @@ export default class Render{
                 
                 for (let j in this.weapons){
                     if(this.weapons[j].isHit(this.evils[i])){
-                        /* Стрела коснулась врага */
-
+                        /* Стрела попала в врага */
+                        var oldScore = Number($("#score").text());
+                        $("#score").text( oldScore += 1 );
                         this.evils[i].isAlive = false; // говорим, что враг мёртв
                     }
                     if (this.weapons[j].isOutOfBordersCanvas() || this.weapons[j].isHit(this.evils[i])){
@@ -126,9 +132,40 @@ export default class Render{
                 this.weapons[i].move();
             }
             modules.actHero.moving();   // обработка перемещения персонажа
-            
+            this.fps();
             this.processGame();
         }, this);
+        
     }
+    fps(){       
+        var fpsBlock = document.getElementById("fps");
+        var delta = (this.nowTime  - this.nextTime) / 1000;
+        this.nextTime = this.nowTime;
+        
+        this.nowTime = performance.now();
+        fpsBlock.innerHTML = Math.round(1 / delta);
+    }
+    timerGame(){
+        var seconds = Number(document.getElementById("secondTimer").innerText);
+        var minutes = Number(document.getElementById("minutesTimer").innerText);
+        var timer = setTimeout(function run(){
+            if (minutes < 0 && seconds < 0){
+                secondsManaElem.parentElement.style.display = "none";
+                manaBlock.querySelector("span").innerText = Number(manaBlock.querySelector("span").innerText) + modules.hero.deltaMana;
+                $("#mana").css("width", manaBlock.offsetWidth + dMana);
+                this.timeGame = false;
+                clearTimeout(timer);
+            }else{
+                seconds--;
+                if (seconds < 0){
+                    minutes--;
+                    seconds = 59;
+                }
+                document.getElementById("secondTimer").innerText = seconds;
+                document.getElementById("minutesTimer").innerText = minutes;
+                setTimeout(run, 1000);
+            }
+        }, 1000)
+	}
 
 }

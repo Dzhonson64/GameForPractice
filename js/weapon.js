@@ -17,6 +17,7 @@ export default class Weapon{
         this.dx = 2;            // скорость изменения положения по X
         this.coefficient = 1;   /* коэффициент, который небходим для правильного направления, 
                                     т.к. у нас не правильня декартовая система, т.к. положительный Y идёт вниз*/
+        
     }
     /* Перемещение стрелы */
     move(){
@@ -41,10 +42,13 @@ export default class Weapon{
         objEvil - объект врага (object)
     */
     isHit(objEvil){
+        
+        
         if(
             Math.abs(objEvil.coordinate.x + objEvil.width - this.coordinate.x - this.width - modules.backrg.x) < objEvil.width &&  
             Math.abs(objEvil.coordinate.y - this.coordinate.y) < objEvil.height){
             /* Произошло столкновение с врагом */
+                
                 return true;
         }
         return false;

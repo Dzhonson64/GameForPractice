@@ -19,31 +19,32 @@ export default class ActionsEvil{
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
         // console.log(modules.hero.coordinate.x + modules.hero.width, obj.coordinate.x);
         /* Берём отдельного врага */
-        if (coordinateEvilOnMapX > obj.borderMoveL){
+        console.log('att or', obj.orientation, obj.orient, coordinateEvilOnMapX, modules.hero.coordinate.x - modules.backrg.x);
+        if (coordinateEvilOnMapX > modules.hero.coordinate.x - modules.backrg.x){
             /* Игрок находится слева */
             
             obj.dx = obj.speed * obj.orient;       // присваиваем скорость пермещения
             obj.evilImg.frameY = 1;    // изменяем положения картинки в спрайте
             this.rightMove = false;     // останавливаем движение вправо
             this.leftMove = true;       // включаем движение влево
-            // console.log('attack left');
+            console.log('attack left');
             this.movingLeft(obj);      // наинчаем пермещение влево
 
-        }else if (coordinateEvilOnMapX + obj.width < obj.borderMoveR){
+        }else if (coordinateEvilOnMapX < modules.hero.coordinate.x - modules.backrg.x){
             /* Игрок находится справа  */
 
             obj.dx = obj.speed * obj.orient;
             obj.evilImg.frameY = 2;
             this.rightMove = true;
             this.leftMove = false;
-            // console.log('attack right');
+            console.log('attack right');
             this.movingRight(obj);
         }
     }
     /* Передвижение врага в режиме "патрулировния" */
     quiteMove(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;    // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
-        
+        console.log('quit or', obj.orientation, obj.orient);
         obj.dx = obj.speed;       // присваиваем скорость пермещения
         // console.log(coordinateEvilOnMapX);
         if (obj.orientation == 1 && coordinateEvilOnMapX + obj.width < obj.borderMoveR){

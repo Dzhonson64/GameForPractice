@@ -77,10 +77,17 @@ export default class ActionsHero{
             }
             weapon.k = k;
 
-            modules.game.ctx.save();
-            modules.game.ctx.rotate(angel * Math.PI / 180);
-            weapon.draw();
-            modules.game.ctx.restore();
+            
+            weapon.image.onload = function () {
+                modules.game.ctx.save();
+                modules.game.ctx.rotate(angel * Math.PI / 180);
+                
+                weapon.draw();
+                modules.game.ctx.restore();
+                
+            }
+            
+            
             
             weapon.move();
            

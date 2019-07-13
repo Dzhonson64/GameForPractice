@@ -5,9 +5,6 @@ export default class ActionsHero{
 /* Описание действий персонажа-героя */
 
     constructor(){
-        this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
-        this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
-        this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
         this.jumpPress = false;     // флаг, отвечающий за нажатие кнопки прыжка
         this.rightPress = false;    // флаг, отвечающий за нажатие кнопки вправо
         this.leftPress  = false;    // флаг, отвечающий за нажатие кнопки влево
@@ -15,7 +12,6 @@ export default class ActionsHero{
         this.jumpStatus = 0;        // статус прыжка, в данном случае, путь до верхней точки при прыжке составляет 15 фреймов
         this.jumpLength = 15;       // высота прыжка
         this.gravAct = new Gravity(modules.hero, this);
-        this.intervalNewMana;
         
         
         document.onkeydown = (elem) => {
@@ -48,26 +44,30 @@ export default class ActionsHero{
             }
         }
 
-        document.onclick = (elem) =>{
-            
+        document.onclick = (elem) =>{         
             
 
-            var manaBlock = document.getElementById("mana");
-            var parentManaBlock = manaBlock.parentElement;
+            var manaBlock = document.getElementById("mana");    // элемент, где хранится динамическая полоса маны
+            var parentManaBlock = manaBlock.parentElement;      // элемент, где хранится статическая полоса маны
             
 
             if (Number(manaBlock.querySelector("span").innerText) > 0) {
-                let weapon = new Weapon(modules.hero.coordinate.x - modules.backrg.x, modules.hero.coordinate.y);
+                /* Маны больше 0 */
+
+                 /* передаём начальные координаты для стрелы, исходя из положения персонажа и размера его спрайта */
+                let weapon = new Weapon(modules.hero.width / 2 + modules.hero.coordinate.x - modules.backrg.x,
+                modules.hero.height / 2 + modules.hero.coordinate.y); 
                 var x1 = elem.clientX;  // кординаты мыши по X
                 var y1 = elem.clientY;  // кординаты мыши по Y
                
-                clearInterval(this.intervalNewMana);
                 if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
-                    var dMana = parentManaBlock.offsetWidth * modules.hero.deltaMana / 200;
-                    manaBlock.querySelector("span").innerText -= modules.hero.deltaMana;
-                    $("#mana").css("width", manaBlock.offsetWidth - dMana);
+                    /* Нажатие произошло в границах холста */
+
+                    var dMana = parentManaBlock.offsetWidth * modules.hero.deltaMana / modules.hero.maxMana; // вычисляем на сколько будет изменяться длина динамической полосы маны
+                    manaBlock.querySelector("span").innerText -= modules.hero.deltaMana;    // уменьшеаем ману
+                    $("#mana").css("width", manaBlock.offsetWidth - dMana);                 // уменьшеаем размер динамической полосы маны
     
-                    modules.render.weapons.push(weapon);
+                    modules.render.weapons.push(weapon); // добавляем созданную стрелу в массив
 
                     var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
                     var y2 = modules.hero.coordinate.y + modules.hero.height / 2;   // кординаты персонажа по Y
@@ -75,50 +75,31 @@ export default class ActionsHero{
                     var katetY = Math.round(this.widthLine(x1, y1, x1, y2));        // вычисление длины катета, который лежит на оси Y
                     var gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY);  // вычисление длины гипотенцзы
                    
-                    
-                    if (x1 < x2 && y1 < y2 || x1 < x2 && y1 > y2 ){ // II и III четверть
-                        katetX = -katetX;
-                        weapon.coefficient = -1;
-                    }
-                    if (x1 < x2 && y1 > y2 || x1 > x2 && y1 > y2){ // III и IV четверть
-                        katetY = -katetY;
-                    }
-                    var k = katetY / katetX;                    // вычисление коэффициент угла наклона через тангенс
-                    var sin = katetY / gipotenyza;              // вычисляем синус угла
-                    var angel = Math.asin(sin) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и мышкой
-                    
-                    if (x1 < x2 && y1 < y2 ){ // II четверть
-                        angel = 180 - angel ;
-                    }
-                    if (x1 < x2 && y1 > y2){  // III четверть
-                        angel = -180 - angel;
-                    }
-                    weapon.k = k;
-                    var time = 2.0;
+                    var sinY = katetY / gipotenyza * (y1 >= y2 ? 1: -1), // вычисляем синус угла
+                    cosY = katetX / gipotenyza * (x1 >= x2 ? 1: -1), // вычисляем косинус угла   
+                    angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI ; // вычисляем значение угла прямой между персонажем и мышкой 
+                    weapon.sin = sinY;
+                    weapon.cos = cosY;
+                    weapon.angle = angle;
+
+                    var time = 2.0; // время восполнения маны после вылета соответвующей стрелы
                     var timer = setTimeout(function delay(){
                         if (time <= 0.0){
-                            manaBlock.querySelector("span").innerText = Number(manaBlock.querySelector("span").innerText) + modules.hero.deltaMana;
-                            $("#mana").css("width", manaBlock.offsetWidth + dMana);
+                            /* Таймер закончился */
+                            manaBlock.querySelector("span").innerText = Number(manaBlock.querySelector("span").innerText) + modules.hero.deltaMana; // увеличиваем ману
+                            $("#mana").css("width", manaBlock.offsetWidth + dMana); // увеличиваем размер динамической полосы маны
                             clearTimeout(timer);
                         }else{
-                            time -= 1;
+                            time -= 1; // кол-во секунд
                             setTimeout(delay, 1000);
                         }
                         
-                    }, 1000)               
-                    weapon.drawRotated(100, 100, angel, 100, 100);
-                    /*this.intervalNewMana = setInterval(() =>{
-                        manaBlock.querySelector("span").innerText = Number(manaBlock.querySelector("span").innerText) + modules.hero.deltaMana;
-                        $("#mana").css("width", manaBlock.offsetWidth + dMana);
-                    }, 2000)*/
-                    
-                    
-                    
-                    
+                    }, 1000)
                     weapon.move();
                 }
                 
             }
+
         }
         
     }
@@ -179,7 +160,7 @@ export default class ActionsHero{
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до левой границы холста 0 */
             }else if((modules.backrg.endBackgr || modules.backrg.x == 0) && modules.hero.coordinate.x > 0){
-                modules.hero.coordinate.x -= modules.hero.dx; // Движение !персонажа влево
+                modules.hero.coordinate.x -= modules.hero.dx; // ДвЦижение !персонажа влево
             }
 
             /* Смена изображений в спрайте для анимации */

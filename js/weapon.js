@@ -8,30 +8,36 @@ export default class Weapon{
         this.weaponImg = new Images("../img/arrow.png");
         this.width = 30;         
         this.height = 10;
-        this.k; // коэффиуиент угла наклона  
-
+        this.sin;       // синус угла между осью х и положением прямой, проходящей через персонажа и мышку  
+        this.cos;       // косинус угла между осью х и положением прямой, проходящей через персонажа и мышку 
+        this.cos2;
+        this.sin2;
+        this.cos3;
+        this.sin3;
+        this.dg = 10;   // скорость стрелы в 1 фрейм 
+        this.angle = 0; // угол наклона стрелы
         this.coordinate = {
             x: x,
             y: y
-        }
-        this.dx = 2;            // скорость изменения положения по X
-        this.coefficient = 1;   /* коэффициент, который небходим для правильного направления, 
-                                    т.к. у нас не правильня декартовая система, т.к. положительный Y идёт вниз*/
-        
+        };
     }
     /* Перемещение стрелы */
     move(){
-        this.coordinate.x += this.dx * this.coefficient;
-        this.coordinate.y -= this.k * this.dx * this.coefficient;
+        
+        this.coordinate.x += this.dg * this.cos; // Получаем составляющую скорости по х и прибавляем к текущему положению стрелю по х
+        this.coordinate.y += this.dg * this.sin; // Получаем составляющую скорости по у и прибавляем к текущему положению стрелю по у
+        // console.log('---- x:', this.coordinate.x, "y:", this.coordinate.y, "----");
     }
     /* Проверка на выход стрелы за границу холста */
     isOutOfBordersCanvas(){
+        // console.log("x:", this.coordinate.x, "y:", this.coordinate.y, "; is border ", this.coordinate.x < 0, this.coordinate.x > modules.game.width, this.coordinate.y, this.coordinate.y > modules.game.height);
         if (
-            this.coordinate.x + this.width < 0 ||
-            this.coordinate.x > modules.game.width ||
-            this.coordinate.y + this.height < 0 ||
+            this.coordinate.x < 0 ||
+            this.coordinate.x > modules.mapCol.widthInTile * 10 ||
+            this.coordinate.y < 0 ||
             this.coordinate.y > modules.game.height
             ){
+                console.log('Arrow out of border');
                 return true;
         }
         return false;
@@ -64,12 +70,6 @@ export default class Weapon{
         )
     }
     drawRotated(offsetX, oofsetY, angel, x, y) {
-        // context.save();
-        // context.translate(x + image.width / 2, y + image.height / 2);
-        // context.rotate(rotation * Math.PI / 180);
-        // context.drawImage(this.weaponImg, -image.width / 2, -image.height / 2);
-        // context.restore();
-
         modules.game.ctx.save();
         modules.game.ctx.translate(offsetX, oofsetY);
         modules.game.ctx.rotate(angel);

@@ -90,14 +90,22 @@ export default class Render{
 
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
+            // console.log(elem.coordinate.x, modules.backrg.x);
+            modules.game.ctx.save();
+            modules.game.ctx.translate(elem.coordinate.x + modules.backrg.x, elem.coordinate.y);
+            /* Мы знаем коодинаты стрелы по х и у, и чтобы повернуть стрелу в нужное напрвление, надо переместить 
+                начало координат в координаты стрелы и повернуть уже там на нужный нам угол.
+            */
+            modules.game.ctx.rotate(-elem.angle * Math.PI / 180);
+   
             modules.game.ctx.drawImage(
                 elem.weaponImg.image,
-                elem.coordinate.x + modules.backrg.x,
-                elem.coordinate.y,
+                0, 0,               // мы уже переместили стрелу в её координаты, поэтому спавним в начале координат
                 elem.width,
                 elem.height,
             )
-        })
+            modules.game.ctx.restore();
+        });
     }
 
     processGame(){
@@ -128,39 +136,40 @@ export default class Render{
                     this.evils.splice(i, 1); // удалем врага
                 }
             }
-            for (let i in this.weapons){ // перемещаем стрелы
+            for (let i = 0; i < this.weapons.length; i++){ // перемещаем стрелы
                 this.weapons[i].move();
             }
             modules.actHero.moving();   // обработка перемещения персонажа
-            this.fps();
+            this.fps(); // ФПС игры
             this.processGame();
         }, this);
         
     }
+    /* обработка ФПС игры */
     fps(){       
-        var fpsBlock = document.getElementById("fps");
-        var delta = (this.nowTime  - this.nextTime) / 1000;
-        this.nextTime = this.nowTime;
+        var fpsBlock = document.getElementById("fps");  // блока, где будет выводится ФПС
+        var delta = (this.nowTime  - this.nextTime) / 1000; // разница вермени, переведённое в миллисекнуды
+        this.nextTime = this.nowTime;   // старое времся становится бывшим верменем
         
-        this.nowTime = performance.now();
-        fpsBlock.innerHTML = Math.round(1 / delta);
+        this.nowTime = performance.now();       // вычисляем новое время
+        fpsBlock.innerHTML = Math.round(1 / delta); // выводим ФПС
     }
+    /* Таймер игры */
     timerGame(){
-        var seconds = Number(document.getElementById("secondTimer").innerText);
-        var minutes = Number(document.getElementById("minutesTimer").innerText);
+        var seconds = Number(document.getElementById("secondTimer").innerText);     // берём секунды из html
+        var minutes = Number(document.getElementById("minutesTimer").innerText);    // берём минуты из html
         var timer = setTimeout(function run(){
             if (minutes < 0 && seconds < 0){
-                secondsManaElem.parentElement.style.display = "none";
-                manaBlock.querySelector("span").innerText = Number(manaBlock.querySelector("span").innerText) + modules.hero.deltaMana;
-                $("#mana").css("width", manaBlock.offsetWidth + dMana);
-                this.timeGame = false;
+                /* Минуты и секунды меньше 0. Время закончилось */
+                this.timeGame = false;  // флаг опускаем. Игры закончилась
                 clearTimeout(timer);
             }else{
-                seconds--;
+                seconds--; 
                 if (seconds < 0){
                     minutes--;
                     seconds = 59;
                 }
+                /* Обновляем отображаемое вермя */
                 document.getElementById("secondTimer").innerText = seconds;
                 document.getElementById("minutesTimer").innerText = minutes;
                 setTimeout(run, 1000);

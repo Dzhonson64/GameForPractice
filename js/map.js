@@ -26,9 +26,9 @@ export default class Map{
                 this.widthInTile = 190; // Ширина карты в тайлах
                 this.tileType = [new Images("../img/road_forest.png"), new Images("../img/road.png")]; // Текстуры для кодов (подаётся код и вычитаем из него 1, чтобы получить текстуру)
                 this.mapCollision = [
-                    ["0.10", "1*10", "0*70", "1*10", "0*70", "1*20"],
+                    ["0.9", "1*10", "0*70", "1*10", "0*70", "1*20"],
                     ["10.20", "1*30", "0*110", "1*50"],
-                    ["20.32", "2*190"]
+                    ["21.32", "2*190"]
                 ];   // массив заполнения карты
             
             break;
@@ -39,24 +39,31 @@ export default class Map{
             default:
 
         }  
+    }
 
-        /* Перевод в двоичный массив с размером 120х190 (для каждого тайла прописывем тип текстуры, по ним будем определять коллизии)*/
-        this.mapcc = []; 
-        this.mapCollision.forEach( (elem) => {
+
+    doesOnVoid(elx, ely){ // Функция, которая определяет стоит ли персонаж на пустом тайле
+        this.void = 1;
+        this.mapCollision.forEach((elem) => {
             let y1 = Number(elem[0].slice(0, elem[0].indexOf('.')));
             let y2 = Number(elem[0].slice(elem[0].indexOf('.') + 1));
-            for(let i = y1; i <= y2; i++){
-                this.mapcc.push([]);
+            if(ely > y1 && ely <= y2){
                 for(let x = 1, k = 0; x < elem.length; x++){
                     let x1 = Number(elem[x].slice(0, elem[x].indexOf("*"))),
                         x2 = Number(elem[x].slice(elem[x].indexOf("*") + 1));
-                        k += x2;
-                        for(let j = k; j < k + x2; j++){
-                            this.mapcc[i].push(x1)
-                        }   
+                    if(elx >= k && elx <= k + x2){
+                        if(x1 === 0){
+                            this.void = 1;
+                            break;
+                        }else{
+                            this.void = 0;
+                            break;
+                        }
+                    }
+                    k += x2;
                 }
             }
         });
-        // console.log(this.mapcc);
+        return Boolean(this.void);
     }
 }

@@ -1,16 +1,22 @@
 import * as modules from "./modules.js";
+import Gravity from "./gravity.js";
 import Armor from './weapon.js'
-export default class ActionsHero {
+export default class ActionsHero extends Gravity{
 /* Описание действий персонажа-героя */
 
     constructor(){
-        this.processJump = false;   // флаг указывающий, что начался ли прыжок или нет
+        super(modules.hero);
+        this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
+        this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
+        this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
         this.jumpPress = false;     // флаг, отвечающий за нажатие кнопки прыжка
         this.rightPress = false;    // флаг, отвечающий за нажатие кнопки вправо
         this.leftPress  = false;    // флаг, отвечающий за нажатие кнопки влево
+        this.upperPoint = false;    // достиг ли персонаж верхней точеи своего прыжка
+        this.jumpStatus = 0;        // статус прыжка, в данном случае, путь до верхней точки при прыжке составляет 15 фреймов
+        this.jumpLength = 15;       // высота прыжка
+        this.processJump = false;   // процесс прыжка персонажа
         
-        this.jumpCount = 0;
-        this.jumpLength = 50;       // высота прыжка
         document.onkeydown = (elem) => {
             if (elem.code == "KeyA"){
                 /* Нажата кнопка A */
@@ -27,7 +33,6 @@ export default class ActionsHero {
             if (elem.code == "Space"){
                  /* Нажата кнопка Space */
                 this.jumpPress = true;
-                this.processJump = true;
             }
         }
            
@@ -45,31 +50,45 @@ export default class ActionsHero {
         document.onclick = (elem) =>{
             let weapon = new Armor(modules.hero.coordinate.x, modules.hero.coordinate.y);
             modules.render.weapons.push(weapon);
-            console.log("C");
-            var x1 = elem.clientX;
-            var y1 = elem.clientY;
-            var x2 = modules.hero.coordinate.x + modules.hero.width / 2;
-            var y2 = modules.hero.coordinate.y + modules.hero.height / 2;
-
-            //console.log(x1, y1);
-            //console.log(x2, modules.hero.coordinate.y + modules.hero.height / 2);
+            var x1 = elem.clientX;  // кординаты мыши по X
+            var y1 = elem.clientY;  // кординаты мыши по Y
+            var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
+            var y2 = modules.hero.coordinate.y + modules.hero.height / 2;   // кординаты персонажа по Y
+            var katetX = Math.round(this.widthLine(x1, y2, x2, y2));        // вычисление длины катета, который лежит на оси X
+            var katetY = Math.round(this.widthLine(x1, y1, x1, y2));        // вычисление длины катета, который лежит на оси Y
+            var gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY);  // вычисление длины гипотенцзы
             
-            modules.game.ctx.moveTo(x2, y2);
-            modules.game.ctx.lineTo(x1, y1);
-            modules.game.ctx.stroke();
-            var katetX = Math.round(this.widthLine(x1, y2, x2, y2));
-            var katetY = Math.round(this.widthLine(x1, y1, x1, y2));
-            console.log(katetX, katetY);
-            var k = katetY / katetX;
-            if (x1 < x2){
-                k = -k;
+            
+            if (x1 < x2 && y1 < y2 || x1 < x2 && y1 > y2 ){ // II и III четверть
+                katetX = -katetX;
+                weapon.coefficient = -1;
+            }
+            if (x1 < x2 && y1 > y2 || x1 > x2 && y1 > y2){ // III и IV четверть
+                katetY = -katetY;
+            }
+            var k = katetY / katetX;                    // вычисление коэффициент угла наклона через тангенс
+            var sin = katetY / gipotenyza;              // вычисляем синус угла
+            var angel = Math.asin(sin) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и мышкой
+            
+            if (x1 < x2 && y1 < y2 ){ // II четверть
+                angel = 180 - angel ;
+            }
+            if (x1 < x2 && y1 > y2){  // III четверть
+                angel = -180 - angel;
             }
             weapon.k = k;
+
+            modules.game.ctx.save();
+            modules.game.ctx.rotate(angel * Math.PI / 180);
+            weapon.draw();
+            modules.game.ctx.restore();
+            
             weapon.move();
-            console.log(k);
+           
         }
         
     }
+
     /* Проверка на столкноввение с противником */
     isCollisionWithEvil(){
         for (let i in modules.render.evils){
@@ -161,23 +180,24 @@ export default class ActionsHero {
             }
 
         }
-        if(this.jumpPress && this.processJump || this.jumpPress && this.processJump && this.isCollisionWithEvil()){
-            /* Нажата кнопка прыжка и процес прыжка - true */
-            this.jumpCount++;
-            modules.hero.coordinate.y = -(3 * this.jumpLength * Math.sin(Math.PI * this.jumpCount / this.jumpLength)) +  modules.game.floorCoordinate;
-            // modules.backrg.y =  (3 * this.jumpLength * Math.sin(Math.PI * this.jumpCount / this.jumpLength)) +  modules.game.floorCoordinate;
+
+        if(this.jumpPress && !this.upperPoint){
+            /* Нажата кнопка прыжка и не достиг ли верхней точки */
+            if(this.jumpStatus >= this.jumpLength){ // Если статус больше длины, то сбатываем его и поднимаем флаг верхней точки
+                this.jumpStatus = 0;
+                this.upperPoint = true;
+            }else{ // Увелививаем статус и поднимаем персонажа
+                this.jumpStatus++;
+                modules.hero.coordinate.y-=10;
+            }
         }
-        if(this.jumpCount > this.jumpLength){
-            this.jumpCount = 0;
-            this.jumpPress = false;
-            modules.hero.coordinate.y = modules.game.floorCoordinate;
-            // modules.backrg.y = modules.game.floorCoordinate;
-            this.processJump = false;
+       
+        if(!this.jumpPress || this.upperPoint){ // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
+            this.grav(this);
         }
     }
     widthLine(x1, y1, x2, y2){
         return Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
     }
-    radToDeg (rad) { return rad / Math.PI * 180; }
 
 }

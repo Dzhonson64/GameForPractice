@@ -8,21 +8,22 @@ export default class Evil {
         startY - начальная координата по Y (number),
     */
     constructor(startY, borderR, borderL){
-        this.evilImg = new Images("../img/hero-test.png", 4); // картинка врага
-        this.width = 32;                                      // длина картинки 
-        this.height = 48;                                     // высота картинки 
-        this.speed = 2;                                     // скорость пермещения врага
-        this.dx;                                              // изменение координаты по X
-        this.dy = 2;                                        // изменение координаты по Y
-        this.borderMoveR = borderR;
-        this.borderMoveL = borderL;
+        this.evilImg = new Images("../img/hero-test.png", 4);   // картинка врага
+        this.width = 32;                                        // длина картинки 
+        this.height = 48;                                       // высота картинки 
+        this.speed = 2;                                         // скорость пермещения врага
+    this.dx;                                                    // изменение координаты по X
+        this.dy = 2;                                            // изменение координаты по Y
+        this.borderMoveR = borderR;                             // прававая границы патрулирования
+        this.borderMoveL = borderL;                             // левая границы патрулирования
         this.coordinate = { // начальные координаты персонажа
-            x: (borderR + borderL) / 2,
+            x: (borderR + borderL) / 2, // ставим врага в середину патрулироемой зоны
             y: startY
         }
-        this.isAttack = false;
+        this.isAttack = false;                              // флага на начало атаки
         this.hp = 200;                                      // ХП
-        this.orientation = 1;
+        this.orientation = 1;                               // ориентация персонажа (1 - вправо, -1 - влево)
+        this.isAlive = true;                                // флага, указыающий на то, что жив герой или нет
     }
     /* Отображение ХП */
     health(){

@@ -1,6 +1,6 @@
 import Images from "./images.js";
 import * as modules from "./modules.js";
-
+/* Класс, описывающий фон игры */
 export default class Background{
     constructor(img){
         this.backImg = new Images(img); // создание фона по излбражению

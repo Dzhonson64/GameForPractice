@@ -19,10 +19,8 @@ export default class Hero{
             y: startY
         }
         this.hp = 200;      // ХП
-        this.orientation;
-        this.offset = startX ? startX : 0;
-        //this.coordinateHeroOnMapX = this.coordinate.x - modules.backrg.x;
+        this.orientation;   // ориентация героя (1 - вправо, -1 - влево)
+        this.offset = startX ? startX : 0; // начальный отступ от левой границы холста
     }
-
    
 }

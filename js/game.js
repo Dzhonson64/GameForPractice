@@ -2,6 +2,9 @@ import * as modules from "./modules.js";
 export default class Game{
     /* Основные настройки игры, поля и т.п. */
 
+    /* 
+        floor - координаты нижней границы перемещения (Number)
+    */
     constructor(floor){
         this.canvasField = document.getElementById("canvas");
         this.ctx = this.canvasField.getContext("2d");

@@ -2,10 +2,11 @@ import * as modules from "./modules.js";
 import Evil from './evil.js'
 export default class Render{
     /* Рендер карты, который отвечает за отрисовку объектов */
+    
     constructor(){
-        this.evils = [];
+        this.evils = [];    // массив врагов
         this.evils.push(new Evil(modules.game.floorCoordinate, 1920, 1700));
-        this.weapons = [];
+        this.weapons = [];  // массив стрел
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -43,10 +44,10 @@ export default class Render{
                 if(x1 !== 0){
                     modules.game.ctx.drawImage(
                         modules.mapCol.tileType[x1 - 1].image,
-                        kx * 10 + modules.backrg.x,
+                        kx * 10 + modules.backrg.x, 
                         y1 * 10 + modules.backrg.y,
                         x2 * 10,
-                        (y2 - y1) * 10 // 10 - размер стороны тайла
+                        (y2 - y1) * 10 + 10 // 10 - размер стороны тайла
                     );
                 }
                 kx += x2;
@@ -96,20 +97,35 @@ export default class Render{
     processGame(){
         /* обновление игоровго процесса, относительно которого будут перересовывать изображения с помощью метод  drawImages() */
         window.requestAnimationFrame(() => {
-           modules.game.ctx.strokeRect(0, 0, modules.game.width, modules.game.height);
-            this.drawImages();
-            modules.actEvil.quiteMove();
-            this.evils.forEach( (elem) => {
-                elem.health();
+            this.drawImages();              // отбражение всех картинок
+            modules.actEvil.quiteMove();    // враги патрулируют
+            for (let i in this.evils){
+                modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение с врага с героем
+                this.evils[i].health();                             // вывод жизней врага
                 
-            })
-            console.log(this.weapons)
-            modules.actEvil.isCollisionWithHero(this.evils[0]);
-            modules.actHero.moving();
-            modules.game.ctx.fillStyle = "green";
-            this.weapons.forEach( (elem) => {
-                elem.move();
-            })
+                for (let j in this.weapons){
+                    if(this.weapons[j].isHit(this.evils[i])){
+                        /* Стрела коснулась врага */
+
+                        this.evils[i].isAlive = false; // говорим, что враг мёртв
+                    }
+                    if (this.weapons[j].isOutOfBordersCanvas() || this.weapons[j].isHit(this.evils[i])){
+                        /* Если стерела вылетела за границы холста или попала во врага */
+
+                        this.weapons.splice(j, 1);  // удаляем стрелу
+                    }
+                }
+
+                if (!this.evils[i].isAlive){
+                    /* Враг мёртв */
+                    this.evils.splice(i, 1); // удалем врага
+                }
+            }
+            for (let i in this.weapons){ // перемещаем стрелы
+                this.weapons[i].move();
+            }
+            modules.actHero.moving();   // обработка перемещения персонажа
+            
             this.processGame();
         }, this);
     }

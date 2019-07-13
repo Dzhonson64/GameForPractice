@@ -7,11 +7,12 @@ export default class ActionsEvil{
         this.intervalAnimMoveRight; // переменная, хранящая setInterval перемещения вправо
         this.leftMove = false;      // флаг движения влево
         this.rightMove = false;     // флаг движения вправо
-        this.processJump = false;
+        this.processJump = false;   // флаг на начало процесса прыжка
         this.jumpCount = 0;
         this.jumpLength = 50;       // высота прыжка
+        
     }
-    /* Выбор направления движения */
+    /* Передвижение врага в режиме "атака" */
     attackMove(){
         modules.render.evils.forEach((elem) => {
             /* Пробегаемся по каждому врагу */
@@ -35,16 +36,18 @@ export default class ActionsEvil{
             }
         })
     }
+    /* Передвижение врага в режиме "патрулировния" */
     quiteMove(){
         modules.render.evils.forEach((elem) => {
             
-            var coordinateEvilOnMapX = elem.coordinate.x - modules.backrg.x;
+            var coordinateEvilOnMapX = elem.coordinate.x - modules.backrg.x;    // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
             elem.dx = elem.speed;       // присваиваем скорость пермещения
+            console.log(coordinateEvilOnMapX);
             if (elem.orientation == 1 && coordinateEvilOnMapX + elem.width < elem.borderMoveR){
-                elem.evilImg.frameY = 2;    // изменяем положения картинки в спрайте
-                this.rightMove = true;     // останавливаем движение вправо
-                this.leftMove = false;       // включаем движение влево
-                this.movingRight(elem);
+                 elem.evilImg.frameY = 2;       // изменяем положения картинки в спрайте
+                this.rightMove = true;          // останавливаем движение вправо
+                this.leftMove = false;          // включаем движение влево
+                this.movingRight(elem);         // включаем пермещение напрво
             }else if (elem.orientation == -1 && coordinateEvilOnMapX > elem.borderMoveL){
                 elem.evilImg.frameY = 1;
                 this.rightMove = false;
@@ -56,17 +59,18 @@ export default class ActionsEvil{
             }
 
             if (coordinateEvilOnMapX + elem.width * 3/2 == elem.borderMoveR){
-                elem.evilImg.frameY = 1;
-                this.rightMove = false;
-                this.leftMove = true;
-                elem.coordinate.x -= 10;
-                this.movingLeft(elem);
+                /* Враг ниходится на правой границе патрулирования */
+                elem.evilImg.frameY = 1;    // изменяем спрайты на движения в левую сторону
+                this.rightMove = false;     // выключаем движение вправо
+                this.leftMove = true;       // включаем движение влево
+                //elem.coordinate.x -= 10;    
+                this.movingLeft(elem);      // ничинаем перемещение влево
             }else if (coordinateEvilOnMapX == elem.borderMoveL){
-                elem.evilImg.frameY = 2;    // изменяем положения картинки в спрайте
-                this.rightMove = true;     // останавливаем движение вправо
-                this.leftMove = false;       // включаем движение влево
-                elem.coordinate.x += 10;
-                this.movingRight(elem);
+                elem.evilImg.frameY = 2;    // изменяем спрайты на движения в левую сторону
+                this.rightMove = true;      // включаем движение вправо
+                this.leftMove = false;      // выключаем движение влево
+                //elem.coordinate.x += 10;
+                this.movingRight(elem);     // ничинаем перемещение вправо
             }
         })
     }
@@ -75,9 +79,10 @@ export default class ActionsEvil{
         obj - объект врага (object)
     */
     movingLeft(obj){
-        var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
-        obj.orientation = -1;
-       if (this.leftMove){
+        var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;  // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
+        obj.orientation = -1; // ориентация врага на движение влево
+        if (this.leftMove){
+            /* Разрешено движение влево */
             if (coordinateEvilOnMapX - obj.dx > 0){
                 /* Слева нет границы карты */
                 if (this.isCollisionWithHero(obj) && !this.processJump){
@@ -101,7 +106,6 @@ export default class ActionsEvil{
         obj - объект врага (object)
     */
     movingRight(obj){
-        var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
         obj.orientation = 1;
         
@@ -125,6 +129,10 @@ export default class ActionsEvil{
             
        }        
     }
+    /* 
+         Вычислинеие на столконовение с игроком
+        obj - объект врага (object)
+    */
     isCollisionWithHero(obj){
         if (obj.orientation == -1 && modules.hero.coordinate.x + modules.hero.width - obj.coordinate.x > 0 && modules.hero.coordinate.x + modules.hero.width - obj.coordinate.x <= obj.width){
             /* Если игрок был справа и разница координат игрока и координта проивника положительна и меньше длины картинки врага */
@@ -136,6 +144,11 @@ export default class ActionsEvil{
             return true;
         }
     }
+
+    /* 
+        Прыжок
+        obj - объект врага (object)
+    */
     jump(obj){
         this.processJump = true;
         this.jumpCount++;

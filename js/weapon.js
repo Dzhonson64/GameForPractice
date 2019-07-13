@@ -33,7 +33,7 @@ export default class Weapon{
         // console.log("x:", this.coordinate.x, "y:", this.coordinate.y, "; is border ", this.coordinate.x < 0, this.coordinate.x > modules.game.width, this.coordinate.y, this.coordinate.y > modules.game.height);
         if (
             this.coordinate.x < 0 ||
-            this.coordinate.x > modules.game.width ||
+            this.coordinate.x > modules.mapCol.widthInTile * 10 ||
             this.coordinate.y < 0 ||
             this.coordinate.y > modules.game.height
             ){

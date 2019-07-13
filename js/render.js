@@ -86,7 +86,7 @@ export default class Render{
         this.weapons.forEach( (elem) => {
             // console.log(elem.coordinate.x, modules.backrg.x);
             modules.game.ctx.save();
-            modules.game.ctx.translate(elem.coordinate.x, elem.coordinate.y);
+            modules.game.ctx.translate(elem.coordinate.x + modules.backrg.x, elem.coordinate.y);
             /* Мы знаем коодинаты стрелы по х и у, и чтобы повернуть стрелу в нужное напрвление, надо переместить 
                 начало координат в координаты стрелы и повернуть уже там на нужный нам угол.
             */

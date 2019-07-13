@@ -48,7 +48,7 @@ export default class ActionsHero{
 
         document.onclick = (elem) =>{
             /* передаём начальные координаты для стрелы, исходя из положения персонажа и размера его спрайта */
-            let weapon = new Weapon(modules.hero.width / 2 + modules.hero.coordinate.x,
+            let weapon = new Weapon(modules.hero.width / 2 + modules.hero.coordinate.x - modules.backrg.x,
                                      modules.hero.height / 2 + modules.hero.coordinate.y); 
 
             

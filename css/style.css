@@ -1,27 +1,33 @@
-body{
-    overflow-y: hidden;
+.conditions{
+    width: 500px;
+    padding: 0;
 }
-.conditions .hp, .conditions .mana{
-    width: 300px;
-    
+.conditions .hp, .conditions .mp{
+    width: 100%;
+    margin: 0%;
+    padding: 0;
+    display: inline-block;
+    z-index: 0;
 }
-.conditions .hp .fill, .conditions .mana .fill{
+.conditions .fill{
+    width: 100%;
+    display: inline-block;
     padding: 10px 0;
-    padding-left: 15px;
+    text-indent: 15px;
+    z-index: 10;
 }
+
 .conditions .hp{
     background: rgba(129, 0, 0, 0.973);
     color: white;
 }
 .conditions .hp .fill{
     background: rgb(255, 0, 0);
-    width: 80%;
 }
-.conditions .mana{
+.conditions .mp{
     background: rgb(19, 0, 88);
     color: white;
 }
-.conditions .mana .fill{
+.conditions .mp .fill{
     background: rgb(4, 0, 228);
-    width: 80%;
 }

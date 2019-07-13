@@ -47,12 +47,11 @@ export default class ActionsHero{
         }
 
         document.onclick = (elem) =>{
-            /* передаём начальные координаты для стрелы, исходя из положения персонажа и размера его спрайта */
-            let weapon = new Weapon(modules.hero.width / 2 + modules.hero.coordinate.x - modules.backrg.x,
-                                     modules.hero.height / 2 + modules.hero.coordinate.y); 
+           
+            
 
             
-            modules.render.weapons.push(weapon);
+            
             var x1 = elem.clientX;  // кординаты мыши по X
             var y1 = elem.clientY;  // кординаты мыши по Y
             var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
@@ -65,10 +64,12 @@ export default class ActionsHero{
             
             var sinY = katetY / gipotenyza * (y1 >= y2 ? 1: -1), // вычисляем синус угла
                 cosY = katetX / gipotenyza * (x1 >= x2 ? 1: -1), // вычисляем косинус угла   
-                angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI ; // вычисляем значение угла прямой между персонажем и мышкой 
-            weapon.sin = sinY;
-            weapon.cos = cosY;
-            weapon.angle = angle;
+                angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI, // вычисляем значение угла прямой между персонажем и мышкой 
+                 /* передаём начальные координаты для стрелы, исходя из положения персонажа и размера его спрайта, синус и косинус */
+                weapon = new Weapon(modules.hero.width / 2 + modules.hero.coordinate.x - modules.backrg.x,
+                                    modules.hero.height / 2 + modules.hero.coordinate.y, sinY, cosY, angle); 
+
+            modules.render.weapons.push(weapon);
             // console.log(angle, sinY, cosY);
             
 

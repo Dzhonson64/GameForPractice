@@ -5,7 +5,7 @@ export default class Render{
     
     constructor(){
         this.evils = [];    // массив врагов
-        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 600));
+        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900));
         this.weapons = [];  // массив стрел
     }
     drawImages(){
@@ -84,7 +84,7 @@ export default class Render{
 
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
-            // console.log(elem.coordinate.x, modules.backrg.x);
+            // console.log(elem);
             modules.game.ctx.save();
             modules.game.ctx.translate(elem.coordinate.x + modules.backrg.x, elem.coordinate.y);
             /* Мы знаем коодинаты стрелы по х и у, и чтобы повернуть стрелу в нужное напрвление, надо переместить 
@@ -106,20 +106,39 @@ export default class Render{
         /* обновление игоровго процесса, относительно которого будут перересовывать изображения с помощью метод  drawImages() */
         window.requestAnimationFrame(() => {
             this.drawImages();              // отбражение всех картинок
-            modules.actEvil.quiteMove();    // враги патрулируют
+            
             for (let i in this.evils){
+                // console.log(this.evils[i].mode, Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height);
+                if(this.evils[i].mode === 0){
+                    modules.actEvil.quiteMove(this.evils[i]);
+                    if(this.evils[i].borderMoveL + modules.backrg.x <= modules.hero.coordinate.x && this.evils[i].borderMoveR + modules.backrg.x >= modules.hero.coordinate.x
+                        && Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height){
+                        this.evils[i].mode = 1;
+                    }
+                }else if(this.evils[i].mode == 1){
+                    modules.actEvil.attackMove(this.evils[i]);
+                    if(this.evils[i].radiusVisible < Math.abs(modules.hero.coordinate.x - this.evils[i].coordinate.x)
+                        || Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) > this.evils[i].height){
+                        this.evils[i].mode = 0;
+                    }
+                }
                 modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение с врага с героем
                 this.evils[i].health();                             // вывод жизней врага
+                // console.log(this.evils[i].cooldown >= this.evils[i].attackDelay, this.evils[i].orient);
+                if(this.evils[i].cooldown !== 0){
+                    
+                    this.evils[i].cooldown += 1;
+                }
+                if(this.evils[i].cooldown >= this.evils[i].attackDelay){
+                    this.evils[i].cooldown = 0;
+                    this.evils[i].orient = 1;
+                }
                 
                 for (let j in this.weapons){
                     if(this.weapons[j].isHit(this.evils[i])){
                         /* Стрела коснулась врага */
-
                         this.evils[i].isAlive = false; // говорим, что враг мёртв
-                    }
-                    if (this.weapons[j].isHit(this.evils[i])){
-                        /* Если стерела попала во врага */
-
+                    
                         this.weapons.splice(j, 1);  // удаляем стрелу
                     }
                 }

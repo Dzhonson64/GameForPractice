@@ -85,14 +85,21 @@ export default class Render{
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
             // console.log(elem.coordinate.x, modules.backrg.x);
+            modules.game.ctx.save();
+            modules.game.ctx.translate(elem.coordinate.x, elem.coordinate.y);
+            /* Мы знаем коодинаты стрелы по х и у, и чтобы повернуть стрелу в нужное напрвление, надо переместить 
+                начало координат в координаты стрелы и повернуть уже там на нужный нам угол.
+            */
+            modules.game.ctx.rotate(-elem.angle * Math.PI / 180);
+   
             modules.game.ctx.drawImage(
                 elem.weaponImg.image,
-                elem.coordinate.x + modules.backrg.x,
-                elem.coordinate.y,
+                0, 0,               // мы уже переместили стрелу в её координаты, поэтому спавним в начале координат
                 elem.width,
                 elem.height,
             )
-        })
+            modules.game.ctx.restore();
+        });
     }
 
     processGame(){
@@ -110,8 +117,8 @@ export default class Render{
 
                         this.evils[i].isAlive = false; // говорим, что враг мёртв
                     }
-                    if (this.weapons[j].isOutOfBordersCanvas() || this.weapons[j].isHit(this.evils[i])){
-                        /* Если стерела вылетела за границы холста или попала во врага */
+                    if (this.weapons[j].isHit(this.evils[i])){
+                        /* Если стерела попала во врага */
 
                         this.weapons.splice(j, 1);  // удаляем стрелу
                     }
@@ -122,8 +129,17 @@ export default class Render{
                     this.evils.splice(i, 1); // удалем врага
                 }
             }
-            for (let i in this.weapons){ // перемещаем стрелы
-                this.weapons[i].move();
+            for (let i = 0; i < this.weapons.length; i++){ // перемещаем стрелы
+                if (this.weapons[i].isOutOfBordersCanvas()){
+                    /* Если стерела вылетела за границы холста */
+
+                    this.weapons.splice(i, 1);  // удаляем стрелу
+                    i--;
+                }else{
+                    this.weapons[i].move();
+                }
+                
+                
             }
             modules.actHero.moving();   // обработка перемещения персонажа
             

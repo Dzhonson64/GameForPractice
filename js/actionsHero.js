@@ -47,7 +47,7 @@ export default class ActionsHero{
         }
 
         document.onclick = (elem) =>{
-            let weapon = new Weapon(modules.hero.coordinate.x, modules.hero.coordinate.y);
+            let weapon = new Weapon(modules.hero.coordinate.x - modules.backrg.x, modules.hero.coordinate.y);
             modules.render.weapons.push(weapon);
             var x1 = elem.clientX;  // кординаты мыши по X
             var y1 = elem.clientY;  // кординаты мыши по Y

@@ -1,11 +1,10 @@
 import * as modules from "./modules.js";
+import Weapon from './weapon.js'
 import Gravity from "./gravity.js";
-import Armor from './weapon.js'
-export default class ActionsHero extends Gravity{
+export default class ActionsHero{
 /* Описание действий персонажа-героя */
 
     constructor(){
-        super(modules.hero);
         this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
         this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
         this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
@@ -15,7 +14,7 @@ export default class ActionsHero extends Gravity{
         this.upperPoint = false;    // достиг ли персонаж верхней точеи своего прыжка
         this.jumpStatus = 0;        // статус прыжка, в данном случае, путь до верхней точки при прыжке составляет 15 фреймов
         this.jumpLength = 15;       // высота прыжка
-        this.processJump = false;   // процесс прыжка персонажа
+        this.gravAct = new Gravity(modules.hero, this);
         
         document.onkeydown = (elem) => {
             if (elem.code == "KeyA"){
@@ -48,7 +47,7 @@ export default class ActionsHero extends Gravity{
         }
 
         document.onclick = (elem) =>{
-            let weapon = new Armor(modules.hero.coordinate.x, modules.hero.coordinate.y);
+            let weapon = new Weapon(modules.hero.coordinate.x, modules.hero.coordinate.y);
             modules.render.weapons.push(weapon);
             var x1 = elem.clientX;  // кординаты мыши по X
             var y1 = elem.clientY;  // кординаты мыши по Y
@@ -92,11 +91,17 @@ export default class ActionsHero extends Gravity{
     /* Проверка на столкноввение с противником */
     isCollisionWithEvil(){
         for (let i in modules.render.evils){
-            if (modules.hero.orientation == 1 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x > 0 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x <= modules.render.evils[i].width){
+            if (modules.hero.orientation == 1 && modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x > 0 && 
+                modules.hero.coordinate.x + modules.hero.width - modules.render.evils[i].coordinate.x <= modules.render.evils[i].width && 
+                modules.hero.coordinate.y + modules.hero.height >= modules.render.evils[i].coordinate.y &&
+                modules.hero.coordinate.y <= modules.render.evils[i].coordinate.y + modules.render.evils[i].height){
                 /* Если игрок был справа и разница координат игрока и координта проивника положительна и меньше длины картинки врага */
 
                 return true;
-            }else if (modules.hero.orientation == -1 && modules.hero.coordinate.x - (modules.render.evils[i].coordinate.x  + modules.render.evils[i].width) < 0 && modules.hero.coordinate.x - modules.render.evils[i].coordinate.x  + modules.render.evils[i].width >= modules.render.evils[i].width){
+            }else if (modules.hero.orientation == -1 && modules.hero.coordinate.x - (modules.render.evils[i].coordinate.x  + modules.render.evils[i].width) < 0 &&
+             modules.hero.coordinate.x - modules.render.evils[i].coordinate.x  + modules.render.evils[i].width >= modules.render.evils[i].width && 
+             modules.hero.coordinate.y + modules.hero.height >= modules.render.evils[i].coordinate.y &&
+             modules.hero.coordinate.y <= modules.render.evils[i].coordinate.y + modules.render.evils[i].height){
                /* Если игрок был слева и разница координат игрока и координта проивника отрицательна и больше длины картинки врага */
 
                 return true;
@@ -133,7 +138,7 @@ export default class ActionsHero extends Gravity{
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
                     elem.coordinate.x += modules.hero.dx;
-                    if (coordinateHeroOnMapX >= elem.borderMoveL && coordinateHeroOnMapX <= elem.borderMoveR){
+                    if (modules.hero.coordinateHeroOnMapX >= elem.borderMoveL && modules.hero.coordinateHeroOnMapX <= elem.borderMoveR){
                     }
                 })
 
@@ -193,7 +198,7 @@ export default class ActionsHero extends Gravity{
         }
        
         if(!this.jumpPress || this.upperPoint){ // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
-            this.grav(this);
+            this.gravAct.grav(this);
         }
     }
     widthLine(x1, y1, x2, y2){

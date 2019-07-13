@@ -41,8 +41,8 @@ export default class Weapon{
     */
     isHit(objEvil){
         if(
-            Math.abs(objEvil.coordinate.x + objEvil.width/2 - this.coordinate.x - this.width/2) < objEvil.width /2 &&  
-            Math.abs(objEvil.coordinate.y - this.coordinate.y) < objEvil.height / 2){
+            Math.abs(objEvil.coordinate.x + objEvil.width - this.coordinate.x - this.width) < objEvil.width &&  
+            Math.abs(objEvil.coordinate.y - this.coordinate.y) < objEvil.height){
             /* Произошло столкновение с врагом */
                 return true;
         }

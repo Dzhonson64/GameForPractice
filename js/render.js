@@ -5,7 +5,7 @@ export default class Render{
     
     constructor(){
         this.evils = [];    // массив врагов
-        this.evils.push(new Evil(modules.game.floorCoordinate, 1920, 1700));
+        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 600));
         this.weapons = [];  // массив стрел
     }
     drawImages(){

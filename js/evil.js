@@ -7,7 +7,7 @@ export default class Evil {
         startX - начальная координата по X (number),
         startY - начальная координата по Y (number),
     */
-    constructor(startY, borderR, borderL){
+    constructor(startY, borderL, borderR){
         this.evilImg = new Images("../img/hero-test.png", 4);   // картинка врага
         this.width = 32;                                        // длина картинки 
         this.height = 48;                                       // высота картинки 

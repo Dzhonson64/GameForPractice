@@ -41,6 +41,7 @@ export default class ActionsEvil{
         modules.render.evils.forEach((elem) => {
             
             var coordinateEvilOnMapX = elem.coordinate.x - modules.backrg.x;    // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
+            
             elem.dx = elem.speed;       // присваиваем скорость пермещения
             console.log(coordinateEvilOnMapX);
             if (elem.orientation == 1 && coordinateEvilOnMapX + elem.width < elem.borderMoveR){

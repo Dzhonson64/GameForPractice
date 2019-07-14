@@ -14,6 +14,7 @@ export default class Weapon{
         this.heightWithAngle = this.width * this.sin;
         this.dg = 10;   // скорость стрелы в 1 фрейм 
         this.angle = angle; // угол наклона стрелы
+        this.upperBorderIsFree = false;
         this.coordinate = {
             x: x,
             y: y
@@ -27,13 +28,13 @@ export default class Weapon{
     }
     /* Проверка на выход стрелы за границу холста */
     isOutOfBordersCanvas(){
-       
         if (
             this.coordinate.x < 0 ||
             this.coordinate.x > modules.mapCol.widthInTile * 10 ||
-            this.coordinate.y < 0 ||
+            this.coordinate.y < 0 && !this.upperBorderIsFree ||
             this.coordinate.y > modules.game.height
             ){
+                console.log('Arrow out of the border');
                 return true;
         }
         return false;

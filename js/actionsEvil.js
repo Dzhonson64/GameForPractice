@@ -106,13 +106,20 @@ export default class ActionsEvil{
     // Функция отнимающая хп у персонажа, согласно атаке врага
     doDamage(obj){
         if(obj.cooldown === 0){ // Если не перезаряжается
-            modules.hero.hp -= obj.attackPower;
-            obj.cooldown += 1
-            // Тут мы можем страдать от скорости обращения к DOM элементам
-            modules.game.heroHp.innerHTML = String(modules.hero.hp) + " HP";
-            modules.game.heroHp.parentElement.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
+            if(modules.hero.block == false){ // если персонаж не блокирует
+                modules.hero.hp -= obj.attackPower;
+                
+                // Тут мы можем страдать от скорости обращения к DOM элементам
+                modules.game.heroHp.innerHTML = String(modules.hero.hp) + " HP";
+                modules.game.heroHp.parentElement.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
+                modules.render.textDamag.push(new TextDamage(obj.attackPower, modules.hero.coordinate.x, modules.hero.coordinate.y, 50, 'red')); // создаём текст с информацией о полученном уроне
+            }else{
+                modules.actHero.doReductionMana(5);
+                if(modules.hero.mp < 5 && modules.hero.block) modules.hero.block = false; // если мана истрачена, то убираем флаг на блок у игрока
+            }
+            obj.cooldown += 1;
             obj.orient = -0.5; // Тупо стоять вплотную с персонажем, поэтому он будет двигаться назад с меньшей скоростью
-            modules.render.textDamag.push(new TextDamage(obj.attackPower, modules.hero.coordinate.x, modules.hero.coordinate.y, 50, 'red')); // создаём текст с информацией о полученном уроне
+           
         }
     }
      /* 

@@ -1,5 +1,6 @@
 import * as modules from "./modules.js";
 import Weapon from './weapon.js'
+import Images from './images.js'
 import Gravity from "./gravity.js";
 export default class ActionsHero{
 /* Описание действий персонажа-героя */
@@ -13,6 +14,65 @@ export default class ActionsHero{
         this.jumpLength = 15;       // высота прыжка
         this.gravAct = new Gravity(modules.hero, this);
         
+        this.ab_0 = new Images('../img/ab_0.jpg');
+        this.selectedAbil = 0;
+
+
+
+
+        if (document.addEventListener) {
+            if ('onwheel' in document) {
+                // IE9+, FF17+, Ch31+
+                document.addEventListener("wheel", (e) => {
+                    // wheelDelta не дает возможность узнать количество пикселей
+                    var delta = e.deltaY || e.detail || e.wheelDelta;
+    
+                    if(delta > 0){
+                        this.selectedAbil = (this.selectedAbil + 1) % 4;
+                    }else{
+                        this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    }
+                });
+            } else if ('onmousewheel' in document) {
+                // устаревший вариант события
+                document.addEventListener("mousewheel", (e) => {
+                    // wheelDelta не дает возможность узнать количество пикселей
+                    var delta = e.deltaY || e.detail || e.wheelDelta;
+    
+                    if(delta > 0){
+                        this.selectedAbil = (this.selectedAbil + 1) % 4;
+                    }else{
+                        this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    }
+                });
+            } else {
+                // Firefox < 17
+                document.addEventListener("MozMousePixelScroll", (e) => {
+                    // wheelDelta не дает возможность узнать количество пикселей
+                    var delta = e.deltaY || e.detail || e.wheelDelta;
+    
+                    if(delta > 0){
+                        this.selectedAbil = (this.selectedAbil + 1) % 4;
+                    }else{
+                        this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    }
+                });
+            }
+        } else { // IE8-
+            document.attachEvent("onmousewheel", (e) => {
+                // wheelDelta не дает возможность узнать количество пикселей
+                var delta = e.deltaY || e.detail || e.wheelDelta;
+
+                if(delta > 0){
+                    this.selectedAbil = (this.selectedAbil + 1) % 4;
+                }else{
+                    this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                }
+            });
+        }
+        
+
+
         
         document.onkeydown = (elem) => {
             if (elem.code == "KeyA"){
@@ -30,6 +90,23 @@ export default class ActionsHero{
             if (elem.code == "Space"){
                  /* Нажата кнопка Space */
                 this.jumpPress = true;
+            }
+
+            if (elem.keyCode == 49){
+                /* Нажата кнопка 1 */
+                this.selectedAbil = 0
+            }
+            if (elem.keyCode == 50){
+                /* Нажата кнопка 2 */
+                this.selectedAbil = 1
+            }
+            if (elem.keyCode == 51){
+                /* Нажата кнопка 3 */
+                this.selectedAbil = 2
+            }
+            if (elem.keyCode == 52){
+                /* Нажата кнопка 4 */
+                this.selectedAbil = 3
             }
         }
            
@@ -87,6 +164,39 @@ export default class ActionsHero{
         }
         
     }
+
+
+
+
+    showAbilBar(){
+
+        modules.game.ctx.globalAlpha = 0.7;
+
+        modules.game.ctx.fillStyle = 'black';
+        modules.game.ctx.fillRect(0, 0, 202, 52);
+
+        modules.game.ctx.fillStyle = 'silver';
+        modules.game.ctx.fillRect(1, 1, 200, 50);
+
+        modules.game.ctx.globalAlpha = 1;
+        modules.game.ctx.fillStyle = 'green';
+        modules.game.ctx.fillRect(50 * this.selectedAbil + 3, 3, 46, 46);
+
+        modules.game.ctx.drawImage(this.ab_0.image, 6, 6, 40, 40);
+        modules.game.ctx.drawImage(this.ab_0.image, 56, 6, 40, 40);
+        modules.game.ctx.drawImage(this.ab_0.image, 106, 6, 40, 40);
+        modules.game.ctx.drawImage(this.ab_0.image, 156, 6, 40, 40);
+        
+    }
+
+
+
+
+
+
+
+
+
 
     doIncreaseMana(){
         

@@ -105,6 +105,7 @@ export default class Render{
             )
             modules.game.ctx.restore();
         });
+        modules.actHero.showAbilBar();
     }
 
     processGame(){

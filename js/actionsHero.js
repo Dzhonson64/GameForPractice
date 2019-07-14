@@ -14,7 +14,6 @@ export default class ActionsHero{
         this.jumpLength = 15;       // высота прыжка
         this.gravAct = new Gravity(modules.hero, this);
         
-        this.ab_0 = new Images('../img/ab_0.jpg');
         this.selectedAbil = 0;
 
 
@@ -26,7 +25,6 @@ export default class ActionsHero{
                 document.addEventListener("wheel", (e) => {
                     // wheelDelta не дает возможность узнать количество пикселей
                     var delta = e.deltaY || e.detail || e.wheelDelta;
-    
                     if(delta > 0){
                         this.selectedAbil = (this.selectedAbil + 1) % 4;
                     }else{
@@ -134,8 +132,14 @@ export default class ActionsHero{
                 if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
                     /* Нажатие произошло в границах холста */
                     this.doReductionMana();
-                   
                     
+                    /* Уводим на перезарядку соответствующую способность */
+                    if (!modules.skills.isReloads[this.selectedAbil]){
+                        /* Перезарядка не идёт у соответствующей способности */
+                        modules.skills.isReloads[this.selectedAbil] = true; 
+                        modules.skills.timer(this.selectedAbil);        
+                    }
+                        
                     
 
                     var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
@@ -162,30 +166,6 @@ export default class ActionsHero{
             }
 
         }
-        
-    }
-
-
-
-
-    showAbilBar(){
-
-        modules.game.ctx.globalAlpha = 0.7;
-
-        modules.game.ctx.fillStyle = 'black';
-        modules.game.ctx.fillRect(0, 0, 202, 52);
-
-        modules.game.ctx.fillStyle = 'silver';
-        modules.game.ctx.fillRect(1, 1, 200, 50);
-
-        modules.game.ctx.globalAlpha = 1;
-        modules.game.ctx.fillStyle = 'green';
-        modules.game.ctx.fillRect(50 * this.selectedAbil + 3, 3, 46, 46);
-
-        modules.game.ctx.drawImage(this.ab_0.image, 6, 6, 40, 40);
-        modules.game.ctx.drawImage(this.ab_0.image, 56, 6, 40, 40);
-        modules.game.ctx.drawImage(this.ab_0.image, 106, 6, 40, 40);
-        modules.game.ctx.drawImage(this.ab_0.image, 156, 6, 40, 40);
         
     }
 

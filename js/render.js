@@ -104,7 +104,7 @@ export default class Render{
             )
             modules.game.ctx.restore();
         });
-        modules.actHero.showAbilBar();
+        modules.skills.showAbilBar();
     }
 
     processGame(){
@@ -115,7 +115,6 @@ export default class Render{
             for (let i in this.evils){
                 if(this.evils[i].mode === 0){ // если враг патрулирует
                     modules.actEvil.quiteMove(this.evils[i]);
-                    console.log(this.evils[i].orientation);
                     // проверяем, не появился ли персонаж в зоне патрулирования
                     if(this.evils[i].borderMoveL + modules.backrg.x <= modules.hero.coordinate.x && this.evils[i].borderMoveR + modules.backrg.x >= modules.hero.coordinate.x
                         && Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height){
@@ -184,6 +183,9 @@ export default class Render{
                     this.textDamag.splice(i, 1);    // удаляем текст
                 }
             }
+
+    console.log(modules.skills.timeSkills[0], modules.skills.timeSkills[1], modules.skills.timeSkills[2], modules.skills.timeSkills[3])
+
 
             modules.actHero.moving();   // обработка перемещения персонажа
             this.fps(); // ФПС игры

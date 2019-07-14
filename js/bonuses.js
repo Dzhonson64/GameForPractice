@@ -1,4 +1,4 @@
-
+ 
 import * as modules from "./modules.js";
 /* Класс, описывающий бонусы игры */
 export default class Bonuses{

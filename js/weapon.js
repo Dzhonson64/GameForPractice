@@ -27,6 +27,7 @@ export default class Weapon{
     }
     /* Проверка на выход стрелы за границу холста */
     isOutOfBordersCanvas(){
+       
         if (
             this.coordinate.x < 0 ||
             this.coordinate.x > modules.mapCol.widthInTile * 10 ||
@@ -49,6 +50,8 @@ export default class Weapon{
             this.coordinate.y + this.heightWithAngle >= objEvil.coordinate.y
             ){
             /* Произошло попадание */
+            console.log('Arrow hit the enemy');
+
                 return true;
         }
         return false;

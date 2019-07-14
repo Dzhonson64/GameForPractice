@@ -1,5 +1,6 @@
 import * as modules from "./modules.js";
 import Evil from './evil.js'
+import TextDamage from './textDamage.js'
 export default class Render{
     /* Рендер карты, который отвечает за отрисовку объектов */
     
@@ -11,8 +12,7 @@ export default class Render{
         this.nextTime;
         this.flagFPS = true;
         this.timeGame = true;
-        
-        
+        this.textDamag = [];
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -146,7 +146,7 @@ export default class Render{
                     if(flagHit){
                         /* Стрела попала в врага */
                         this.evils[i].hp -= modules.hero.hit;
-                        
+                        this.textDamag.push(new TextDamage(modules.hero.hit, this.evils[i].coordinate.x, this.evils[i].coordinate.y, 50)); // создаём текст с информацией о нанесённом уроне
                         if (this.evils[i].hp == 0){
                             this.evils[i].isAlive = false; // говорим, что враг мёртв
                         }
@@ -154,7 +154,6 @@ export default class Render{
                     }
                     if (this.weapons[j].isOutOfBordersCanvas() || flagHit){
                         /* Если стерела вылетела за границы холста или попала во врага */
-
                         this.weapons.splice(j, 1);  // удаляем стрелу
                     }
                 }
@@ -168,7 +167,23 @@ export default class Render{
             }
             for (let i = 0; i < this.weapons.length; i++){ // перемещаем стрелы
                 this.weapons[i].move();
+
+                // -----!ХВАТИТ УДАЛЯТЬ ЭТО, ИБО СТРЕЛЫ НЕ УБИРАЮТСЯ!-----
+
+                if (this.weapons[i].isOutOfBordersCanvas()){
+                    /* Если стерела вылетела за границы холста */
+                    this.weapons.splice(i, 1);  // удаляем стрелу
+                }
+
             }
+
+            for(let i in this.textDamag){
+                if(this.textDamag[i].showText()){
+                    /* Если время жизни текста закончилось */
+                    this.textDamag.splice(i, 1);    // удаляем текст
+                }
+            }
+
             modules.actHero.moving();   // обработка перемещения персонажа
             this.fps(); // ФПС игры
             this.processGame();

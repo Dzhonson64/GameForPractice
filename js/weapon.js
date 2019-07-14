@@ -55,6 +55,9 @@ export default class Weapon{
             ){
             /* Произошло попадание */
             console.log('Arrow hit the enemy');
+
+                
+                
                 return true;
         }
         return false;

@@ -1,4 +1,5 @@
 import * as modules from "./modules.js";
+import TextDamage from './textDamage.js'
 export default class ActionsEvil{
 /* Описание действий врагов */
 
@@ -18,7 +19,7 @@ export default class ActionsEvil{
     attackMove(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
         /* Берём отдельного врага */
-        console.log('att or', obj.orientation, obj.orient, coordinateEvilOnMapX, modules.hero.coordinate.x - modules.backrg.x);
+        // console.log('att or', obj.orientation, obj.orient, coordinateEvilOnMapX, modules.hero.coordinate.x - modules.backrg.x);
         if (coordinateEvilOnMapX > modules.hero.coordinate.x - modules.backrg.x){
             /* Игрок находится слева */
             
@@ -41,7 +42,7 @@ export default class ActionsEvil{
     /* Передвижение врага в режиме "патрулировния" */
     quiteMove(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;    // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
-        console.log('quit or', obj.orientation, obj.orient);
+        // console.log('quit or', obj.orientation, obj.orient);
         obj.dx = obj.speed;       // присваиваем скорость пермещения
         if (obj.orientation == 1 && coordinateEvilOnMapX + obj.width < obj.borderMoveR){
             obj.evilImg.frameY = 2;       // изменяем положения картинки в спрайте
@@ -111,6 +112,7 @@ export default class ActionsEvil{
             modules.game.heroHp.innerHTML = String(modules.hero.hp) + " HP";
             modules.game.heroHp.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
             obj.orient = -0.5; // Тупо стоять вплотную с персонажем, поэтому он будет двигаться назад с меньшей скоростью
+            modules.render.textDamag.push(new TextDamage(obj.attackPower, modules.hero.coordinate.x, modules.hero.coordinate.y, 50, 'red')); // создаём текст с информацией о полученном уроне
         }
     }
      /* 

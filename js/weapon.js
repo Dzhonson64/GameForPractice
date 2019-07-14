@@ -27,10 +27,7 @@ export default class Weapon{
     }
     /* Проверка на выход стрелы за границу холста */
     isOutOfBordersCanvas(){
-        console.log(this.coordinate.x < 0,
-            this.coordinate.x > modules.mapCol.widthInTile * 10,
-            this.coordinate.y < 0,
-            this.coordinate.y > modules.game.height)
+       
         if (
             this.coordinate.x < 0 ||
             this.coordinate.x > modules.mapCol.widthInTile * 10 ||

@@ -170,9 +170,9 @@ export default class Render{
 
                 // -----!ХВАТИТ УДАЛЯТЬ ЭТО, ИБО СТРЕЛЫ НЕ УБИРАЮТСЯ!-----
 
-                if (this.weapons[j].isOutOfBordersCanvas()){
+                if (this.weapons[i].isOutOfBordersCanvas()){
                     /* Если стерела вылетела за границы холста */
-                    this.weapons.splice(j, 1);  // удаляем стрелу
+                    this.weapons.splice(i, 1);  // удаляем стрелу
                 }
 
             }

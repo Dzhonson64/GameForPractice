@@ -9,21 +9,51 @@
 </head>
 <body>
     <canvas id = "canvas"></canvas>
-    <div class="conditions">
-        <div class="hp">
-            <div class="fill">     
-                    200 HP
+    <div class="infoBlock">
+        <div class="conditions">
+            <div class="hp">
+                <div class="fill" id = "hp">
+                    <span>100 HP</span>
+                        
+                </div>
+                
             </div>
-            
+            <div class="seconds">
+                <span id = "secondsMana"></span> sec
+            </div>
         </div>
-        <div class="mp">
-            <div class="fill">
-                200 MP
+        <div class="timer">
+                Осталось 
+                <span id = "minutesTimer">20</span>
+                :
+                <span id = "secondTimer">5</span>
+        </div>
+        <div class="score">
+            Score: <span id = "score">0</span>
+        </div>
+        <div class="fps">
+            <span id = "fps"></span> fps
+        </div>
+        
+        <div class="conditions">
+            <div class="mp">
+                <div class="fill" id = "mana">
+                    <span>200</span> MP
+                </div>
             </div>
-            
         </div>
     </div>
-    <script type = "module" src = "js/modules.js"></script>
+    <div class="bonuses" id = "bonuses">
+        <div class = "bonus" id = "bonus1">
+            Бонус 1
+        </div>
+        <div class = "bonus" id = "bonus2">
+            Бонус 2
+        </div>
+    </div>
     
+    
+    <script type = "module" src = "js/modules.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </body>
 </html>

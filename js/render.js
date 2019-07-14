@@ -7,6 +7,12 @@ export default class Render{
         this.evils = [];    // массив врагов
         this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900));
         this.weapons = [];  // массив стрел
+        this.nowTime = performance.now();
+        this.nextTime;
+        this.flagFPS = true;
+        this.timeGame = true;
+        
+        
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -84,7 +90,6 @@ export default class Render{
 
         /* Отрисовка стрелы */
         this.weapons.forEach( (elem) => {
-            // console.log(elem);
             modules.game.ctx.save();
             modules.game.ctx.translate(elem.coordinate.x + modules.backrg.x, elem.coordinate.y);
             /* Мы знаем коодинаты стрелы по х и у, и чтобы повернуть стрелу в нужное напрвление, надо переместить 
@@ -108,7 +113,6 @@ export default class Render{
             this.drawImages();              // отбражение всех картинок
             
             for (let i in this.evils){
-                // console.log(this.evils[i].mode, Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height);
                 if(this.evils[i].mode === 0){ // если враг патрулирует
                     modules.actEvil.quiteMove(this.evils[i]);
                     // проверяем, не появился ли персонаж в зоне патрулирования
@@ -138,35 +142,76 @@ export default class Render{
                 }
                 
                 for (let j in this.weapons){
-                    if(this.weapons[j].isHit(this.evils[i])){
-                        /* Стрела коснулась врага */
-                        this.evils[i].isAlive = false; // говорим, что враг мёртв
-                    
+                    var flagHit = this.weapons[j].isHit(this.evils[i]);
+                    if(flagHit){
+                        /* Стрела попала в врага */
+                        this.evils[i].hp -= modules.hero.hit;
+                        console.log("Hit");
+                        
+                        if (this.evils[i].hp == 0){
+                            this.evils[i].isAlive = false; // говорим, что враг мёртв
+                        }
+                        
+                    }
+                    if (this.weapons[j].isOutOfBordersCanvas() || flagHit){
+                        /* Если стерела вылетела за границы холста или попала во врага */
+
                         this.weapons.splice(j, 1);  // удаляем стрелу
                     }
                 }
 
                 if (!this.evils[i].isAlive){
                     /* Враг мёртв */
+                    var oldScore = Number($("#score").text());
+                    $("#score").text( oldScore += 1 );
                     this.evils.splice(i, 1); // удалем врага
                 }
             }
             for (let i = 0; i < this.weapons.length; i++){ // перемещаем стрелы
-                if (this.weapons[i].isOutOfBordersCanvas()){
-                    /* Если стерела вылетела за границы холста */
-
-                    this.weapons.splice(i, 1);  // удаляем стрелу
-                    i--;
-                }else{
-                    this.weapons[i].move();
-                }
-                
-                
+                this.weapons[i].move();
             }
             modules.actHero.moving();   // обработка перемещения персонажа
-            
+            this.fps(); // ФПС игры
             this.processGame();
         }, this);
+        
     }
+    /* обработка ФПС игры */
+    fps(){       
+        var fpsBlock = document.getElementById("fps");  // блока, где будет выводится ФПС
+        var delta = (this.nowTime  - this.nextTime) / 1000; // разница вермени, переведённое в миллисекнуды
+        this.nextTime = this.nowTime;   // старое времся становится бывшим верменем
+        
+        this.nowTime = performance.now();       // вычисляем новое время
+        fpsBlock.innerHTML = Math.round(1 / delta); // выводим ФПС
+    }
+    /* Таймер игры */
+    timerGame(){
+        var seconds = Number(document.getElementById("secondTimer").innerText);     // берём секунды из html
+        var minutes = Number(document.getElementById("minutesTimer").innerText);    // берём минуты из html
+        var timer = setTimeout(function run(){
+            if (minutes < 0 && seconds < 0){
+                /* Минуты и секунды меньше 0. Время закончилось */
+                this.timeGame = false;  // флаг опускаем. Игры закончилась
+                clearTimeout(timer);
+            }else{
+                seconds--; 
+                if (seconds < 0){
+                    minutes--;
+                    seconds = 59;
+                }
+                /* Обновляем отображаемое вермя */
+                if (seconds < 10){
+                    document.getElementById("secondTimer").innerText = "0" + seconds;
+                }else{
+                    document.getElementById("secondTimer").innerText = seconds;
+                }
+                
+                document.getElementById("minutesTimer").innerText = minutes;
+                
+                setTimeout(run, 1000);
+            }
+        }, 1000)
+	}
 
 }

@@ -1,33 +1,69 @@
 .conditions{
-    width: 500px;
+    width: 300px;
     padding: 0;
+}
+.infoBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.bonuses {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+.bonuses .bonus{
+    cursor: pointer;
+    margin: 10px;
+    
+}
+.bonuses .bonus.active{
+    box-shadow: 0 0 8px black;
 }
 .conditions .hp, .conditions .mp{
     width: 100%;
+    position: relative;
     margin: 0%;
     padding: 0;
     display: inline-block;
     z-index: 0;
 }
-.conditions .fill{
+
+.conditions .hp .fill, .conditions .mp .fill{
     width: 100%;
     display: inline-block;
     padding: 10px 0;
+}
+.conditions .hp .fill span, .conditions .mp .fill span{
+    padding-left: 15px;
     text-indent: 15px;
     z-index: 10;
 }
-
-.conditions .hp{
+.hp{
     background: rgba(129, 0, 0, 0.973);
     color: white;
 }
-.conditions .hp .fill{
+.hp .fill{
     background: rgb(255, 0, 0);
 }
-.conditions .mp{
+.mp{
     background: rgb(19, 0, 88);
     color: white;
 }
-.conditions .mp .fill{
+.mp .fill{
     background: rgb(4, 0, 228);
+}
+.fps, .score, .timer {
+    font-size: 22px;
+    background-color: #365025;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #ffffff;
+}
+.seconds {
+    display: none;
+    position: absolute;
+    color: #000000;
+    top: 10px;
+    right: -60px;
 }

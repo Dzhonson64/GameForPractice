@@ -17,7 +17,6 @@ export default class ActionsEvil{
     /* Передвижение врага в режиме "атака" */
     attackMove(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
-        // console.log(modules.hero.coordinate.x + modules.hero.width, obj.coordinate.x);
         /* Берём отдельного врага */
         console.log('att or', obj.orientation, obj.orient, coordinateEvilOnMapX, modules.hero.coordinate.x - modules.backrg.x);
         if (coordinateEvilOnMapX > modules.hero.coordinate.x - modules.backrg.x){
@@ -27,7 +26,6 @@ export default class ActionsEvil{
             obj.evilImg.frameY = 1;    // изменяем положения картинки в спрайте
             this.rightMove = false;     // останавливаем движение вправо
             this.leftMove = true;       // включаем движение влево
-            console.log('attack left');
             this.movingLeft(obj);      // наинчаем пермещение влево
 
         }else if (coordinateEvilOnMapX < modules.hero.coordinate.x - modules.backrg.x){
@@ -37,7 +35,6 @@ export default class ActionsEvil{
             obj.evilImg.frameY = 2;
             this.rightMove = true;
             this.leftMove = false;
-            console.log('attack right');
             this.movingRight(obj);
         }
     }
@@ -46,7 +43,6 @@ export default class ActionsEvil{
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;    // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
         console.log('quit or', obj.orientation, obj.orient);
         obj.dx = obj.speed;       // присваиваем скорость пермещения
-        // console.log(coordinateEvilOnMapX);
         if (obj.orientation == 1 && coordinateEvilOnMapX + obj.width < obj.borderMoveR){
             obj.evilImg.frameY = 2;       // изменяем положения картинки в спрайте
             this.rightMove = true;          // останавливаем движение вправо
@@ -85,20 +81,13 @@ export default class ActionsEvil{
     movingLeft(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;  // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
         obj.orientation = -1; // ориентация врага на движение влево
-        // console.log('left');
         if (this.leftMove){
             /* Разрешено движение влево */
             if (coordinateEvilOnMapX - obj.dx > 0){
                 /* Слева нет границы карты */
-                // console.log('ll', this.isCollisionWithHero(obj), !this.processJump, obj.orient === 1);
                 if (this.isCollisionWithHero(obj) && !this.processJump && obj.orient === 1){
-                    // console.log(obj.cooldown);
-                    
-
                        this.doDamage(obj);
-                    
                 }else {
-                    // console.log(obj.orient);
                     obj.dx = obj.speed * obj.orient;
                     obj.coordinate.x -= obj.dx;
                     if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения
@@ -115,15 +104,12 @@ export default class ActionsEvil{
 
     // Функция отнимающая хп у персонажа, согласно атаке врага
     doDamage(obj){
-        console.log('doDamage');
         if(obj.cooldown === 0){ // Если не перезаряжается
             modules.hero.hp -= obj.attackPower;
             obj.cooldown += 1
-            console.log('hero hp', modules.hero.hp);
-            // Тут мы можем страдать от скорости обращения к DOM элементам, но вроде срать на это можно
+            // Тут мы можем страдать от скорости обращения к DOM элементам
             modules.game.heroHp.innerHTML = String(modules.hero.hp) + " HP";
             modules.game.heroHp.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
-            // obj.dx = 0;
             obj.orient = -0.5; // Тупо стоять вплотную с персонажем, поэтому он будет двигаться назад с меньшей скоростью
         }
     }
@@ -142,7 +128,6 @@ export default class ActionsEvil{
                 if (this.isCollisionWithHero(obj) && !this.processJump && obj.orient === 1){
                     this.doDamage(obj);
                 }else{
-                    // console.log(obj.orient);
                     obj.dx = obj.speed * obj.orient;
                     obj.coordinate.x += obj.dx;
                     if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения

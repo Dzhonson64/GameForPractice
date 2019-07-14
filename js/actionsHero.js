@@ -5,9 +5,6 @@ export default class ActionsHero{
 /* Описание действий персонажа-героя */
 
     constructor(){
-        this.flag = 0;              // кол-во нажатых кнопок, отвечающих за перемещение
-        this.intervalAnimMove;      // переменная, хранящая setInterval перемещения
-        this.intervalAnimJump;      // переменная, хранящая setInterval прыжка
         this.jumpPress = false;     // флаг, отвечающий за нажатие кнопки прыжка
         this.rightPress = false;    // флаг, отвечающий за нажатие кнопки вправо
         this.leftPress  = false;    // флаг, отвечающий за нажатие кнопки влево
@@ -15,6 +12,7 @@ export default class ActionsHero{
         this.jumpStatus = 0;        // статус прыжка, в данном случае, путь до верхней точки при прыжке составляет 15 фреймов
         this.jumpLength = 15;       // высота прыжка
         this.gravAct = new Gravity(modules.hero, this);
+        
         
         document.onkeydown = (elem) => {
             if (elem.code == "KeyA"){
@@ -46,51 +44,73 @@ export default class ActionsHero{
             }
         }
 
-        document.onclick = (elem) =>{
-           
-            
+        document.onclick = (elem) =>{                    
 
-            
-            
-            var x1 = elem.clientX;  // кординаты мыши по X
-            var y1 = elem.clientY;  // кординаты мыши по Y
-            var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
-            var y2 = modules.hero.coordinate.y + modules.hero.height / 2;   // кординаты персонажа по Y
-            var katetX = Math.round(this.widthLine(x1, y2, x2, y2));        // вычисление длины катета, который лежит на оси X
-            var katetY = Math.round(this.widthLine(x1, y1, x1, y2));        // вычисление длины катета, который лежит на оси Y
-            var gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY);  // вычисление длины гипотенцзы
-            
-            
-            
-            var sinY = katetY / gipotenyza * (y1 >= y2 ? 1: -1), // вычисляем синус угла
-                cosY = katetX / gipotenyza * (x1 >= x2 ? 1: -1), // вычисляем косинус угла   
-                angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI, // вычисляем значение угла прямой между персонажем и мышкой 
+            if (Number(modules.game.heroMp.innerText) > 0) {
+                /* Маны больше 0 */
+
                  /* передаём начальные координаты для стрелы, исходя из положения персонажа и размера его спрайта, синус и косинус */
-                weapon = new Weapon(modules.hero.width / 2 + modules.hero.coordinate.x - modules.backrg.x,
-                                    modules.hero.height / 2 + modules.hero.coordinate.y, sinY, cosY, angle); 
-
-            modules.render.weapons.push(weapon);
-            // console.log(angle, sinY, cosY);
-            
-
-            /*
-            weapon.image.onload = function () {
-                modules.game.ctx.save();
-                modules.game.ctx.rotate(angel * Math.PI / 180);
                 
-                weapon.draw();
-                modules.game.ctx.restore();
+                var x1 = elem.clientX;  // кординаты мыши по X
+                var y1 = elem.clientY;  // кординаты мыши по Y
+               
+                if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
+                    /* Нажатие произошло в границах холста */
+                    this.doReductionMana();
+                   
+                    
+                    
+
+                    var x2 = modules.hero.coordinate.x + modules.hero.width / 2;    // кординаты персонажа по X
+                    var y2 = modules.hero.coordinate.y + modules.hero.height / 2;   // кординаты персонажа по Y
+                    var katetX = Math.round(this.widthLine(x1, y2, x2, y2));        // вычисление длины катета, который лежит на оси X
+                    var katetY = Math.round(this.widthLine(x1, y1, x1, y2));        // вычисление длины катета, который лежит на оси Y
+                    var gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY);  // вычисление длины гипотенцзы
+                   
+                    var sinY = katetY / gipotenyza * (y1 >= y2 ? 1: -1), // вычисляем синус угла
+                    cosY = katetX / gipotenyza * (x1 >= x2 ? 1: -1), // вычисляем косинус угла   
+                    angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и мышкой 
+                     /* передаём начальные координаты для стрелы, исходя из положения персонажа и размера его спрайта, синус и косинус */
+                     
+                    
+                    this.doIncreaseMana();
+                    var weapon = new Weapon(modules.hero.width / 2 + modules.hero.coordinate.x - modules.backrg.x,
+                        modules.hero.height / 2 + modules.hero.coordinate.y, sinY, cosY, angle); 
+            
+                    modules.render.weapons.push(weapon);
+                    weapon.move();
+                    
+                }
                 
             }
-            
-            
-            */
-            weapon.move();
-           
+
         }
         
     }
 
+    doIncreaseMana(){
+        
+        var timer = setTimeout(function delay(){
+            if ( modules.hero.mp < modules.hero.maxMp){
+                /* Таймер закончился */
+                modules.hero.mp += modules.hero.deltaMana;
+                modules.game.heroMp.innerText = modules.hero.mp; // увеличиваем ману
+                modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%"; // увеличиваем размер динамической полосы маны
+                clearTimeout(timer);
+            }else{
+                setTimeout(delay, 5000);
+            }
+            
+        }, 5000)
+    }
+    doReductionMana(){
+        if (modules.hero.mp > 0){
+            modules.hero.mp -= modules.hero.deltaMana;
+            modules.game.heroMp.innerText = modules.hero.mp; // увеличиваем ману
+            modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%"; // увеличиваем размер динамической полосы маны
+        }
+        
+    }
     /* Проверка на столкноввение с противником */
     isCollisionWithEvil(){
         for (let i in modules.render.evils){
@@ -117,7 +137,6 @@ export default class ActionsHero{
     /* Перемещение героя */
     moving(){
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
-        // console.log(coordinateHeroOnMapX);
         /* 200 (modules.hero.offset) - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
@@ -148,7 +167,7 @@ export default class ActionsHero{
 
             /* [1] - Смотрим на значение флага endBackgr и проверяем не дошёл ли персонаж до левой границы холста 0 */
             }else if((modules.backrg.endBackgr || modules.backrg.x == 0) && modules.hero.coordinate.x > 0){
-                modules.hero.coordinate.x -= modules.hero.dx; // Движение !персонажа влево
+                modules.hero.coordinate.x -= modules.hero.dx; // ДвЦижение !персонажа влево
             }
 
             /* Смена изображений в спрайте для анимации */

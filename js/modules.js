@@ -7,16 +7,22 @@ import Hero from "./hero.js";
 import ActionsHero from "./actionsHero.js";
 import ActionsEvil from "./actionsEvil.js";
 import Background from "./background.js";
+import Bonuses from "./bonuses.js";
 import Map from "./map.js";
 
 export let game = new Game(210);
 export let mapCol = new Map(1);
 export let render = new Render();
+export let bonuses = new Bonuses();
 export let backrg = new Background("../img/test_back.png");
 export let hero = new Hero(100, game.floorCoordinate);
 
 
 export let actHero = new ActionsHero();
 export let actEvil = new ActionsEvil();
-
-render.processGame();
+window.addEventListener("load", function(){
+    render.processGame();
+    render.fps();
+    render.timerGame();
+    
+});

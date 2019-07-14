@@ -24,11 +24,9 @@ export default class Weapon{
         
         this.coordinate.x += this.dg * this.cos; // Получаем составляющую скорости по х и прибавляем к текущему положению стрелю по х
         this.coordinate.y += this.dg * this.sin; // Получаем составляющую скорости по у и прибавляем к текущему положению стрелю по у
-        // console.log('---- x:', this.coordinate.x, "y:", this.coordinate.y, "----");
     }
     /* Проверка на выход стрелы за границу холста */
     isOutOfBordersCanvas(){
-        // console.log("x:", this.coordinate.x, "y:", this.coordinate.y, "; is border ", this.coordinate.x < 0, this.coordinate.x > modules.game.width, this.coordinate.y, this.coordinate.y > modules.game.height);
         if (
             this.coordinate.x < 0 ||
             this.coordinate.x > modules.mapCol.widthInTile * 10 ||
@@ -46,12 +44,16 @@ export default class Weapon{
         objEvil - объект врага (object)
     */
     isHit(objEvil){
+        console.log(this.coordinate.x + modules.backrg.x + this.widthWithAngle >= objEvil.coordinate.x, 
+            this.coordinate.x + modules.backrg.x + this.widthWithAngle <= objEvil.coordinate.x + objEvil.width, 
+            this.coordinate.y + this.heightWithAngle <= objEvil.coordinate.y + objEvil.height, 
+            this.coordinate.y + this.heightWithAngle >= objEvil.coordinate.y) 
         if(this.coordinate.x + modules.backrg.x + this.widthWithAngle >= objEvil.coordinate.x && 
             this.coordinate.x + modules.backrg.x + this.widthWithAngle <= objEvil.coordinate.x + objEvil.width && 
             this.coordinate.y + this.heightWithAngle <= objEvil.coordinate.y + objEvil.height &&
             this.coordinate.y + this.heightWithAngle >= objEvil.coordinate.y
             ){
-            /* Произошло столкновение с врагом */
+            /* Произошло попадание */
             console.log('Arrow hit the enemy');
                 return true;
         }

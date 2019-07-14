@@ -27,6 +27,10 @@ export default class Weapon{
     }
     /* Проверка на выход стрелы за границу холста */
     isOutOfBordersCanvas(){
+        console.log(this.coordinate.x < 0,
+            this.coordinate.x > modules.mapCol.widthInTile * 10,
+            this.coordinate.y < 0,
+            this.coordinate.y > modules.game.height)
         if (
             this.coordinate.x < 0 ||
             this.coordinate.x > modules.mapCol.widthInTile * 10 ||
@@ -44,10 +48,6 @@ export default class Weapon{
         objEvil - объект врага (object)
     */
     isHit(objEvil){
-        console.log(this.coordinate.x + modules.backrg.x + this.widthWithAngle >= objEvil.coordinate.x, 
-            this.coordinate.x + modules.backrg.x + this.widthWithAngle <= objEvil.coordinate.x + objEvil.width, 
-            this.coordinate.y + this.heightWithAngle <= objEvil.coordinate.y + objEvil.height, 
-            this.coordinate.y + this.heightWithAngle >= objEvil.coordinate.y) 
         if(this.coordinate.x + modules.backrg.x + this.widthWithAngle >= objEvil.coordinate.x && 
             this.coordinate.x + modules.backrg.x + this.widthWithAngle <= objEvil.coordinate.x + objEvil.width && 
             this.coordinate.y + this.heightWithAngle <= objEvil.coordinate.y + objEvil.height &&
@@ -56,8 +56,6 @@ export default class Weapon{
             /* Произошло попадание */
             console.log('Arrow hit the enemy');
 
-                
-                
                 return true;
         }
         return false;

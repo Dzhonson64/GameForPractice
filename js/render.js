@@ -146,12 +146,7 @@ export default class Render{
                     if(flagHit){
                         /* Стрела попала в врага */
                         this.evils[i].hp -= modules.hero.hit;
-                        console.log("Hit");
-                        
-
                         this.textDamag.push(new TextDamage(modules.hero.hit, this.evils[i].coordinate.x, this.evils[i].coordinate.y, 50)); // создаём текст с информацией о нанесённом уроне
-                        
-
                         if (this.evils[i].hp == 0){
                             this.evils[i].isAlive = false; // говорим, что враг мёртв
                         }
@@ -159,7 +154,6 @@ export default class Render{
                     }
                     if (this.weapons[j].isOutOfBordersCanvas() || flagHit){
                         /* Если стерела вылетела за границы холста или попала во врага */
-
                         this.weapons.splice(j, 1);  // удаляем стрелу
                     }
                 }
@@ -173,6 +167,14 @@ export default class Render{
             }
             for (let i = 0; i < this.weapons.length; i++){ // перемещаем стрелы
                 this.weapons[i].move();
+
+                // -----!ХВАТИТ УДАЛЯТЬ ЭТО, ИБО СТРЕЛЫ НЕ УБИРАЮТСЯ!-----
+
+                if (this.weapons[j].isOutOfBordersCanvas()){
+                    /* Если стерела вылетела за границы холста или попала во врага */
+                    this.weapons.splice(j, 1);  // удаляем стрелу
+                }
+
             }
 
             for(let i in this.textDamag){

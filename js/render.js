@@ -68,8 +68,8 @@ export default class Render{
             modules.hero.height,
             modules.hero.coordinate.x,
             modules.hero.coordinate.y,
-            modules.hero.width /2,
-            modules.hero.height /2
+            modules.hero.width,
+            modules.hero.height
         )
         
         /* Отрисовка врагов */
@@ -82,8 +82,8 @@ export default class Render{
                 elem.height,
                 elem.coordinate.x,
                 elem.coordinate.y,
-                elem.width / 2,
-                elem.height / 2
+                elem.width,
+                elem.height
             )
         })
 
@@ -183,8 +183,6 @@ export default class Render{
                     this.textDamag.splice(i, 1);    // удаляем текст
                 }
             }
-
-    console.log(modules.skills.timeSkills[0], modules.skills.timeSkills[1], modules.skills.timeSkills[2], modules.skills.timeSkills[3])
 
 
             modules.actHero.moving();   // обработка перемещения персонажа

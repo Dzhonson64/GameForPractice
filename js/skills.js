@@ -3,7 +3,7 @@ import * as modules from "./modules.js";
 /* Класс, описывающий способности игры */
 export default class Skills{
     constructor(){
-        this.timeSkills = [5.1, 10.2, 5.3, 15];
+        this.timeSkills = [2, 10.2, 5.3, 15];
         this.isReloads = [false,false, false, false];
         this.imgSkills = [new Images('../img/skill1.png'), new Images('../img/skill2.png'), new Images('../img/skill3.png'), new Images('../img/skill4.png')];
         this.activeSkill = false;

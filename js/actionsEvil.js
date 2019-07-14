@@ -19,7 +19,6 @@ export default class ActionsEvil{
     attackMove(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
         /* Берём отдельного врага */
-        // console.log('att or', obj.orientation, obj.orient, coordinateEvilOnMapX, modules.hero.coordinate.x - modules.backrg.x);
         if (coordinateEvilOnMapX > modules.hero.coordinate.x - modules.backrg.x){
             /* Игрок находится слева */
             
@@ -42,7 +41,6 @@ export default class ActionsEvil{
     /* Передвижение врага в режиме "патрулировния" */
     quiteMove(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;    // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
-        // console.log('quit or', obj.orientation, obj.orient);
         obj.dx = obj.speed;       // присваиваем скорость пермещения
         if (obj.orientation == 1 && coordinateEvilOnMapX + obj.width < obj.borderMoveR){
             obj.evilImg.frameY = 0;       // изменяем положения картинки в спрайте

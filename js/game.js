@@ -24,6 +24,30 @@ export default class Game{
         this.canvasField.setAttribute("width", this.width + "px");
         this.canvasField.setAttribute("height", this.height + "px");
 
-    
+        document.getElementById("pause").addEventListener('click', (e) =>{
+                /* Нажата кнопка воспроизведение/пауза */
+                
+            if (modules.render.startStopGame){
+                /* Игра была НЕ на паузе */
+                modules.render.startStopGame = false;   // останаваливаем игровой процесс
+
+                /* Меняем кнопки воспроизведение/пауза */
+                document.getElementById("pause").children[0].classList.remove("none");
+                document.getElementById("pause").children[1].classList.add("none");
+            }else{
+                /* Игра была на паузе */
+
+                
+                modules.render.startStopGame = true;    // восстанавливаем игровой процесс
+                modules.render.timerGame(); // возобновляем таймер игры
+
+                /* Меняем кнопки воспроизведение/пауза */
+                document.getElementById("pause").children[0].classList.add("none");
+                document.getElementById("pause").children[1].classList.remove("none");
+            }
+        });
+    }
+    pause(){
+        
     }
 }

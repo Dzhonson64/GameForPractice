@@ -59,7 +59,6 @@ export default class Render{
                 kx += x2;
             }
         });
-
         /* Отрисовка героя */
         modules.game.ctx.drawImage(
             modules.hero.heroImg.image,
@@ -69,8 +68,8 @@ export default class Render{
             modules.hero.height,
             modules.hero.coordinate.x,
             modules.hero.coordinate.y,
-            modules.hero.width,
-            modules.hero.height
+            modules.hero.width /2,
+            modules.hero.height /2
         )
         
         /* Отрисовка врагов */
@@ -83,8 +82,8 @@ export default class Render{
                 elem.height,
                 elem.coordinate.x,
                 elem.coordinate.y,
-                elem.width,
-                elem.height
+                elem.width / 2,
+                elem.height / 2
             )
         })
 
@@ -115,6 +114,7 @@ export default class Render{
             for (let i in this.evils){
                 if(this.evils[i].mode === 0){ // если враг патрулирует
                     modules.actEvil.quiteMove(this.evils[i]);
+                    console.log(this.evils[i].orientation);
                     // проверяем, не появился ли персонаж в зоне патрулирования
                     if(this.evils[i].borderMoveL + modules.backrg.x <= modules.hero.coordinate.x && this.evils[i].borderMoveR + modules.backrg.x >= modules.hero.coordinate.x
                         && Math.abs(modules.hero.coordinate.y - this.evils[i].coordinate.y) <= this.evils[i].height){
@@ -146,7 +146,6 @@ export default class Render{
                     if(flagHit){
                         /* Стрела попала в врага */
                         this.evils[i].hp -= modules.hero.hit;
-                        console.log("Hit");
                         
                         if (this.evils[i].hp == 0){
                             this.evils[i].isAlive = false; // говорим, что враг мёртв
@@ -200,7 +199,7 @@ export default class Render{
                     minutes--;
                     seconds = 59;
                 }
-                /* Обновляем отображаемое вермя */
+                /* Обновляем отображаемое время */
                 if (seconds < 10){
                     document.getElementById("secondTimer").innerText = "0" + seconds;
                 }else{

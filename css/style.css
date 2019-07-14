@@ -8,14 +8,57 @@
     align-items: center;
 }
 .bonuses {
+    margin-top: 15px;
+}
+.bonuses .wrapper {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    justify-content: center;
+}
+.bonuses h2{
+    text-align: center;
+    color: rgb(54, 80, 37);
+    margin: 0;
 }
 .bonuses .bonus{
+    position: relative;
     cursor: pointer;
     margin: 10px;
     
+}
+.bonuses .bonus .timerBonus{
+    display: none;
+    color: #ffffff;
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    font-size: 25px;
+    margin: auto;
+    font-weight: 700;
+}
+.bonuses .bonus.active .timerBonus{
+    display: block;
+}
+.bonuses .bonus.active::before{
+    content: "";
+    display: flex;
+    width: 44px;
+    z-index: 10;
+    height: 48px;
+    background-color: rgba(54, 80, 37, 0.9);
+    justify-content: center;
+    align-items: center;
+    
+}
+.bonuses .bonus.active img {
+    position: absolute;
+    z-index: -9;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto
 }
 .bonuses .bonus.active{
     box-shadow: 0 0 8px black;
@@ -28,7 +71,10 @@
     display: inline-block;
     z-index: 0;
 }
-
+.bonuses .bonus.deactivated {
+    opacity: 0.5;
+    cursor: default;
+}
 .conditions .hp .fill, .conditions .mp .fill{
     width: 100%;
     display: inline-block;

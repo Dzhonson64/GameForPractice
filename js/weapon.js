@@ -33,7 +33,6 @@ export default class Weapon{
             this.coordinate.y < 0 ||
             this.coordinate.y > modules.game.height
             ){
-                console.log('Arrow out of border');
                 return true;
         }
         return false;
@@ -44,17 +43,12 @@ export default class Weapon{
         objEvil - объект врага (object)
     */
     isHit(objEvil){
-        console.log(this.coordinate.x + modules.backrg.x + this.widthWithAngle >= objEvil.coordinate.x, 
-            this.coordinate.x + modules.backrg.x + this.widthWithAngle <= objEvil.coordinate.x + objEvil.width, 
-            this.coordinate.y + this.heightWithAngle <= objEvil.coordinate.y + objEvil.height, 
-            this.coordinate.y + this.heightWithAngle >= objEvil.coordinate.y) 
         if(this.coordinate.x + modules.backrg.x + this.widthWithAngle >= objEvil.coordinate.x && 
             this.coordinate.x + modules.backrg.x + this.widthWithAngle <= objEvil.coordinate.x + objEvil.width && 
             this.coordinate.y + this.heightWithAngle <= objEvil.coordinate.y + objEvil.height &&
             this.coordinate.y + this.heightWithAngle >= objEvil.coordinate.y
             ){
             /* Произошло попадание */
-            console.log('Arrow hit the enemy');
                 return true;
         }
         return false;

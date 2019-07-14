@@ -24,7 +24,7 @@ export default class ActionsHero{
             if (elem.code == "KeyD"){
                  /* Нажата кнопка D */
                 this.rightPress = true;
-                modules.hero.heroImg.frameY = 2;
+                modules.hero.heroImg.frameY = 0;
                 modules.hero.orientation = 1;
             }
             if (elem.code == "Space"){

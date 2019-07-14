@@ -22,7 +22,7 @@ export default class ActionsEvil{
             /* Игрок находится слева */
             
             obj.dx = obj.speed * obj.orient;       // присваиваем скорость пермещения
-            obj.evilImg.frameY = 1;    // изменяем положения картинки в спрайте
+            obj.evilImg.frameY = 0;    // изменяем положения картинки в спрайте
             this.rightMove = false;     // останавливаем движение вправо
             this.leftMove = true;       // включаем движение влево
             this.movingLeft(obj);      // наинчаем пермещение влево
@@ -31,7 +31,7 @@ export default class ActionsEvil{
             /* Игрок находится справа  */
 
             obj.dx = obj.speed * obj.orient;
-            obj.evilImg.frameY = 2;
+            obj.evilImg.frameY = 1;
             this.rightMove = true;
             this.leftMove = false;
             this.movingRight(obj);
@@ -43,7 +43,7 @@ export default class ActionsEvil{
         
         obj.dx = obj.speed;       // присваиваем скорость пермещения
         if (obj.orientation == 1 && coordinateEvilOnMapX + obj.width < obj.borderMoveR){
-            obj.evilImg.frameY = 2;       // изменяем положения картинки в спрайте
+            obj.evilImg.frameY = 0;       // изменяем положения картинки в спрайте
             this.rightMove = true;          // останавливаем движение вправо
             this.leftMove = false;          // включаем движение влево
             this.movingRight(obj);         // включаем пермещение напрво
@@ -108,7 +108,7 @@ export default class ActionsEvil{
             obj.cooldown += 1
             // Тут мы можем страдать от скорости обращения к DOM элементам
             modules.game.heroHp.innerHTML = String(modules.hero.hp) + " HP";
-            modules.game.heroHp.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
+            modules.game.heroHp.parentElement.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
             obj.orient = -0.5; // Тупо стоять вплотную с персонажем, поэтому он будет двигаться назад с меньшей скоростью
         }
     }

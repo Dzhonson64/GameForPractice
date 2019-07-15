@@ -37,7 +37,7 @@ export default class Game{
             }else{
                 /* Игра была на паузе */
 
-                
+                this.resume();  // возобновляем таёмеры
                 modules.render.startStopGame = true;    // восстанавливаем игровой процесс
                 modules.render.timerGame(); // возобновляем таймер игры
 
@@ -47,7 +47,33 @@ export default class Game{
             }
         });
     }
-    pause(){
-        
+    /* Возобновление работы таймеров */
+    resume(){
+        for(let i = 0; i < 4; i++){ // пробегаемся по таймерам способностей
+            if (modules.skills.isReloads[i]){
+                /* Таймер был в запущенном виде до паузы */
+
+                modules.skills.timer(i);    // возобновляемего
+            }
+        }
+        for(let i = 0; i < 2; i++){ // пробегаемся по таймерам бонусов
+            if(modules.bonuses.isActives[i] == true){
+                /* Таймер был в запущенном виде до паузы */
+
+                switch (i) {
+                    /* Включаем соответсвующий таймер для бонуса */
+                    case 0:
+                        modules.bonuses.timer(i, true, modules.bonuses.addHp, 1);
+                        console.log("1 active");
+                        break;
+                    case 1:
+                        modules.bonuses.specialTimer(i, modules.bonuses.addSpeed, 10);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+        }
     }
 }

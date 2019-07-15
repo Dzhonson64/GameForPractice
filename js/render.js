@@ -186,7 +186,6 @@ export default class Render{
                     }
                 }
 
-
                 modules.actHero.moving();   // обработка перемещения персонажа
                 this.fps(); // ФПС игры
             }

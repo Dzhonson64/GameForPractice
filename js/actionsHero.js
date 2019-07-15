@@ -21,53 +21,61 @@ export default class ActionsHero{
         this.selectedAbil = 0;
         
         this.intervalIncrease; // интервал для регена маны
-
         if (document.addEventListener) {
             if ('onwheel' in document) {
                 // IE9+, FF17+, Ch31+
                 document.addEventListener("wheel", (e) => {
-                    // wheelDelta не дает возможность узнать количество пикселей
-                    var delta = e.deltaY || e.detail || e.wheelDelta;
-                    if(delta > 0){
-                        this.selectedAbil = (this.selectedAbil + 1) % 4;
-                    }else{
-                        this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    if(modules.render.startStopGame){
+                        // wheelDelta не дает возможность узнать количество пикселей
+                        var delta = e.deltaY || e.detail || e.wheelDelta;
+                        if(delta > 0){
+                            this.selectedAbil = (this.selectedAbil + 1) % 4;
+                        }else{
+                            this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                        }
                     }
+                    
                 });
             } else if ('onmousewheel' in document) {
                 // устаревший вариант события
                 document.addEventListener("mousewheel", (e) => {
-                    // wheelDelta не дает возможность узнать количество пикселей
-                    var delta = e.deltaY || e.detail || e.wheelDelta;
-    
-                    if(delta > 0){
-                        this.selectedAbil = (this.selectedAbil + 1) % 4;
-                    }else{
-                        this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    if(modules.render.startStopGame){
+                        // wheelDelta не дает возможность узнать количество пикселей
+                        var delta = e.deltaY || e.detail || e.wheelDelta;
+        
+                        if(delta > 0){
+                            this.selectedAbil = (this.selectedAbil + 1) % 4;
+                        }else{
+                            this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                        }
                     }
                 });
             } else {
                 // Firefox < 17
                 document.addEventListener("MozMousePixelScroll", (e) => {
-                    // wheelDelta не дает возможность узнать количество пикселей
-                    var delta = e.deltaY || e.detail || e.wheelDelta;
-    
-                    if(delta > 0){
-                        this.selectedAbil = (this.selectedAbil + 1) % 4;
-                    }else{
-                        this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    if(modules.render.startStopGame){
+                        // wheelDelta не дает возможность узнать количество пикселей
+                        var delta = e.deltaY || e.detail || e.wheelDelta;
+        
+                        if(delta > 0){
+                            this.selectedAbil = (this.selectedAbil + 1) % 4;
+                        }else{
+                            this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                        }
                     }
                 });
             }
         } else { // IE8-
             document.attachEvent("onmousewheel", (e) => {
-                // wheelDelta не дает возможность узнать количество пикселей
-                var delta = e.deltaY || e.detail || e.wheelDelta;
+                if(modules.render.startStopGame){
+                    // wheelDelta не дает возможность узнать количество пикселей
+                    var delta = e.deltaY || e.detail || e.wheelDelta;
 
-                if(delta > 0){
-                    this.selectedAbil = (this.selectedAbil + 1) % 4;
-                }else{
-                    this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    if(delta > 0){
+                        this.selectedAbil = (this.selectedAbil + 1) % 4;
+                    }else{
+                        this.selectedAbil = (this.selectedAbil > 0 ? (this.selectedAbil - 1): 3);
+                    }
                 }
             });
         }
@@ -76,50 +84,56 @@ export default class ActionsHero{
 
         
         document.onkeydown = (elem) => {
-            if (elem.code == "KeyA"){
-                /* Нажата кнопка A */
-                this.leftPress = true;
-                modules.hero.heroImg.frameY = 1;
-                modules.hero.orientation = -1;
+            if(modules.render.startStopGame){
+                if (elem.code == "KeyA"){
+                    /* Нажата кнопка A */
+                    this.leftPress = true;
+                    modules.hero.heroImg.frameY = 1;
+                    modules.hero.orientation = -1;
+                }
+                if (elem.code == "KeyD"){
+                    /* Нажата кнопка D */
+                    this.rightPress = true;
+                    modules.hero.heroImg.frameY = 0;
+                    modules.hero.orientation = 1;
+                }
+                if (elem.code == "Space"){
+                    /* Нажата кнопка Space */
+                    this.jumpPress = true;
+                }
+    
+                if (elem.keyCode == 49){
+                    /* Нажата кнопка 1 */
+                    this.selectedAbil = 0
+                }
+                if (elem.keyCode == 50){
+                    /* Нажата кнопка 2 */
+                    this.selectedAbil = 1
+                }
+                if (elem.keyCode == 51){
+                    /* Нажата кнопка 3 */
+                    this.selectedAbil = 2
+                }
+                if (elem.keyCode == 52){
+                    /* Нажата кнопка 4 */
+                    this.selectedAbil = 3
+                }
             }
-            if (elem.code == "KeyD"){
-                 /* Нажата кнопка D */
-                this.rightPress = true;
-                modules.hero.heroImg.frameY = 0;
-                modules.hero.orientation = 1;
-            }
-            if (elem.code == "Space"){
-                 /* Нажата кнопка Space */
-                this.jumpPress = true;
-            }
-
-            if (elem.keyCode == 49){
-                /* Нажата кнопка 1 */
-                this.selectedAbil = 0
-            }
-            if (elem.keyCode == 50){
-                /* Нажата кнопка 2 */
-                this.selectedAbil = 1
-            }
-            if (elem.keyCode == 51){
-                /* Нажата кнопка 3 */
-                this.selectedAbil = 2
-            }
-            if (elem.keyCode == 52){
-                /* Нажата кнопка 4 */
-                this.selectedAbil = 3
-            }
+            
         }
-           
+        
         document.onkeyup = (elem) => {
-            if (elem.code == "KeyA"){
-                /* Отжата кнопка A */
-                this.leftPress = false;
+            if(modules.render.startStopGame){
+                if (elem.code == "KeyA"){
+                    /* Отжата кнопка A */
+                    this.leftPress = false;
+                }
+                if (elem.code == "KeyD"){
+                    /* Отжата кнопка D */
+                    this.rightPress = false;
+                }
             }
-            if (elem.code == "KeyD"){
-                 /* Отжата кнопка D */
-                this.rightPress = false;
-            }
+            
         }
 
 
@@ -127,34 +141,37 @@ export default class ActionsHero{
         
         document.addEventListener('mousedown', (e) =>{ // блок персонажа, прописан ещё в actionsEvil, т к работает так сяк
             console.log(e.which == 1, this.selectedAbil == 1);
-            if(e.which == 1 && this.selectedAbil == 1 && modules.hero.mp >= 5){
+            if(e.which == 1 && this.selectedAbil == 1 && modules.hero.mp >= 5 && modules.render.startStopGame){
                 modules.hero.block = true;
             }
         });
 
         document.addEventListener('mouseup', (e) =>{ // убираем блок при отжатии мыши
-            if(e.which == 1 && this.selectedAbil == 1){
+            if(e.which == 1 && this.selectedAbil == 1 && modules.render.startStopGame){
                 modules.hero.block = false;
             }
         });
 
 
-        document.onclick = (elem) =>{                    
-            if(this.selectedAbil == 0 && !modules.skills.isReloads[this.selectedAbil]){ // обычная стрельба
-                this.doArrow(elem, 0, 0, false);
-            }else if(this.selectedAbil == 2 && modules.hero.mp >= 15 && !modules.skills.isReloads[this.selectedAbil]){ // три стрелы
-                this.doArrow(elem, 15, 0, false);
-                this.doArrow(elem, 0, 10, false);
-                this.doArrow(elem, 0, -10, false);
-            }else if(this.selectedAbil == 3 && modules.hero.mp >= 30 && !modules.skills.isReloads[this.selectedAbil]){ // град стрел
-                this.doArrow(elem, 30, 0, true);
-                this.doArrow(elem, 0, 20, true);
-                this.doArrow(elem, 0, -20, true);
-                this.doArrow(elem, 0, 50, true);
-                this.doArrow(elem, 0, -50, true);
-                this.doArrow(elem, 0, 90, true);
-                this.doArrow(elem, 0, -90, true);
-            }
+        document.onclick = (elem) =>{ 
+            if(modules.render.startStopGame){
+                if(this.selectedAbil == 0 && !modules.skills.isReloads[this.selectedAbil]){ // обычная стрельба
+                    this.doArrow(elem, 0, 0, false);
+                }else if(this.selectedAbil == 2 && modules.hero.mp >= 15 && !modules.skills.isReloads[this.selectedAbil]){ // три стрелы
+                    this.doArrow(elem, 15, 0, false);
+                    this.doArrow(elem, 0, 10, false);
+                    this.doArrow(elem, 0, -10, false);
+                }else if(this.selectedAbil == 3 && modules.hero.mp >= 30 && !modules.skills.isReloads[this.selectedAbil]){ // град стрел
+                    this.doArrow(elem, 30, 0, true);
+                    this.doArrow(elem, 0, 20, true);
+                    this.doArrow(elem, 0, -20, true);
+                    this.doArrow(elem, 0, 50, true);
+                    this.doArrow(elem, 0, -50, true);
+                    this.doArrow(elem, 0, 90, true);
+                    this.doArrow(elem, 0, -90, true);
+                }
+            }             
+            
         }
         
         
@@ -220,11 +237,10 @@ export default class ActionsHero{
 
                     var weapon = new Weapon(modules.hero.coordinate.x + modules.hero.width / 2 - modules.backrg.x - dx, dx * cosY, sinY, cosY, angle); // sinY = -1, cosY = 0, angle = -90
                     weapon.upperBorderIsFree = true; // для стрел ставим флаг, чтобы они не задевали верхний край карты, т е не удалялись
-                    // console.log('4');
+                    
                 }
                 
                 
-                // if(dx === 0) this.doIncreaseMana();
         
                 modules.render.weapons.push(weapon);
                 weapon.move();
@@ -246,16 +262,17 @@ export default class ActionsHero{
     doIncreaseMana(){
         // Вечный интервал для восстановления маны
         this.intervalIncrease = setInterval(function delay(){
-            if ( modules.hero.mp < modules.hero.maxMp){
+            if ( modules.hero.mp < modules.hero.maxMp && modules.render.startStopGame){
                 modules.hero.mp =  (modules.hero.mp + modules.hero.deltaMana <= modules.hero.maxMp)? (modules.hero.mp + modules.hero.deltaMana): modules.hero.maxMp;
                 modules.game.heroMp.innerText = modules.hero.mp; // увеличиваем ману
                 modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%"; // увеличиваем размер динамической полосы маны
             }
-        }, 5000)
+            
+        }, 8000)
     }
-    doReductionMana(x = modules.hero.deltaMana){
+    doReductionMana(){
         if (modules.hero.mp > 0){
-            modules.hero.mp -= x;
+            modules.hero.mp -= modules.hero.deltaMana;
             modules.game.heroMp.innerText = modules.hero.mp; // уменьшаем ману
             modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%"; // уменьшаем размер динамической полосы маны
         }

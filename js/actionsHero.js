@@ -298,21 +298,27 @@ export default class ActionsHero{
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
 
 
+        // Получаем массив с пересечениями
 
         this.collisions = modules.mapCol.collisWithObj(
             (modules.hero.coordinate.x - modules.backrg.x) / 10, 
             (modules.hero.coordinate.y) / 10, 
             (modules.hero.width) / 10, (modules.hero.height) / 10);
 
-            console.log(this.collisions);
+        // Если персонаж в прыжке и сверху что-то есть
 
-        if(this.jumpPress && this.collisions[0] !== 0 && !this.upperPoint){
+        if(this.jumpPress && this.collisions[0] !== 0){
             this.jumpPress = false;
         }
         
+        // Если персонаж в двигается вправо и справа что-то есть
+
         if(this.rightPress && this.collisions[1] !== 0){
             this.rightPress = false;
         }
+
+        // Если персонаж в двигается вправо и справа что-то есть
+
         if(this.leftPress && this.collisions[3] !== 0){
             this.leftPress = false;
         }
@@ -390,6 +396,7 @@ export default class ActionsHero{
 
         }
 
+        
         if(this.jumpPress && !this.upperPoint){
             /* Нажата кнопка прыжка и не достиг ли верхней точки */
             if(this.jumpStatus >= this.jumpLength){ // Если статус больше длины, то сбатываем его и поднимаем флаг верхней точки
@@ -400,9 +407,11 @@ export default class ActionsHero{
                 modules.hero.coordinate.y-=10;
             }
         }
-        console.log('acthero', this.jumpPress, !this.upperPoint);
-       
-        if(!this.jumpPress || this.upperPoint){ // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
+        // console.log('acthero', this.jumpPress, !this.upperPoint);
+
+
+       // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
+        if(!this.jumpPress || this.upperPoint){ 
             this.gravAct.grav(this);
         }
 

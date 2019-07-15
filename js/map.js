@@ -42,7 +42,7 @@ export default class Map{
         }  
     }
 
-
+/*
     doesOnVoid(elx, ely){ // Функция, которая определяет стоит ли персонаж на пустом тайле
         this.void = 1;
         // console.log(elx, ely);
@@ -67,7 +67,7 @@ export default class Map{
             }
         });
         return Boolean(this.void);
-    }
+    }*/
 
 
     collisWithObj(elx, ely, w, h){

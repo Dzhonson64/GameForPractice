@@ -13,7 +13,8 @@ export default class Render{
         this.flagFPS = true;
         this.timeGame = true;
         this.textDamag = [];
-        this.startStopGame = true; // старт игры - true, конец/пауза - false 
+        this.startStopGame = true; // старт игры - true, пауза - false 
+        this.endGame = false;       // конец игры
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -188,6 +189,11 @@ export default class Render{
 
                 modules.actHero.moving();   // обработка перемещения персонажа
                 this.fps(); // ФПС игры
+
+                if(this.endGame || this.evils.length == 0){
+                    modules.game.pause();
+                    modules.game.deathScreen();
+                }
             }
                 this.processGame();
             

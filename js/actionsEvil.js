@@ -111,6 +111,10 @@ export default class ActionsEvil{
                 modules.game.heroHp.innerHTML = String(modules.hero.hp) + " HP";
                 modules.game.heroHp.parentElement.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
                 modules.render.textDamag.push(new TextDamage(obj.attackPower, modules.hero.coordinate.x, modules.hero.coordinate.y, 50, 'red')); // создаём текст с информацией о полученном уроне
+
+                if(modules.hero.hp <= 0){
+                    modules.render.endGame = true;
+                }
             }else{
                 modules.actHero.doReductionMana(5);
                 if(modules.hero.mp < 5 && modules.hero.block) modules.hero.block = false; // если мана истрачена, то убираем флаг на блок у игрока

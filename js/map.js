@@ -77,7 +77,7 @@ export default class Map{
         w = Math.floor(w);
         h = Math.floor(h);
         this.void = 1;
-        // console.log('col', elx, ely, elx + w, ely + h);
+        console.log('col', elx, ely, elx + w, ely + h);
         this.collWith = [0, 0, 0, 0];   // 0 Верх, 1 право, 2 низ, 3 лево
         this.mapCollision.forEach((elem) => {
             let y1 = Number(elem[0].slice(0, elem[0].indexOf('.')));
@@ -116,7 +116,7 @@ export default class Map{
             }
             
         });
-        console.log('col end');
+        // console.log('col end');
         return this.collWith;
     }
 

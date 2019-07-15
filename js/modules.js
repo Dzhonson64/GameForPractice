@@ -11,7 +11,7 @@ import Bonuses from "./bonuses.js";
 import Map from "./map.js";
 import Skills from "./skills.js";
 
-export let game = new Game(210);
+export let game = new Game(180);
 export let mapCol = new Map(1);
 export let render = new Render();
 export let bonuses = new Bonuses();

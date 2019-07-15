@@ -14,6 +14,8 @@ export default class Evil {
         this.speed = 2;                                         // скорость пермещения врага
         this.dx;                                                    // изменение координаты по X
         this.dy = 2;                                            // изменение координаты по Y
+        this.leftMove = false;      // флаг движения влево
+        this.rightMove = false;     // флаг движения вправо
         this.borderMoveR = borderR;                             // прававая границы патрулирования
         this.borderMoveL = borderL;                             // левая границы патрулирования
         this.coordinate = { // начальные координаты персонажа
@@ -30,6 +32,7 @@ export default class Evil {
         this.orient = 1;                                    // ориентация отхода назад при cooldown
         this.mode = 0;                                      // режим врагов(0 - патруль, 1 - агрессия)
         this.radiusVisible = 500;                           // радиус, в котором враг видит по х при mode = 1
+        this.collisions = [0, 0, 0, 0];                     // массив с коллизией с местностью для врага
     }
     /* Отображение ХП */
     health(){

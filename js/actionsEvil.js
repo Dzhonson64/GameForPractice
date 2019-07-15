@@ -6,8 +6,7 @@ export default class ActionsEvil{
     constructor(){
         this.intervalAnimMoveLeft;  // переменная, хранящая setInterval перемещения влево        
         this.intervalAnimMoveRight; // переменная, хранящая setInterval перемещения вправо
-        this.leftMove = false;      // флаг движения влево
-        this.rightMove = false;     // флаг движения вправо
+        
         this.processJump = false;   // флаг на начало процесса прыжка
         
         this.jumpCount = 0;
@@ -24,8 +23,8 @@ export default class ActionsEvil{
             
             obj.dx = obj.speed * obj.orient;       // присваиваем скорость пермещения
             obj.evilImg.frameY = 0;    // изменяем положения картинки в спрайте
-            this.rightMove = false;     // останавливаем движение вправо
-            this.leftMove = true;       // включаем движение влево
+            obj.rightMove = false;     // останавливаем движение вправо
+            obj.leftMove = true;       // включаем движение влево
             this.movingLeft(obj);      // наинчаем пермещение влево
 
         }else if (coordinateEvilOnMapX < modules.hero.coordinate.x - modules.backrg.x){
@@ -33,8 +32,8 @@ export default class ActionsEvil{
 
             obj.dx = obj.speed * obj.orient;
             obj.evilImg.frameY = 1;
-            this.rightMove = true;
-            this.leftMove = false;
+            obj.rightMove = true;
+            obj.leftMove = false;
             this.movingRight(obj);
         }
     }
@@ -44,13 +43,13 @@ export default class ActionsEvil{
         obj.dx = obj.speed;       // присваиваем скорость пермещения
         if (obj.orientation == 1 && coordinateEvilOnMapX + obj.width < obj.borderMoveR){
             obj.evilImg.frameY = 0;       // изменяем положения картинки в спрайте
-            this.rightMove = true;          // останавливаем движение вправо
-            this.leftMove = false;          // включаем движение влево
+            obj.rightMove = true;          // останавливаем движение вправо
+            obj.leftMove = false;          // включаем движение влево
             this.movingRight(obj);         // включаем пермещение напрво
         }else if (obj.orientation == -1 && coordinateEvilOnMapX > obj.borderMoveL){
             obj.evilImg.frameY = 1;
-            this.rightMove = false;
-            this.leftMove = true;
+            obj.rightMove = false;
+            obj.leftMove = true;
             this.movingLeft(obj);
         }else {
             /* Произошло столкновение с игроком */
@@ -60,14 +59,14 @@ export default class ActionsEvil{
         if (coordinateEvilOnMapX + obj.width * 3/2 >= obj.borderMoveR){
             /* Враг ниходится на правой границе патрулирования */
             obj.evilImg.frameY = 1;    // изменяем спрайты на движения в левую сторону
-            this.rightMove = false;     // выключаем движение вправо
-            this.leftMove = true;       // включаем движение влево
+            obj.rightMove = false;     // выключаем движение вправо
+            obj.leftMove = true;       // включаем движение влево
             //elem.coordinate.x -= 10;    
             this.movingLeft(obj);      // ничинаем перемещение влево
         }else if (coordinateEvilOnMapX <= obj.borderMoveL){
             obj.evilImg.frameY = 2;    // изменяем спрайты на движения в левую сторону
-            this.rightMove = true;      // включаем движение вправо
-            this.leftMove = false;      // выключаем движение влево
+            obj.rightMove = true;      // включаем движение вправо
+            obj.leftMove = false;      // выключаем движение влево
             //elem.coordinate.x += 10;
             this.movingRight(obj);     // ничинаем перемещение вправо
         }
@@ -80,7 +79,7 @@ export default class ActionsEvil{
     movingLeft(obj){
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;  // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
         obj.orientation = -1; // ориентация врага на движение влево
-        if (this.leftMove){
+        if (obj.leftMove && obj.collisions[3] === 0){
             /* Разрешено движение влево */
             if (coordinateEvilOnMapX - obj.dx > 0){
                 /* Слева нет границы карты */
@@ -88,7 +87,9 @@ export default class ActionsEvil{
                        this.doDamage(obj);
                 }else {
                     obj.dx = obj.speed * obj.orient;
-                    obj.coordinate.x -= obj.dx;
+
+                    obj.coordinate.x -= obj.collisions[1] === 0? obj.dx: 0; // если враг не дошёл до блока справа с коллизией, при отходе от персонажа
+
                     if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения
                         obj.evilImg.frameX += 1;   // если дошли до конца спрайта
                     } else {
@@ -132,7 +133,7 @@ export default class ActionsEvil{
         var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;
         obj.orientation = 1;
         
-        if (this.rightMove){
+        if (obj.rightMove && obj.collisions[1] === 0){
             if (coordinateEvilOnMapX + obj.dx + 3/2 * obj.width <= modules.backrg.backImg.image.width){
                 /* Справа нет границы карты */
 
@@ -140,7 +141,9 @@ export default class ActionsEvil{
                     this.doDamage(obj);
                 }else{
                     obj.dx = obj.speed * obj.orient;
-                    obj.coordinate.x += obj.dx;
+
+                    obj.coordinate.x += obj.collisions[3] === 0? obj.dx: 0; // если враг не дошёл до блока слева с коллизией, при отходе от персонажа
+
                     if (obj.width * (obj.evilImg.frameX + 1) < obj.evilImg.image.width) { //для смены позиции изображения
                         obj.evilImg.frameX += 1;   // если дошли до конца спрайта
                     } else {

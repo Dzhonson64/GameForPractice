@@ -175,7 +175,7 @@ export default class Game{
                 }else if(Number(localStorage["score" + j]) == Number(localStorage["score" + (j + 1)])){
                     /* счёт игрока j равен счёта игрока j + 1 */
                     
-                    if(this.toSeconds(String(localStorage["minutes" + j]), String(localStorage["seconds" + j])) > this.toSeconds(String(localStorage["minutes" + (j+1)]), String(localStorage["seconds" + (j+1)]))){
+                    if(this.toSeconds(String(localStorage["minutes" + j]), String(localStorage["seconds" + j])) < this.toSeconds(String(localStorage["minutes" + (j+1)]), String(localStorage["seconds" + (j+1)]))){
                         /* Время игрока j меньше чем игрока j + 1 */
 
                         /* Делаем swap, сохраняя соответсвующие данные */

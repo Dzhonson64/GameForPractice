@@ -19,9 +19,14 @@ export default class Weapon{
             x: x,
             y: y
         };
+        this.collisions = [0, 0, 0, 0];
     }
     /* Перемещение стрелы */
     move(){
+        this.collisions = modules.mapCol.collisWithObj(
+            (this.coordinate.x) / 10, 
+            (this.coordinate.y) / 10, 
+            (this.widthWithAngle) / 10, (this.heightWithAngle) / 10);
         
         this.coordinate.x += this.dg * this.cos; // Получаем составляющую скорости по х и прибавляем к текущему положению стрелю по х
         this.coordinate.y += this.dg * this.sin; // Получаем составляющую скорости по у и прибавляем к текущему положению стрелю по у

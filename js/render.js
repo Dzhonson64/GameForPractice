@@ -89,7 +89,7 @@ export default class Render{
             )
         })
 
-        /* Отрисовка стрелы */
+        /* Отрисовка стрел */
         this.weapons.forEach( (elem) => {
             modules.game.ctx.save();
             modules.game.ctx.translate(elem.coordinate.x + modules.backrg.x, elem.coordinate.y);
@@ -116,6 +116,13 @@ export default class Render{
                 this.drawImages();              // отбражение всех картинок
                 
                 for (let i in this.evils){
+
+                    this.evils[i].collisions = modules.mapCol.collisWithObj(
+                        (this.evils[i].coordinate.x - modules.backrg.x) / 10, 
+                        (this.evils[i].coordinate.y) / 10, 
+                        (this.evils[i].width) / 10, (this.evils[i].height) / 10);   // обновляем коллизию на местность около врага
+
+
                     if(this.evils[i].mode === 0){ // если враг патрулирует
                         modules.actEvil.quiteMove(this.evils[i]);
                         // проверяем, не появился ли персонаж в зоне патрулирования
@@ -157,6 +164,7 @@ export default class Render{
                         }
                         if (this.weapons[j].isOutOfBordersCanvas() || flagHit){
                             /* Если стерела вылетела за границы холста или попала во врага */
+                            console.log('del ev arrow');
                             this.weapons.splice(j, 1);  // удаляем стрелу
                         }
                     }
@@ -172,9 +180,16 @@ export default class Render{
                     this.weapons[i].move();
 
                     // -----!ХВАТИТ УДАЛЯТЬ ЭТО, ИБО СТРЕЛЫ НЕ УБИРАЮТСЯ!-----
-
-                    if (this.weapons[i].isOutOfBordersCanvas()){
-                        /* Если стерела вылетела за границы холста */
+                    if (this.weapons[i].isOutOfBordersCanvas() || this.weapons[i].
+                        collisions.reduce(function(sum, current) {
+                            return sum + current;
+                        }, 0) !== 0){
+                            console.log('del arrow ', this.weapons[i].
+                            collisions, this.weapons[i].
+                            collisions.reduce(function(sum, current) {
+                                return sum + current;
+                            }, 0));
+                        /* Если стерела вылетела за границы холста или столкнулась с местностью */
                         this.weapons.splice(i, 1);  // удаляем стрелу
                     }
 

@@ -14,6 +14,11 @@ export default class ActionsHero{
         this.jumpLength = 15;       // высота прыжка
         this.gravAct = new Gravity(modules.hero, this);
         
+        
+        
+        this.collisions = [0, 0, 0, 0];
+
+
         this.selectedAbil = 0;
 
 
@@ -84,40 +89,42 @@ export default class ActionsHero{
 
         
         document.onkeydown = (elem) => {
-            if(modules.render.startStopGame){
-                if (elem.code == "KeyA"){
-                    /* Нажата кнопка A */
-                    this.leftPress = true;
-                    modules.hero.heroImg.frameY = 1;
-                    modules.hero.orientation = -1;
-                }
-                if (elem.code == "KeyD"){
-                    /* Нажата кнопка D */
-                    this.rightPress = true;
-                    modules.hero.heroImg.frameY = 0;
-                    modules.hero.orientation = 1;
-                }
-                if (elem.code == "Space"){
-                    /* Нажата кнопка Space */
-                    this.jumpPress = true;
-                }
-    
-                if (elem.keyCode == 49){
-                    /* Нажата кнопка 1 */
-                    this.selectedAbil = 0
-                }
-                if (elem.keyCode == 50){
-                    /* Нажата кнопка 2 */
-                    this.selectedAbil = 1
-                }
-                if (elem.keyCode == 51){
-                    /* Нажата кнопка 3 */
-                    this.selectedAbil = 2
-                }
-                if (elem.keyCode == 52){
-                    /* Нажата кнопка 4 */
-                    this.selectedAbil = 3
-                }
+            if (elem.code == "KeyA"){
+                /* Нажата кнопка A */
+                this.leftPress = true;
+                modules.hero.heroImg.frameY = 1;
+                modules.hero.orientation = -1;
+            }
+            if (elem.code == "KeyD"){
+                 /* Нажата кнопка D */
+                this.rightPress = true;
+                modules.hero.heroImg.frameY = 0;
+                modules.hero.orientation = 1;
+            }
+            if (elem.code == "KeyW" && this.collisions[0] === 0){
+                 /* Нажата кнопка W */
+                this.jumpPress = true;
+            }
+            if (elem.code == "KeyS"){
+                /* Нажата кнопка S */
+               
+           }
+
+            if (elem.keyCode == 49){
+                /* Нажата кнопка 1 */
+                this.selectedAbil = 0
+            }
+            if (elem.keyCode == 50){
+                /* Нажата кнопка 2 */
+                this.selectedAbil = 1
+            }
+            if (elem.keyCode == 51){
+                /* Нажата кнопка 3 */
+                this.selectedAbil = 2
+            }
+            if (elem.keyCode == 52){
+                /* Нажата кнопка 4 */
+                this.selectedAbil = 3
             }
             
         }
@@ -304,6 +311,34 @@ export default class ActionsHero{
     /* Перемещение героя */
     moving(){
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
+
+
+        // Получаем массив с пересечениями
+
+        this.collisions = modules.mapCol.collisWithObj(
+            (modules.hero.coordinate.x - modules.backrg.x) / 10, 
+            (modules.hero.coordinate.y) / 10, 
+            (modules.hero.width) / 10, (modules.hero.height) / 10);
+
+        // Если персонаж в прыжке и сверху что-то есть
+
+        if(this.jumpPress && this.collisions[0] !== 0){
+            this.jumpPress = false;
+        }
+        
+        // Если персонаж в двигается вправо и справа что-то есть
+
+        if(this.rightPress && this.collisions[1] !== 0){
+            this.rightPress = false;
+        }
+
+        // Если персонаж в двигается вправо и справа что-то есть
+
+        if(this.leftPress && this.collisions[3] !== 0){
+            this.leftPress = false;
+        }
+
+
         /* 200 (modules.hero.offset) - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
@@ -376,6 +411,7 @@ export default class ActionsHero{
 
         }
 
+        
         if(this.jumpPress && !this.upperPoint){
             /* Нажата кнопка прыжка и не достиг ли верхней точки */
             if(this.jumpStatus >= this.jumpLength){ // Если статус больше длины, то сбатываем его и поднимаем флаг верхней точки
@@ -386,10 +422,17 @@ export default class ActionsHero{
                 modules.hero.coordinate.y-=10;
             }
         }
-       
-        if(!this.jumpPress || this.upperPoint){ // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
+        // console.log('acthero', this.jumpPress, !this.upperPoint);
+
+
+       // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
+        if(!this.jumpPress || this.upperPoint){ 
             this.gravAct.grav(this);
         }
+
+
+
+        
     }
     widthLine(x1, y1, x2, y2){
         return Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));

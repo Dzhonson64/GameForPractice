@@ -15,8 +15,10 @@ export default class Gravity{
                     а также получить эту координату в тайлах и округлить в !меньшую сторону)
                 2: у-координата тайла, который находится под объектом (тоже нужно перевести в тайлы)
         */
-        if(modules.mapCol.doesOnVoid(Math.floor((this.gravObj.coordinate.x + this.gravObj.width - modules.backrg.x) / 10), (this.gravObj.coordinate.y + 10) / 10)){
-            this.gravObj.coordinate.y += 10 * (this.kg >= 5 ? 1.5: 1); // Для шустроты, двигаются объекты 1 тайл за фрейм и умножаем на ускорение
+       
+        // if(this.activity.collisions[2] === 0)
+        if(this.activity.collisions[2] === 0){
+            this.gravObj.coordinate.y += 10 * (this.kg >= 10 ? 1.5: 1); // Для шустроты, двигаются объекты 1 тайл за фрейм и умножаем на ускорение
             this.kg++;
             
         }else if(this.activity !== -1 && this.activity.jumpPress){ // Если у объекта есть активити и он в прыжке (случай прописан для персонажа)

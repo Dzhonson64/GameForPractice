@@ -14,6 +14,11 @@ export default class ActionsHero{
         this.jumpLength = 15;       // высота прыжка
         this.gravAct = new Gravity(modules.hero, this);
         
+        
+        
+        this.collisions = [0, 0, 0, 0];
+
+
         this.selectedAbil = 0;
 
 
@@ -88,10 +93,14 @@ export default class ActionsHero{
                 modules.hero.heroImg.frameY = 0;
                 modules.hero.orientation = 1;
             }
-            if (elem.code == "Space"){
-                 /* Нажата кнопка Space */
+            if (elem.code == "KeyW" && this.collisions[0] === 0){
+                 /* Нажата кнопка W */
                 this.jumpPress = true;
             }
+            if (elem.code == "KeyS"){
+                /* Нажата кнопка S */
+               
+           }
 
             if (elem.keyCode == 49){
                 /* Нажата кнопка 1 */
@@ -246,7 +255,7 @@ export default class ActionsHero{
     doIncreaseMana(){
         // Вечный интервал для восстановления маны
         this.intervalIncrease = setInterval(function delay(){
-            if ( modules.hero.mp < modules.hero.maxMp){
+            if ( modules.hero.mp < modules.hero.maxMp && !modules.hero.block){
                 modules.hero.mp =  (modules.hero.mp + modules.hero.deltaMana <= modules.hero.maxMp)? (modules.hero.mp + modules.hero.deltaMana): modules.hero.maxMp;
                 modules.game.heroMp.innerText = modules.hero.mp; // увеличиваем ману
                 modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%"; // увеличиваем размер динамической полосы маны
@@ -287,6 +296,28 @@ export default class ActionsHero{
     /* Перемещение героя */
     moving(){
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
+
+
+
+        this.collisions = modules.mapCol.collisWithObj(
+            (modules.hero.coordinate.x - modules.backrg.x) / 10, 
+            (modules.hero.coordinate.y) / 10, 
+            (modules.hero.width) / 10, (modules.hero.height) / 10);
+
+            console.log(this.collisions);
+
+        if(this.jumpPress && this.collisions[0] !== 0 && !this.upperPoint){
+            this.jumpPress = false;
+        }
+        
+        if(this.rightPress && this.collisions[1] !== 0){
+            this.rightPress = false;
+        }
+        if(this.leftPress && this.collisions[3] !== 0){
+            this.leftPress = false;
+        }
+
+
         /* 200 (modules.hero.offset) - магическое число, стартовая позиция персонажа и место за которое будет закрепляться персонаж, если фон можно двигать.
             Если фон не двигается, то движется персонаж, пока не дойдёт до границы холста.
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
@@ -369,10 +400,15 @@ export default class ActionsHero{
                 modules.hero.coordinate.y-=10;
             }
         }
+        console.log('acthero', this.jumpPress, !this.upperPoint);
        
         if(!this.jumpPress || this.upperPoint){ // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации
             this.gravAct.grav(this);
         }
+
+
+
+        
     }
     widthLine(x1, y1, x2, y2){
         return Math.sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));

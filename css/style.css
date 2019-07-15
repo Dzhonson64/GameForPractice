@@ -1,6 +1,8 @@
 body{
     font-weight: normal;
     user-select: none;
+    margin: 0;
+    padding: 0;
 }
 .conditions{
     width: 300px;
@@ -145,4 +147,145 @@ body{
 .pause:hover{
     background-color: #578b3e;
     color: #bbd4ae;
+}
+
+
+.startScreen .typedInfo .name{
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-size: 2rem;
+}
+.startScreen .typedInfo .name input{
+    width: 250px;
+    font-size: 20px;
+    height: 20px;
+    margin-left: 15px;
+}
+.startScreen  .btnStart{
+    cursor: pointer;
+    margin-top: 50px;
+    background-color: #26381b;
+    font-size: 2.5rem;
+    border-radius: 10px;
+    color: #ffffff;
+    border: 5px solid #1d2b15;
+    padding: 10px 15px;
+    transition: all 0.5s;
+}
+.startScreen  .btnStart:hover{
+    background-color: #1d2b15;
+    box-shadow: 0 0 17px 2px black;
+}
+
+
+
+
+
+
+
+
+
+
+.endScreen, .startScreen {
+    padding: 10px;
+    background-color: #365025;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.game, .endScreen {
+    display: none;
+}
+.endScreen .info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.endScreen .endScore{
+    background-color: #26381b;
+    font-size: 2.5rem;
+    border-radius: 10px;
+    color: #ffffff;
+    border: 5px solid #1d2b15;
+    padding: 10px 15px;
+}
+.endScreen .nickname{
+    color: #ffffff;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+.endScreen .tableGamers{
+    display: flex;
+    color: #ffffff;
+   
+
+}
+.endScreen h2{
+    margin-top: 50px;
+    color: #ffffff;
+}
+.endScreen .tableGamers p {
+    margin: 0;
+}
+.endScreen .idGamers p, .endScreen .time p, .endScreen .name p, .endScreen .scoreTable p{
+    padding: 5px 10px;
+}
+.endScreen .idGamers .title, .endScreen .time .title, .endScreen .name .title, .endScreen .scoreTable .title{
+    text-align: left;
+    font-size: 1.5rem;
+    padding: 10px 10px;
+    
+}
+.endScreen .idGamers, .endScreen .time, .endScreen .name, .endScreen .scoreTable{
+    
+    text-align: center;
+    font-size: 1.3rem;
+}
+.endScreen .idGamers .title{
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+}
+.endScreen .time .title{
+    border-bottom: 1px solid;
+}
+.endScreen .name .title{
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+}
+.endScreen .scoreTable .title{
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+}
+
+.endScreen .idGamers p{
+    border-top: 1px solid;
+    border-right: 1px solid;
+}
+.endScreen .time p{
+    border-top: 1px solid;
+}
+.endScreen .name p{
+    border-left: 1px solid;
+    border-top: 1px solid;
+    border-right: 1px solid;
+}
+.endScreen .scoreTable p{
+    border-left: 1px solid;
+    border-top: 1px solid;
+}
+
+.game .username{
+    position: fixed;
+    color: #ffffff;
+    right: 20px;
+    top: 87px;
+    font-size: 25px;
+    padding: 10px 15px;
+    background-color: #365025;
+    border-radius: 10px;
 }

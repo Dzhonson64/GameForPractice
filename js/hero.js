@@ -8,9 +8,9 @@ export default class Hero{
         startY - начальная координата по Y (number),
     */
     constructor(startX, startY){
-        this.heroImg = new Images("../img/hero.png", 2);
-        this.width = 222 / 2;    // длина картинки в спрайте
-        this.height = 248 / 2;   // ширина картинки в спрайте
+        this.heroImg = new Images("../img/hero.png", 7);
+        this.width = 53;    // длина картинки в спрайте
+        this.height = 65;   // ширина картинки в спрайте
         this.dx = 5;        // скорость изменения положения по X
         this.dy = 15;       // скорость изменения положения по Y
         this.sizeJump = 50; // макс. высота прыжка

@@ -81,7 +81,10 @@ export default class Game{
                 document.getElementById("game").style.display = "block";        // отображаем игру
     
                 document.getElementById("nickInGame").querySelector("span").innerText = this.username;  // выводим ник в игре
-                this.pause();
+                setTimeout(() =>{
+                    this.pause();
+                }, 50)
+                
             }else{
                 /* Ник не был введён */
                 alert("Введите ник");
@@ -102,21 +105,25 @@ export default class Game{
                     
         if (modules.render.startStopGame){
             /* Игра была НЕ на паузе */
-            modules.render.startStopGame = false;   // останаваливаем игровой процесс
+            
 
             /* Меняем кнопки воспроизведение/пауза */
             document.getElementById("pause").children[0].classList.remove("none");
             document.getElementById("pause").children[1].classList.add("none");
+
+            modules.render.startStopGame = false;   // останаваливаем игровой процесс
         }else{
             /* Игра была на паузе */
 
             this.resume();  // возобновляем таёмеры
-            modules.render.startStopGame = true;    // восстанавливаем игровой процесс
+           
             modules.render.timerGame(); // возобновляем таймер игры
 
             /* Меняем кнопки воспроизведение/пауза */
             document.getElementById("pause").children[0].classList.add("none");
             document.getElementById("pause").children[1].classList.remove("none");
+
+            modules.render.startStopGame = true;    // восстанавливаем игровой процесс
         }
     }
     /* Возобновление работы таймеров */
@@ -224,7 +231,7 @@ export default class Game{
            
             if (i == 9 && !isShowUserInTable){
                 /* Добавление на 10 позицию списка, если в остальных 9 позициях не было нужного ника*/
-                $("#idGamers").append("<p>" + 10 + "</p>");
+                $("#idGamers").append("<p>" + this.getIdUser(this.username) + "</p>");
                 $("#timerGamers").append("<p>" + this.minutes + ":" + this.seconds + "</p>");
                 $("#tableName").append("<p>" + this.username + "</p>");
                 $("#tableScore").append("<p>" + this.score + "</p>");

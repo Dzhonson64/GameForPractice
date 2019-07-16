@@ -22,7 +22,7 @@ export default class ActionsEvil{
             /* Игрок находится слева */
             
             obj.dx = obj.speed * obj.orient;       // присваиваем скорость пермещения
-            obj.evilImg.frameY = 0;    // изменяем положения картинки в спрайте
+            obj.evilImg.frameY = 3;    // изменяем положения картинки в спрайте
             obj.rightMove = false;     // останавливаем движение вправо
             obj.leftMove = true;       // включаем движение влево
             this.movingLeft(obj);      // наинчаем пермещение влево
@@ -31,7 +31,7 @@ export default class ActionsEvil{
             /* Игрок находится справа  */
 
             obj.dx = obj.speed * obj.orient;
-            obj.evilImg.frameY = 1;
+            obj.evilImg.frameY = 2;
             obj.rightMove = true;
             obj.leftMove = false;
             this.movingRight(obj);
@@ -104,10 +104,20 @@ export default class ActionsEvil{
 
     // Функция отнимающая хп у персонажа, согласно атаке врага
     doDamage(obj){
+        var coordinateEvilOnMapX = obj.coordinate.x - modules.backrg.x;  // координаты врага относительно всего фона карты (но показыает не точные координаты, если упереться в правую границу)
+        
         if(obj.cooldown === 0){ // Если не перезаряжается
             if(modules.hero.block == false){ // если персонаж не блокирует
                 modules.hero.hp -= obj.attackPower;
-                
+                /* Берём отдельного врага */
+                if (coordinateEvilOnMapX > modules.hero.coordinate.x - modules.backrg.x){
+                    /* Игрок находится слева */
+                    obj.evilImg.frameY = 3;    // изменяем положения картинки в спрайте
+        
+                }else if (coordinateEvilOnMapX < modules.hero.coordinate.x - modules.backrg.x){
+                    /* Игрок находится справа  */
+                    obj.evilImg.frameY = 2;
+                }
                 // Тут мы можем страдать от скорости обращения к DOM элементам
                 modules.game.heroHp.innerHTML = String(modules.hero.hp) + " HP";
                 modules.game.heroHp.parentElement.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";

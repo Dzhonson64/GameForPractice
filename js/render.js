@@ -6,7 +6,7 @@ export default class Render{
     
     constructor(){
         this.evils = [];    // массив врагов
-        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900));
+        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900), new Evil(modules.game.floorCoordinate, 900, 1200));
         this.weapons = [];  // массив стрел
         this.nowTime = performance.now();
         this.nextTime;
@@ -138,7 +138,7 @@ export default class Render{
                             this.evils[i].mode = 0;
                         }
                     }
-                    modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение с врага с героем
+                    modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение врага с героем
                     this.evils[i].health();                             // вывод жизней врага
                     // проверяем cooldown, и если он запущен (не равен 0), то увеличиваем его
                     if(this.evils[i].cooldown !== 0){
@@ -209,7 +209,9 @@ export default class Render{
                     modules.game.pause();
                     modules.game.deathScreen();
                 }
+                //console.log(modules.skills.isReloads[0], modules.skills.isReloads[1], modules.skills.isReloads[2], modules.skills.isReloads[3]);
             }
+            console.log("startStopGame - ", this.startStopGame);
                 this.processGame();
             
             

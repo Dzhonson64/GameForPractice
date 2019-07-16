@@ -6,7 +6,7 @@ export default class Render{
     
     constructor(){
         this.evils = [];    // массив врагов
-        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900));
+        this.evils.push(new Evil(modules.game.floorCoordinate, 2000, 3000));
         this.weapons = [];  // массив стрел
         this.nowTime = performance.now();
         this.nextTime;
@@ -15,6 +15,7 @@ export default class Render{
         this.textDamag = [];
         this.startStopGame = true; // старт игры - true, пауза - false 
         this.endGame = false;       // конец игры
+        modules.backrg.backGameWidth = Math.round(modules.game.height * modules.backrg.aspect);
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -28,16 +29,20 @@ export default class Render{
         );
         
 
-
+        // console.log('begin fon');
         // Отрисовка фона
-
-        modules.game.ctx.drawImage(
-            modules.backrg.backImg.image,
-            modules.backrg.x,
-            modules.backrg.y,
-            modules.game.height * modules.backrg.aspect,
-            modules.game.height
-        );
+        for(let i = 0; (i - 1) * modules.backrg.backImg.length * modules.backrg.backGameWidth < modules.mapCol.widthInTile * 10; i++){
+            for(let j = 0; j < modules.backrg.backImg.length; j++){
+                modules.game.ctx.drawImage(
+                    modules.backrg.backImg[j].image,
+                    modules.backrg.x + (i * modules.backrg.backImg.length + j) * modules.backrg.backGameWidth,
+                    modules.backrg.y,
+                    modules.game.height * modules.backrg.aspect,
+                    modules.game.height
+                );
+            }
+        } 
+        // console.log('end fon');
 
         //Отрисовка местности
 

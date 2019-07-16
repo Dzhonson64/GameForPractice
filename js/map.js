@@ -5,8 +5,19 @@ export default class Map{
     constructor(level){
         /* Здесь концепт отходит от привычной тайловой генерации, так что любые термины взяты для простоты. То есть это уникальный способ генерации. 
             Коллизия строится из ячеек, а они, в свою очередь, из тайлов 10х10 пикс.
-        */
+            */
+        this.tileType = [new Images("../img/road_forest.png"), new Images("../img/road.png"), new Images("../img/stone.png")]; // Текстуры для кодов (подаётся код и вычитаем из него 1, чтобы получить текстуру)
+        
         switch (level){
+            case 0:
+                this.heightInTile = modules.game.height / 10; // Высота карты в тайлах
+                this.widthInTile = 300; // Ширина карты в тайлах 
+                this.mapCollision = [
+                    ["20.30", "0*10", "0*130", "1*50"],
+                    ["30.35", "2*300"],
+                    ["35.55", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20", "3*20"] // 40
+                ];   // массив заполнения карты
+                break;
             case 1:
                 // Первый уровень
                 /*
@@ -25,10 +36,9 @@ export default class Map{
                 */
                 this.heightInTile = modules.game.height / 10; // Высота карты в тайлах
                 this.widthInTile = 190; // Ширина карты в тайлах 
-                this.tileType = [new Images("../img/road_forest.png"), new Images("../img/road.png")]; // Текстуры для кодов (подаётся код и вычитаем из него 1, чтобы получить текстуру)
                 this.mapCollision = [
                     ["0.10", "1*10", "0*55", "1*40", "0*55", "1*30"],
-                    ["10.30", "1*10", "0*130", "1*50"],
+                    ["10.29", "1*10", "0*130", "1*50"],
                     ["30.40", "2*190"] // 40
                 ];   // массив заполнения карты
             
@@ -70,7 +80,7 @@ export default class Map{
     }*/
 
 
-    collisWithObj(elx, ely, w, h){
+    collisWithObj(elx, ely, w, h, con = null){
         // console.log('col', elx, ely, w, h);
         elx = Math.floor(elx);
         ely = Math.floor(ely);
@@ -96,14 +106,20 @@ export default class Map{
                                 // console.log('col y', elx, k + x2);
 
                                 if(up && y == y2 && elx + 1 !== k + x2 && elx + w -1 !== k) this.collWith[0] = x1;
-                                else if(down && y == y1 && elx + 1 !== k + x2 && elx + w - 1 !== k) this.collWith[2] = x1;
+                                else if(down && y == y1 && elx + 1 !== k + x2 && elx + w - 1 !== k) {this.collWith[2] = x1;break;}
 
-                                if(elx > k && elx < k + x2 && !down && y != y1) {
+                                down = (ely + h <= y1 + 5 && ely + h <= y1)
+                                // if(con != null) console.log('col down y:', ely, 'y1:', y1, 'h:', h, ely + h <= y1 + 5, ely + h <= y1)
+                                
+                                if(elx >= k && elx <= k + x2 && !down && y != y1) {
                                     // console.log('col k', (k + x2) / 2 >= elx, (k + x2) / 2, elx, k);
                                     this.collWith[3] = x1;
                                 }
+                                // if(con != null) console.log('col k x:', elx, 'y:', ely, 'k:', k, 'sysy:', y, 'cond1:',
+                                // elx >= k, elx <= k + x2, !down, y != y1, 'cond2:',
+                                // elx + w >= k, elx + w <= k + x2, !down, y != y1);
 
-                                if(elx + w > k && elx + w < k + x2 && !down && y != y1) {
+                                if(elx + w >= k && elx + w <= k + x2 && !down && y != y1) {
                                     // console.log('col k', (k + x2) / 2 < elx + w, (k + x2) / 2, elx, k);
                                     this.collWith[1] = x1;
                                 }

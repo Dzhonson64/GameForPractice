@@ -105,10 +105,7 @@ export default class ActionsHero{
                  /* Нажата кнопка W */
                 this.jumpPress = true;
             }
-            if (elem.code == "KeyS"){
-                /* Нажата кнопка S */
-               
-           }
+            
 
             if (elem.keyCode == 49){
                 /* Нажата кнопка 1 */
@@ -277,9 +274,9 @@ export default class ActionsHero{
             
         }, 8000)
     }
-    doReductionMana(){
+    doReductionMana(mana = modules.hero.deltaMana){
         if (modules.hero.mp > 0){
-            modules.hero.mp -= modules.hero.deltaMana;
+            modules.hero.mp -= mana;
             modules.game.heroMp.innerText = modules.hero.mp; // уменьшаем ману
             modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%"; // уменьшаем размер динамической полосы маны
         }
@@ -318,7 +315,7 @@ export default class ActionsHero{
         this.collisions = modules.mapCol.collisWithObj(
             (modules.hero.coordinate.x - modules.backrg.x) / 10, 
             (modules.hero.coordinate.y) / 10, 
-            (modules.hero.width) / 10, (modules.hero.height) / 10);
+            (modules.hero.width) / 10, (modules.hero.height) / 10, 'd');
 
         // Если персонаж в прыжке и сверху что-то есть
 
@@ -344,8 +341,9 @@ export default class ActionsHero{
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
             поэтому далее выстанавливаем вспомогательные условия (помечены комментарии с приставкой [1]). Место костылей, рассматриваем варианты замены */
 
-        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= modules.hero.offset && modules.game.width / 2 > -modules.backrg.x || // левая граница фона
-           -modules.backrg.x + modules.hero.offset <= modules.game.width && modules.hero.coordinate.x <= modules.hero.offset && modules.game.width / 2 <= -modules.backrg.x){ // правая граница фона
+        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= modules.hero.offset && modules.backrg.difference / 2 > -modules.backrg.x || // левая граница фона
+           -modules.backrg.x + modules.game.width - modules.hero.offset <= modules.mapCol.widthInTile * 10 && modules.hero.coordinate.x <= modules.hero.offset && 
+                                modules.backrg.difference / 2 <= -modules.backrg.x){ // правая граница фона
                 modules.backrg.endBackgr = false; // Можно двигать фон (кроме некоторых случаев, которые помечены комментариями с приставкой [1])
         }else{
             modules.backrg.endBackgr = true;    // Нельзя двигать фон
@@ -353,12 +351,15 @@ export default class ActionsHero{
 
         //---! Движение фона обратно движению персонажа !---
         if (this.leftPress && !this.isCollisionWithEvil() || this.leftPress && this.processJump){ //Если движемся влево
-
+            console.log(this.collisions);
             /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до левой границы холста 0 */
             if(modules.backrg.x < 0 && !modules.backrg.endBackgr){  
 
                 // движение !фона
                 modules.backrg.x += modules.backrg.k * modules.hero.dx;
+
+
+                
 
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
@@ -381,6 +382,7 @@ export default class ActionsHero{
         }
 
         else if (this.rightPress && !this.isCollisionWithEvil() || this.rightPress && this.processJump ){ //если движется вправо
+            console.log(this.collisions);
 
             /* Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы карты. Тут работает магическое число 200, 
                     т. к. персонаж смещён от начала фона и образуется пустота при подходе вправо (если не ставить число 200) */

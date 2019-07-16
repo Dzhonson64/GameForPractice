@@ -15,7 +15,7 @@ export default class Gravity{
         // Если снизу ничего нет
         
         if(this.activity.collisions[2] === 0){
-            this.gravObj.coordinate.y += 10 * (this.kg >= 10 ? 1.5: 1); // Для шустроты, двигаются объекты 1 тайл за фрейм и умножаем на ускорение
+            this.gravObj.coordinate.y += 10; // Для шустроты, двигаются объекты 1 тайл за фрейм и умножаем на ускорение
             this.kg++;
             
         }else if(this.activity !== -1 && this.activity.jumpPress){ // Если у объекта есть активити и он в прыжке (случай прописан для персонажа)

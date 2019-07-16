@@ -26,5 +26,6 @@ window.addEventListener("load", function(){
     render.processGame();
     render.fps();
     render.timerGame();
+    game.pause();
     
 });

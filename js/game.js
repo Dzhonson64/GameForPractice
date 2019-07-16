@@ -66,7 +66,6 @@ export default class Game{
                         this.id = oldCoutGamers
                     }else{
                        this.id = this.getIdUser(this.username);
-                       console.log(this.id);
                     }
                     
                 }else{
@@ -82,14 +81,20 @@ export default class Game{
                 document.getElementById("game").style.display = "block";        // отображаем игру
     
                 document.getElementById("nickInGame").querySelector("span").innerText = this.username;  // выводим ник в игре
-                console.log(localStorage['username' + this.id],  this.id);
+                this.pause();
             }else{
                 /* Ник не был введён */
                 alert("Введите ник");
             }
             
-        //this.fillTableScore();
+        
         });
+
+        /* Скрытие и отображние описания игры */
+        $("#more").click(function(){ 
+            $( "#contentDescript" ).slideToggle("slow"); 
+            $("#more").text() == "показать" ? $("#more").text("скрыть") : $("#more").text("показать");
+          });
         
     }
     pause(){
@@ -131,7 +136,6 @@ export default class Game{
                     /* Включаем соответсвующий таймер для бонуса */
                     case 0:
                         modules.bonuses.timer(i, true, modules.bonuses.addHp, 1);
-                        console.log("1 active");
                         break;
                     case 1:
                         modules.bonuses.specialTimer(i, modules.bonuses.addSpeed, 10);
@@ -222,7 +226,7 @@ export default class Game{
                 /* Добавление на 10 позицию списка, если в остальных 9 позициях не было нужного ника*/
                 $("#idGamers").append("<p>" + 10 + "</p>");
                 $("#timerGamers").append("<p>" + this.minutes + ":" + this.seconds + "</p>");
-                $("#tableName").append("<p>" + this.name + "</p>");
+                $("#tableName").append("<p>" + this.username + "</p>");
                 $("#tableScore").append("<p>" + this.score + "</p>");
             }else{
                 /* Добавление в список, если эта не 9 позиция или 9 и нужный ник уже был отобраэён*/
@@ -270,7 +274,7 @@ export default class Game{
         localStorage["seconds" + this.id] = String(this.seconds);
         this.bubleSort();       // делаем сортировку списка, относительно новых данных
         this.fillTableScore();  // делаем заполненеи и отображение списка игроков
-        console.log(this.username, this.minutes + ":" + this.seconds, this.score, this.id);
+        this.fillUserInTable();
     }
     /* Проверка на то, если ли такой ник уже в базе */
     isUser(user){
@@ -291,5 +295,21 @@ export default class Game{
             }
         }
         return 0;
+    }
+   fillUserInTable(){
+        var tempElemUser = $("#tableName").children().each(function(pos) {
+            if($("#tableName").children()[pos].innerText == this.username){
+                
+                $("#tableName").children()[pos].classList.add("you");
+                $("#idGamers").children()[pos].classList.add("you");
+                $("#tableScore").children()[pos].classList.add("you");
+                $("#timerGamers").children()[pos].classList.add("you");
+            }else{
+                $("#tableName").children()[pos].classList.remove("you");
+                $("#idGamers").children()[pos].classList.remove("you");
+                $("#tableScore").children()[pos].classList.remove("you");
+                $("#timerGamers").children()[pos].classList.remove("you");
+            }    
+        }.bind(this));
     }
 }

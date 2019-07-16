@@ -172,12 +172,57 @@ body{
     border: 5px solid #1d2b15;
     padding: 10px 15px;
     transition: all 0.5s;
+    margin-bottom: 50px;
 }
 .startScreen  .btnStart:hover{
     background-color: #1d2b15;
     box-shadow: 0 0 17px 2px black;
 }
-
+.startScreen .description{
+    width: 700px;
+}
+.startScreen .description h2{
+    text-align: center;
+    color: #ffffff;
+}
+.startScreen .description .content{
+    display: none;
+    color: #d4d4d4;
+}
+.startScreen .description .content p {
+    font-size: 1.1rem;
+}
+.startScreen .description .content h3{
+    color: #ffffff;
+    text-align: center;
+    margin-top: 100px;
+}
+.startScreen .description .content .controlMove,
+.startScreen .description .content .infoBonuses,
+.startScreen .description .content .infoSkills
+{
+    display: flex;
+    flex-direction: column;
+}
+.startScreen .description .content .controlMove .container,
+.startScreen .description .content .infoBonuses .container,
+.startScreen .description .content .infoSkills .container
+{
+    display: flex;
+    align-items: center;
+}
+.startScreen .description .content .controlMove .container p,
+.startScreen .description .content .infoBonuses .container p,
+.startScreen .description .content .infoSkills .container p
+{
+    margin-left: 10px;
+}
+.startScreen .description .content .controlMove img,
+.startScreen .description .content .infoBonuses img,
+.startScreen .description .content .infoSkills img
+{
+    width: 40px;
+}
 
 
 
@@ -190,7 +235,7 @@ body{
 .endScreen, .startScreen {
     padding: 10px;
     background-color: #365025;
-    height: 100vh;
+    min-height: 98vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -246,37 +291,37 @@ body{
     font-size: 1.3rem;
 }
 .endScreen .idGamers .title{
-    border-right: 1px solid;
-    border-bottom: 1px solid;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
 }
 .endScreen .time .title{
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #ffffff;
 }
 .endScreen .name .title{
-    border-left: 1px solid;
-    border-bottom: 1px solid;
-    border-right: 1px solid;
+    border-left: 1px solid ;
+    border-bottom: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
 }
 .endScreen .scoreTable .title{
-    border-left: 1px solid;
-    border-bottom: 1px solid;
+    border-left: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
 }
 
 .endScreen .idGamers p{
-    border-top: 1px solid;
-    border-right: 1px solid;
+    border-top: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
 }
 .endScreen .time p{
-    border-top: 1px solid;
+    border-top: 1px solid #ffffff;
 }
 .endScreen .name p{
-    border-left: 1px solid;
-    border-top: 1px solid;
-    border-right: 1px solid;
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
 }
 .endScreen .scoreTable p{
-    border-left: 1px solid;
-    border-top: 1px solid;
+    border-left: 1px solid#ffffff;
+    border-top: 1px solid #ffffff;
 }
 
 .game .username{
@@ -288,4 +333,18 @@ body{
     padding: 10px 15px;
     background-color: #365025;
     border-radius: 10px;
+}
+
+.you{
+    color: #eccf00;
+}
+#more{
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.15rem;
+    color: #bad4a9;
+    transition: all 0.5s;
+}
+#more:hover{
+    color: #ffffff;
 }

@@ -18,9 +18,9 @@ export default class Hero{
             x: startX,
             y: startY
         }
-        this.hp = 10;      // ХП
+        this.hp = 100;      // ХП
         this.mp = 200;
-        this.maxHp = 40;
+        this.maxHp = 100;
         this.maxMp = 200;
         this.orientation;   // ориентация героя (1 - вправо, -1 - влево)
         this.offset = startX ? startX : 0; // начальный отступ от левой границы холста

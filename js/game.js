@@ -1,4 +1,5 @@
 import * as modules from "./modules.js";
+import Evil from './evil.js'
 export default class Game{
     /* Основные настройки игры, поля и т.п. */
 
@@ -98,8 +99,47 @@ export default class Game{
         $("#more").click(function(){ 
             $( "#contentDescript" ).slideToggle("slow"); 
             $("#more").text() == "показать" ? $("#more").text("скрыть") : $("#more").text("показать");
-          });
+        });
+        document.getElementById("reload").addEventListener('click', (e) =>{
+            this.reloadGame();
+        });
+    }
+    reloadGame(){
+        /* Восстанавливаем начальные координаты игрока */
+        //modules.hero.coordinate.x = this.offset;
+        modules.backrg.x = 0;
+
+        /* Восстанавливаем HP игрока */
+        modules.hero.hp = modules.hero.maxHp;
+        modules.game.heroHp.innerHTML = String(modules.hero.hp);
+        modules.game.heroHp.parentElement.style.width = String(modules.hero.hp / modules.hero.maxHp * 100) + "%";
+
+        /* Восстанавливаем MP игрока */
+        modules.hero.mp = modules.hero.maxMp;
+        modules.game.heroMp.innerHTML = String(modules.hero.mp);
+        modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%";
+
+        /* Восстанавливаем врагов */
+        for (let i = 0; i <= modules.render.evils.length; i++){
+            modules.render.evils.pop();
+        }
+        modules.render.evils.push(
+            new Evil(modules.game.floorCoordinate, 500, 900),
+            new Evil(modules.game.floorCoordinate, 900, 1200)
+        );
+
+        /* Восстанавливаем таймер игры */
         
+        //modules.render.startStopGame = false;
+        modules.render.timerGame(true);
+        document.getElementById("minutesTimer").innerText = "20";
+        document.getElementById("secondTimer").innerText = "05";
+        modules.render.timerGame();
+        //modules.render.startStopGame = true;
+        
+
+        document.getElementById("score").innerText = 0;
+
     }
     pause(){
         /* Нажата кнопка воспроизведение/пауза */
@@ -310,7 +350,7 @@ export default class Game{
         }
         return 0;
     }
-   fillUserInTable(){
+    fillUserInTable(){
         var tempElemUser = $("#tableName").children().each(function(pos) {
             if($("#tableName").children()[pos].innerText == this.username){
                 
@@ -326,4 +366,5 @@ export default class Game{
             }    
         }.bind(this));
     }
+    
 }

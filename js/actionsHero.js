@@ -152,7 +152,6 @@ export default class ActionsHero{
 
         document.onclick = (elem) =>{ 
             if(modules.render.startStopGame){
-                console.log("remodules.skills.isReloads[0]");
                 if(this.selectedAbil == 0 && !modules.skills.isReloads[0]){ // обычная стрельба
                     modules.skills.isReloads[0] = true; 
                     modules.skills.timer(0);
@@ -433,7 +432,6 @@ export default class ActionsHero{
                 modules.hero.coordinate.y-=10;
             }
         }
-        // console.log('acthero', this.jumpPress, !this.upperPoint);
 
 
        // Если персонаж не в прыжке или достиг верхней точки, то запускаем логику гравитации

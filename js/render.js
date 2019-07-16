@@ -6,7 +6,11 @@ export default class Render{
     
     constructor(){
         this.evils = [];    // массив врагов
-        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900), new Evil(modules.game.floorCoordinate, 900, 1200));
+        this.evils.push(
+            new Evil(modules.game.floorCoordinate, 500, 900),
+            new Evil(modules.game.floorCoordinate, 900, 1200)
+        );
+        this.countEvils = 2;    // кол-во врагов в игре должно быть
         this.weapons = [];  // массив стрел
         this.nowTime = performance.now();
         this.nextTime;
@@ -208,11 +212,10 @@ export default class Render{
                     modules.game.statusHero = true;
                     this.endGame = true;
                 }
-                if(this.endGame){
+                if(this.endGame && this.startStopGame){
                     modules.game.pause();
                     modules.game.deathScreen();
                 }
-                //console.log(modules.skills.isReloads[0], modules.skills.isReloads[1], modules.skills.isReloads[2], modules.skills.isReloads[3]);
             }
                 this.processGame();
             
@@ -230,14 +233,17 @@ export default class Render{
         fpsBlock.innerHTML = Math.round(1 / delta); // выводим ФПС
     }
     /* Таймер игры */
-    timerGame(){
+    timerGame(clearTimerAndStart = false){
+        var timer;
         var seconds = Number(document.getElementById("secondTimer").innerText);     // берём секунды из html
         var minutes = Number(document.getElementById("minutesTimer").innerText);    // берём минуты из html
-        
-        var timer = setTimeout(function run(){
-            if (minutes < 0 && seconds < 0 || !this.startStopGame){
+        console.log("startStopGame out - ", this.startStopGame);
+
+        timer = setTimeout(function run(){
+            console.log("startStopGame - ", this.startStopGame);
+            if (minutes < 0 && seconds < 0 || !this.startStopGame || clearTimerAndStart){
                 /* Минуты и секунды меньше 0. Время закончилось */
-                this.timeGame = false;  // флаг опускаем. Игры закончилась
+                //this.timeGame = false;  // флаг опускаем. Игры закончилась
                 clearTimeout(timer);
             }else{
                 seconds--; 
@@ -258,5 +264,4 @@ export default class Render{
             }
         }.bind(this), 1000)
 	}
-
 }

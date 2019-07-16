@@ -146,7 +146,21 @@ body{
 }
 .pause:hover{
     background-color: #578b3e;
-    color: #bbd4ae;
+}
+.reload{
+    cursor: pointer;
+    position: fixed;
+    color: #ffffff;
+    right: 90px;
+    top: 10px;
+    font-size: 31px;
+    padding: 10px 15px;
+    background-color: #365025;
+    border-radius: 50%;
+    transition: all 0.5s;
+}
+.reload:hover{
+    background-color: #578b3e;
 }
 
 

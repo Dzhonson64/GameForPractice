@@ -10,7 +10,8 @@ export default class Game{
         this.minutes;
         this.seconds;
         this.score;
-        this.id;
+        this.id; 
+        this.statusHero = false; // флаг, указывающий на проигрыш (false) или выигрыш (true) героя
         
 
 
@@ -272,6 +273,12 @@ export default class Game{
         document.getElementById("endScreen").style.display = "block";   // отображаем поле с концом игры
 
         /* Отображаем данные, которые в верхней части до таблицы */
+        if(this.statusHero){
+            document.getElementById("status").querySelector("span").innerText = "You WIN !!!";
+        }else{
+            document.getElementById("status").querySelector("span").innerText = "You've lost !!!";
+        }
+        
         document.getElementById("nickname").querySelector("span").innerText = this.username;
         document.getElementById("endScore").querySelector("span").innerText = this.score;
 

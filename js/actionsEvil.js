@@ -124,7 +124,9 @@ export default class ActionsEvil{
                 modules.render.textDamag.push(new TextDamage(obj.attackPower, modules.hero.coordinate.x, modules.hero.coordinate.y, 50, 'red')); // создаём текст с информацией о полученном уроне
 
                 if(modules.hero.hp <= 0){
-                    modules.render.endGame = true;
+                    /* ХП героя закончились */
+                    modules.render.endGame = true;      // говрим, что конце игры
+                    modules.game.statusHero = false;    // игрок проиграл
                 }
             }else{
                 modules.actHero.doReductionMana(5);

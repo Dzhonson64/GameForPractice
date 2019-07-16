@@ -204,14 +204,16 @@ export default class Render{
 
                 modules.actHero.moving();   // обработка перемещения персонажа
                 this.fps(); // ФПС игры
-
-                if(this.endGame || this.evils.length == 0){
+                if(this.evils.length == 0){
+                    modules.game.statusHero = true;
+                    this.endGame = true;
+                }
+                if(this.endGame){
                     modules.game.pause();
                     modules.game.deathScreen();
                 }
                 //console.log(modules.skills.isReloads[0], modules.skills.isReloads[1], modules.skills.isReloads[2], modules.skills.isReloads[3]);
             }
-            console.log("startStopGame - ", this.startStopGame);
                 this.processGame();
             
             

@@ -32,7 +32,6 @@ export default class Map{
                             this.mapCollision = [
                                 ["0.120", "1*5", "0*180", "1*5"] - получили карту с 2 колоннами по краям карты
                             ]
-
                 */
                 this.heightInTile = modules.game.height / 10; // Высота карты в тайлах
                 this.widthInTile = 190; // Ширина карты в тайлах 
@@ -79,7 +78,7 @@ export default class Map{
         return Boolean(this.void);
     }*/
 
-
+    // Золотая функция
     collisWithObj(elx, ely, w, h, con = null){
         // console.log('col', elx, ely, w, h);
         elx = Math.floor(elx);

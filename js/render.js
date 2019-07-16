@@ -6,7 +6,7 @@ export default class Render{
     
     constructor(){
         this.evils = [];    // массив врагов
-        this.evils.push(new Evil(modules.game.floorCoordinate, 2000, 3000));
+        this.evils.push(new Evil(modules.game.floorCoordinate, 500, 900), new Evil(modules.game.floorCoordinate, 900, 1200));
         this.weapons = [];  // массив стрел
         this.nowTime = performance.now();
         this.nextTime;
@@ -66,6 +66,29 @@ export default class Render{
                 kx += x2;
             }
         });
+
+        // левая рука персонажа
+
+
+        modules.game.ctx.save();
+        modules.game.ctx.translate(modules.hero.coordinate.x + modules.hero.hands.left.coordinate.x, modules.hero.coordinate.y + modules.hero.hands.left.coordinate.y);
+
+        modules.game.ctx.rotate(-modules.hero.hands.left.rotate * Math.PI / 180);
+
+        modules.game.ctx.drawImage(
+            modules.hero.hands.img.image,
+            modules.hero.hands.width * modules.hero.hands.left.frame[0],
+            modules.hero.hands.height * modules.hero.hands.left.frame[1],
+            modules.hero.hands.width,
+            modules.hero.hands.height,
+            modules.hero.hands.left.coordinate.anchorX[modules.hero.orientation === 1? 1: 0], 
+            modules.hero.hands.left.coordinate.anchorY[modules.hero.orientation === 1? 1: 0],
+            modules.hero.hands.width,
+            modules.hero.hands.height
+        )
+        modules.game.ctx.restore();
+
+
         /* Отрисовка героя */
         modules.game.ctx.drawImage(
             modules.hero.heroImg.image,
@@ -143,7 +166,7 @@ export default class Render{
                             this.evils[i].mode = 0;
                         }
                     }
-                    modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение с врага с героем
+                    modules.actEvil.isCollisionWithHero(this.evils[i]); // проверка на столкновение врага с героем
                     this.evils[i].health();                             // вывод жизней врага
                     // проверяем cooldown, и если он запущен (не равен 0), то увеличиваем его
                     if(this.evils[i].cooldown !== 0){
@@ -209,11 +232,15 @@ export default class Render{
 
                 modules.actHero.moving();   // обработка перемещения персонажа
                 this.fps(); // ФПС игры
-
-                if(this.endGame || this.evils.length == 0){
+                if(this.evils.length == 0){
+                    modules.game.statusHero = true;
+                    this.endGame = true;
+                }
+                if(this.endGame){
                     modules.game.pause();
                     modules.game.deathScreen();
                 }
+                //console.log(modules.skills.isReloads[0], modules.skills.isReloads[1], modules.skills.isReloads[2], modules.skills.isReloads[3]);
             }
                 this.processGame();
             

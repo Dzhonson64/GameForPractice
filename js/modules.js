@@ -23,8 +23,10 @@ export let hero = new Hero(100, game.floorCoordinate);
 export let actHero = new ActionsHero();
 export let actEvil = new ActionsEvil();
 window.addEventListener("load", function(){
+    game.pause();
     render.processGame();
     render.fps();
     render.timerGame();
+    
     
 });

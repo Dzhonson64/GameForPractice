@@ -9,8 +9,8 @@ export default class Evil {
     */
     constructor(startY, borderL, borderR, attack = 5, attackDelay = 50){
         this.evilImg = new Images("../img/evil.png", 2);   // картинка врага
-        this.width = 205 / 2;                                        // длина картинки 
-        this.height = 250 / 2;                                       // высота картинки 
+        this.width = 55;                                        // длина картинки 
+        this.height = 62;                                       // высота картинки 
         this.speed = 2;                                         // скорость пермещения врага
         this.dx;                                                    // изменение координаты по X
         this.dy = 2;                                            // изменение координаты по Y

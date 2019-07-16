@@ -10,7 +10,8 @@ export default class Game{
         this.minutes;
         this.seconds;
         this.score;
-        this.id;
+        this.id; 
+        this.statusHero = false; // флаг, указывающий на проигрыш (false) или выигрыш (true) героя
         
 
 
@@ -26,8 +27,7 @@ export default class Game{
 
                 //this.widthMap = modules.backrg.backImg.image.width - 118;
 
-                this.ceilingCoordinate = 180 - 100;
-                this.floorCoordinate = 180;
+                this.floorCoordinate = 249;
             break;
             case 1:
                 /* Размеры игрового поля */
@@ -36,7 +36,6 @@ export default class Game{
         
                 //this.widthMap = modules.backrg.backImg.image.width - 118;
                
-                this.ceilingCoordinate = 180 - 100;
                 this.floorCoordinate = 180;
                 
             break;
@@ -79,7 +78,6 @@ export default class Game{
                         this.id = oldCoutGamers
                     }else{
                        this.id = this.getIdUser(this.username);
-                       console.log(this.id);
                     }
                     
                 }else{
@@ -95,14 +93,23 @@ export default class Game{
                 document.getElementById("game").style.display = "block";        // отображаем игру
     
                 document.getElementById("nickInGame").querySelector("span").innerText = this.username;  // выводим ник в игре
-                console.log(localStorage['username' + this.id],  this.id);
+                setTimeout(() =>{
+                    this.pause();
+                }, 50)
+                
             }else{
                 /* Ник не был введён */
                 alert("Введите ник");
             }
             
-        //this.fillTableScore();
+        
         });
+
+        /* Скрытие и отображние описания игры */
+        $("#more").click(function(){ 
+            $( "#contentDescript" ).slideToggle("slow"); 
+            $("#more").text() == "показать" ? $("#more").text("скрыть") : $("#more").text("показать");
+          });
         
     }
     pause(){
@@ -110,21 +117,25 @@ export default class Game{
                     
         if (modules.render.startStopGame){
             /* Игра была НЕ на паузе */
-            modules.render.startStopGame = false;   // останаваливаем игровой процесс
+            
 
             /* Меняем кнопки воспроизведение/пауза */
             document.getElementById("pause").children[0].classList.remove("none");
             document.getElementById("pause").children[1].classList.add("none");
+
+            modules.render.startStopGame = false;   // останаваливаем игровой процесс
         }else{
             /* Игра была на паузе */
 
             this.resume();  // возобновляем таёмеры
-            modules.render.startStopGame = true;    // восстанавливаем игровой процесс
+           
             modules.render.timerGame(); // возобновляем таймер игры
 
             /* Меняем кнопки воспроизведение/пауза */
             document.getElementById("pause").children[0].classList.add("none");
             document.getElementById("pause").children[1].classList.remove("none");
+
+            modules.render.startStopGame = true;    // восстанавливаем игровой процесс
         }
     }
     /* Возобновление работы таймеров */
@@ -144,7 +155,6 @@ export default class Game{
                     /* Включаем соответсвующий таймер для бонуса */
                     case 0:
                         modules.bonuses.timer(i, true, modules.bonuses.addHp, 1);
-                        console.log("1 active");
                         break;
                     case 1:
                         modules.bonuses.specialTimer(i, modules.bonuses.addSpeed, 10);
@@ -233,9 +243,9 @@ export default class Game{
            
             if (i == 9 && !isShowUserInTable){
                 /* Добавление на 10 позицию списка, если в остальных 9 позициях не было нужного ника*/
-                $("#idGamers").append("<p>" + 10 + "</p>");
+                $("#idGamers").append("<p>" + this.getIdUser(this.username) + "</p>");
                 $("#timerGamers").append("<p>" + this.minutes + ":" + this.seconds + "</p>");
-                $("#tableName").append("<p>" + this.name + "</p>");
+                $("#tableName").append("<p>" + this.username + "</p>");
                 $("#tableScore").append("<p>" + this.score + "</p>");
             }else{
                 /* Добавление в список, если эта не 9 позиция или 9 и нужный ник уже был отобраэён*/
@@ -274,6 +284,12 @@ export default class Game{
         document.getElementById("endScreen").style.display = "block";   // отображаем поле с концом игры
 
         /* Отображаем данные, которые в верхней части до таблицы */
+        if(this.statusHero){
+            document.getElementById("status").querySelector("span").innerText = "You WIN !!!";
+        }else{
+            document.getElementById("status").querySelector("span").innerText = "You've lost !!!";
+        }
+        
         document.getElementById("nickname").querySelector("span").innerText = this.username;
         document.getElementById("endScore").querySelector("span").innerText = this.score;
 
@@ -283,7 +299,7 @@ export default class Game{
         localStorage["seconds" + this.id] = String(this.seconds);
         this.bubleSort();       // делаем сортировку списка, относительно новых данных
         this.fillTableScore();  // делаем заполненеи и отображение списка игроков
-        console.log(this.username, this.minutes + ":" + this.seconds, this.score, this.id);
+        this.fillUserInTable();
     }
     /* Проверка на то, если ли такой ник уже в базе */
     isUser(user){
@@ -304,5 +320,21 @@ export default class Game{
             }
         }
         return 0;
+    }
+   fillUserInTable(){
+        var tempElemUser = $("#tableName").children().each(function(pos) {
+            if($("#tableName").children()[pos].innerText == this.username){
+                
+                $("#tableName").children()[pos].classList.add("you");
+                $("#idGamers").children()[pos].classList.add("you");
+                $("#tableScore").children()[pos].classList.add("you");
+                $("#timerGamers").children()[pos].classList.add("you");
+            }else{
+                $("#tableName").children()[pos].classList.remove("you");
+                $("#idGamers").children()[pos].classList.remove("you");
+                $("#tableScore").children()[pos].classList.remove("you");
+                $("#timerGamers").children()[pos].classList.remove("you");
+            }    
+        }.bind(this));
     }
 }

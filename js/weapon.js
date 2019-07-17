@@ -39,7 +39,7 @@ export default class Weapon{
             this.coordinate.y < 0 && !this.upperBorderIsFree ||
             this.coordinate.y > modules.game.height
             ){
-                console.log('Arrow out of the border');
+                // console.log('Arrow out of the border');
                 return true;
         }
         return false;
@@ -56,7 +56,7 @@ export default class Weapon{
             this.coordinate.y + this.heightWithAngle >= objEvil.coordinate.y
             ){
             /* Произошло попадание */
-            console.log('Arrow hit the enemy');
+            // console.log('Arrow hit the enemy');
 
                 return true;
         }

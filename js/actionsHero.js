@@ -86,13 +86,14 @@ export default class ActionsHero{
                     this.leftPress = true;
                     modules.hero.heroImg.frameY = 1;
                     modules.hero.orientation = -1;
+                    modules.hero.changeDirection()
                 }
                 if (elem.code == "KeyD"){
                     /* Нажата кнопка D */
                     this.rightPress = true;
                     modules.hero.heroImg.frameY = 0;
-                    
                     modules.hero.orientation = 1;
+                    modules.hero.changeDirection()
                 }
                 if (elem.code == "KeyW" && this.collisions[0] === 0){
                     /* Нажата кнопка W */
@@ -145,16 +146,28 @@ export default class ActionsHero{
                 katetY = Math.round(this.widthLine(x1, y1, x1, y2)),        // вычисление длины катета, который лежит на оси Y
                 gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY),  // вычисление длины гипотенцзы
                 sinY = (katetY) / gipotenyza * (y1 >= y2 ? 1: -1), // вычисляем синус угла
-                angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и позицией мышки
-            modules.hero.hands.left.rotate = angle + modules.hero.hands.left.startrotate[modules.hero.orientation === 1? 1: 0][modules.hero.hands.shoot];
-            modules.hero.hands.right.rotate = angle + modules.hero.hands.right.startrotate[modules.hero.orientation === 1? 1: 0][modules.hero.hands.shoot];
+                angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и позицией мышки\
+            // console.log(modules.hero.orientation);
+            if(modules.hero.orientation === 1){
+                modules.hero.hands.left.rotate = angle + modules.hero.hands.left.startrotate[modules.hero.orientation === 1? 1: 0][0];
+                // console.log('ang bef', angle % 90)
+                //angle = angle + (90 - Math.abs(angle % 90 != 0? angle % 45: 90)) / 2;
+                // console.log('ang aft', angle % 90)
+                // modules.hero.hands.right.rotate = angle + modules.hero.hands.right.startrotate[modules.hero.orientation === 1? 1: 0][modules.hero.hands.shoot];
+            }else{
+                modules.hero.hands.right.rotate = angle + modules.hero.hands.right.startrotate[modules.hero.orientation === 1? 1: 0][0];
+                // console.log('ang bef', angle % 90)
+                //angle = angle + (90 - Math.abs(angle % 90 != 0? angle % 45: 90)) / 2;
+                // console.log('ang aft', angle % 90)
+                // modules.hero.hands.left.rotate = angle + modules.hero.hands.left.startrotate[modules.hero.orientation === 1? 1: 0][modules.hero.hands.shoot];
+            }
         }
 
 
 
         
         document.addEventListener('mousedown', (e) =>{ // блок персонажа, прописан ещё в actionsEvil, т к работает так сяк
-            console.log(e.which == 1, this.selectedAbil == 1);
+            // console.log(e.which == 1, this.selectedAbil == 1);
             if(e.which == 1 && this.selectedAbil == 1 && modules.hero.mp >= 5){
                 modules.hero.block = true;
             }
@@ -169,8 +182,10 @@ export default class ActionsHero{
 
         document.onclick = (elem) =>{ 
             if(modules.render.startStopGame){
-                console.log("remodules.skills.isReloads[0]");
+                modules.hero.changeDirection()
+                //console.log("remodules.skills.isReloads[0]");
                 if(this.selectedAbil == 0 && !modules.skills.isReloads[0]){ // обычная стрельба
+                    modules.hero.attack();
                     modules.skills.isReloads[0] = true; 
                     modules.skills.timer(0);
 
@@ -185,6 +200,7 @@ export default class ActionsHero{
                     this.doArrow(elem, 0, 0, false);
                 }else if(this.selectedAbil == 2 && modules.hero.mp >= 15 && !modules.skills.isReloads[2]){ // три стрелы
                     modules.skills.isReloads[2] = true; 
+                    modules.hero.attack();
                     modules.skills.timer(2);  
                     // if(modules.hero.orientation == 1){
                     //     modules.hero.heroImg.frameY = 2;
@@ -198,6 +214,7 @@ export default class ActionsHero{
                     this.doArrow(elem, 0, -10, false);
                 }else if(this.selectedAbil == 3 && modules.hero.mp >= 30 && !modules.skills.isReloads[3]){ // град стрел
                     modules.skills.isReloads[3] = true; 
+                    modules.hero.attack();
                     modules.skills.timer(3);   
                     // if(modules.hero.orientation == 1){
                     //     modules.hero.heroImg.frameY = 0;
@@ -421,7 +438,7 @@ export default class ActionsHero{
             } else {
                 modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
             }
-            // modules.hero.heroImg.frameX = 1
+            // modules.hero.heroImg.frameX = 6
             modules.hero.changeFrame(modules.hero.heroImg.frameX);
         }
 
@@ -455,7 +472,7 @@ export default class ActionsHero{
             } else {
                 modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
             }
-            // modules.hero.heroImg.frameX = 0
+            // modules.hero.heroImg.frameX = 6
             modules.hero.changeFrame(modules.hero.heroImg.frameX);
         }
 

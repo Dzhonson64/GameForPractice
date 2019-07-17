@@ -130,9 +130,11 @@ export default class Hero{
             this.hands.left.coordinate.offsetX[this.orientation === 1? 1: 0][heroFrame];
         this.hands.right.coordinate.x = 
             this.hands.right.coordinate.offsetX[this.orientation === 1? 1: 0][heroFrame];
+        
     }
     attack(){
         this.hands.shoot = 1;
+        clearInterval(this.intleftarm);
         if(this.orientation === 1){
             this.hands.right.rotate = this.hands.left.rotate - this.hands.right.startrotate[1][0];
         }else{

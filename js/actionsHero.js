@@ -174,7 +174,7 @@ export default class ActionsHero{
         });
 
         document.addEventListener('mouseup', (e) =>{ // убираем блок при отжатии мыши
-            if(e.which == 1 && this.selectedAbil == 1){
+            if(e.which == 1){
                 modules.hero.block = false;
             }
         });

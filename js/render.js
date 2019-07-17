@@ -70,6 +70,9 @@ export default class Render{
         // левая рука персонажа
 
 
+        modules.game.ctx.globalAlpha = 1 - modules.hero.block * 0.3; // если персонаж блокирует добавляем прозрачности
+
+
         modules.game.ctx.save();
         if(modules.hero.orientation === 1){
             // левая рука персонажа
@@ -166,7 +169,7 @@ export default class Render{
     
         modules.game.ctx.restore();
         
-
+        modules.game.ctx.globalAlpha = 1;   // возвращаем прозрачность назад
 
         /* Отрисовка врагов */
         this.evils.forEach( (elem) => {

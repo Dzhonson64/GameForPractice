@@ -20,6 +20,7 @@ export default class Render{
         this.startStopGame = true; // старт игры - true, пауза - false 
         this.endGame = false;       // конец игры
         modules.backrg.backGameWidth = Math.round(modules.game.height * modules.backrg.aspect);
+        this.clearTimer = false;
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -261,19 +262,23 @@ export default class Render{
         fpsBlock.innerHTML = Math.round(1 / delta); // выводим ФПС
     }
     /* Таймер игры */
-    timerGame(clearTimerAndStart = false){
+    timerGame(){
         var timer;
-        var seconds = Number(document.getElementById("secondTimer").innerText);     // берём секунды из html
-        var minutes = Number(document.getElementById("minutesTimer").innerText);    // берём минуты из html
-        console.log("startStopGame out - ", this.startStopGame);
+        
+        
+        if(this.clearTimer){
+            clearTimeout(timer);
+            return;
+        }
 
         timer = setTimeout(function run(){
-            console.log("startStopGame - ", this.startStopGame);
-            if (minutes < 0 && seconds < 0 || !this.startStopGame || clearTimerAndStart){
+            if (minutes < 0 && seconds < 0 || !this.startStopGame){
                 /* Минуты и секунды меньше 0. Время закончилось */
                 //this.timeGame = false;  // флаг опускаем. Игры закончилась
                 clearTimeout(timer);
             }else{
+                var seconds = Number(document.getElementById("secondTimer").innerText);     // берём секунды из html
+                var minutes = Number(document.getElementById("minutesTimer").innerText);    // берём минуты из html
                 seconds--; 
                 if (seconds < 0){
                     minutes--;

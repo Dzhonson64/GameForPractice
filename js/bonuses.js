@@ -9,6 +9,7 @@ export default class Bonuses{
             document.getElementById("bonus3").querySelector("span")
         ],
         this.isActives = [false,false];
+        this.stopTimerBon = false;
         /* Бонус первого вида. О 1 раз выполняется ПО счётчику и потом деактивируется */
         document.getElementById("bonus1").onclick = () =>{
             /* Активирован первый бонус */
@@ -35,7 +36,10 @@ export default class Bonuses{
                     /* Бонус не активен и готов к использованию */
 
                     this.addMana(40); // выполняем нужные дейсвтвия бонуса
-                    document.getElementById("bonus2").classList.add("deactivated"); // выполняем деактивируем бонус
+                    if(!this.stopTimerBon){
+                        document.getElementById("bonus2").classList.add("deactivated"); // выполняем деактивируем бонус
+                    }
+                    
                 }
             }
         }
@@ -78,7 +82,7 @@ export default class Bonuses{
                 if(modules.render.startStopGame){
                     /* Игра была ещё запущена */
                     this.isActives[numBonus] = false;               // опускаем флаг, говоря что этот бонусу неактивен
-                    if(isOneUse){
+                    if(isOneUse && !this.stopTimerBon){
                         /* Функция должна выполняться 1 раз */
     
                         this.bonusesArr[numBonus].parentElement.parentElement.classList.add("deactivated"); // декативируем её

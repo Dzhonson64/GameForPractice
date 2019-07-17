@@ -6,7 +6,7 @@ export default class Skills{
         this.timeSkills = [2, 10.2, 5.3, 15];           // массив времён перезарядов каждой способноти
         this.isReloads = [false,false, false, false];   // состоянии перезарядок каждой способности
         this.imgSkills = [new Images('../img/skill1.png'), new Images('../img/skill2.png'), new Images('../img/skill3.png'), new Images('../img/skill4.png')]; // массив картинок способностей
-        //this.activeSkill = false;
+        
     }
     timer(numAbil){
         var oldTime = this.timeSkills[numAbil];  // запоминаем начальное время таймера, чтобы потом сбросить

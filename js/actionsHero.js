@@ -170,46 +170,47 @@ export default class ActionsHero{
         document.onclick = (elem) =>{ 
             if(modules.render.startStopGame){
                 if(this.selectedAbil == 0 && !modules.skills.isReloads[0]){ // обычная стрельба
-                    modules.skills.isReloads[0] = true; 
-                    modules.skills.timer(0);
+                   
+                    var x1 = elem.clientX;  // кординаты мыши по X
+                    var y1 = elem.clientY;  // кординаты мыши по Y 
+                    if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
+                        modules.skills.isReloads[0] = true;
+                        modules.skills.timer(0);
+                        this.doArrow(elem, 0, 0, false);
+                    }
 
                     
 
-                    // if(modules.hero.orientation == 1){
-                    //     modules.hero.heroImg.frameY = 2;
-                    // }else{
-                    //     modules.hero.heroImg.frameY = 3;
-                    // }
 
-                    this.doArrow(elem, 0, 0, false);
+                    
                 }else if(this.selectedAbil == 2 && modules.hero.mp >= 15 && !modules.skills.isReloads[2]){ // три стрелы
-                    modules.skills.isReloads[2] = true; 
-                    modules.skills.timer(2);  
-                    // if(modules.hero.orientation == 1){
-                    //     modules.hero.heroImg.frameY = 2;
-                    // }else{
-                    //     modules.hero.heroImg.frameY = 3;
-                    // }
-                    
+                   
+                    var x1 = elem.clientX;  // кординаты мыши по X
+                    var y1 = elem.clientY;  // кординаты мыши по Y
+                    if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
+                        modules.skills.isReloads[2] = true; 
+                        modules.skills.timer(2);  
+                        
 
-                    this.doArrow(elem, 15, 0, false);
-                    this.doArrow(elem, 0, 10, false);
-                    this.doArrow(elem, 0, -10, false);
+                        this.doArrow(elem, 15, 0, false);
+                        this.doArrow(elem, 0, 10, false);
+                        this.doArrow(elem, 0, -10, false);
+                    }
                 }else if(this.selectedAbil == 3 && modules.hero.mp >= 30 && !modules.skills.isReloads[3]){ // град стрел
-                    modules.skills.isReloads[3] = true; 
-                    modules.skills.timer(3);   
-                    // if(modules.hero.orientation == 1){
-                    //     modules.hero.heroImg.frameY = 0;
-                    // }else{
-                    //     modules.hero.heroImg.frameY = 1;
-                    // }
-                    this.doArrow(elem, 30, 0, true);
-                    this.doArrow(elem, 0, 20, true);
-                    this.doArrow(elem, 0, -20, true);
-                    this.doArrow(elem, 0, 50, true);
-                    this.doArrow(elem, 0, -50, true);
-                    this.doArrow(elem, 0, 90, true);
-                    this.doArrow(elem, 0, -90, true);
+                     
+                    var x1 = elem.clientX;  // кординаты мыши по X
+                    var y1 = elem.clientY;  // кординаты мыши по Y
+                    if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
+                        modules.skills.isReloads[3] = true;
+                        modules.skills.timer(3);   
+                        this.doArrow(elem, 30, 0, true);
+                        this.doArrow(elem, 0, 20, true);
+                        this.doArrow(elem, 0, -20, true);
+                        this.doArrow(elem, 0, 50, true);
+                        this.doArrow(elem, 0, -50, true);
+                        this.doArrow(elem, 0, 90, true);
+                        this.doArrow(elem, 0, -90, true);
+                    }
                 }
             }             
             
@@ -233,11 +234,11 @@ export default class ActionsHero{
             /* Маны больше 0 */
 
              /* передаём начальные координаты для стрелы, исходя из положения персонажа и размера его спрайта, синус и косинус */
+             var x1 = elem.clientX;  // кординаты мыши по X
+             var y1 = elem.clientY;  // кординаты мыши по Y
             
-            var x1 = elem.clientX;  // кординаты мыши по X
-            var y1 = elem.clientY;  // кординаты мыши по Y
            
-            if (x1 >= 10 && x1 <= modules.game.width && y1 > 10 && y1 <= modules.game.height){
+            
                 /* Нажатие произошло в границах холста */
                 this.doReductionMana(mana);
                 
@@ -281,7 +282,6 @@ export default class ActionsHero{
                 modules.render.weapons.push(weapon);
                 weapon.move();
                 
-            }
             
         
     }

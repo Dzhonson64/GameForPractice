@@ -245,9 +245,8 @@ body{
 
 
 
-
 .endScreen, .startScreen {
-    padding: 10px;
+    padding: 0px;
     background-color: #365025;
     min-height: 98vh;
     display: flex;

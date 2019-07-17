@@ -91,6 +91,7 @@ export default class ActionsHero{
                     /* Нажата кнопка D */
                     this.rightPress = true;
                     modules.hero.heroImg.frameY = 0;
+                    
                     modules.hero.orientation = 1;
                 }
                 if (elem.code == "KeyW" && this.collisions[0] === 0){
@@ -135,6 +136,22 @@ export default class ActionsHero{
 
 
 
+        document.onmousemove = (e) =>{
+            var x1 = e.clientX,  // кординаты мыши по X
+                y1 = e.clientY,  // кординаты мыши по Y
+                x2 = modules.hero.coordinate.x + modules.hero.width / 2,    // кординаты персонажа по X
+                y2 = modules.hero.coordinate.y + modules.hero.height / 2,   // кординаты персонажа по Y
+                katetX = Math.round(this.widthLine(x1, y2, x2, y2)),        // вычисление длины катета, который лежит на оси X
+                katetY = Math.round(this.widthLine(x1, y1, x1, y2)),        // вычисление длины катета, который лежит на оси Y
+                gipotenyza = Math.sqrt(katetX * katetX + katetY * katetY),  // вычисление длины гипотенцзы
+                sinY = (katetY) / gipotenyza * (y1 >= y2 ? 1: -1), // вычисляем синус угла
+                angle = ((x1 >= x2 ? 0: Math.PI) - Math.asin(sinY * (x1 >= x2 ? 1: -1))) * 180 / Math.PI; // вычисляем значение угла прямой между персонажем и позицией мышки
+            modules.hero.hands.left.rotate = angle + modules.hero.hands.left.startrotate[modules.hero.orientation === 1? 1: 0][modules.hero.hands.shoot];
+            modules.hero.hands.right.rotate = angle + modules.hero.hands.right.startrotate[modules.hero.orientation === 1? 1: 0][modules.hero.hands.shoot];
+        }
+
+
+
         
         document.addEventListener('mousedown', (e) =>{ // блок персонажа, прописан ещё в actionsEvil, т к работает так сяк
             console.log(e.which == 1, this.selectedAbil == 1);
@@ -156,21 +173,23 @@ export default class ActionsHero{
                     modules.skills.isReloads[0] = true; 
                     modules.skills.timer(0);
 
-                    if(modules.hero.orientation == 1){
-                        modules.hero.heroImg.frameY = 2;
-                    }else{
-                        modules.hero.heroImg.frameY = 3;
-                    }
+                    
+
+                    // if(modules.hero.orientation == 1){
+                    //     modules.hero.heroImg.frameY = 2;
+                    // }else{
+                    //     modules.hero.heroImg.frameY = 3;
+                    // }
 
                     this.doArrow(elem, 0, 0, false);
                 }else if(this.selectedAbil == 2 && modules.hero.mp >= 15 && !modules.skills.isReloads[2]){ // три стрелы
                     modules.skills.isReloads[2] = true; 
                     modules.skills.timer(2);  
-                    if(modules.hero.orientation == 1){
-                        modules.hero.heroImg.frameY = 2;
-                    }else{
-                        modules.hero.heroImg.frameY = 3;
-                    }
+                    // if(modules.hero.orientation == 1){
+                    //     modules.hero.heroImg.frameY = 2;
+                    // }else{
+                    //     modules.hero.heroImg.frameY = 3;
+                    // }
                     
 
                     this.doArrow(elem, 15, 0, false);
@@ -179,11 +198,11 @@ export default class ActionsHero{
                 }else if(this.selectedAbil == 3 && modules.hero.mp >= 30 && !modules.skills.isReloads[3]){ // град стрел
                     modules.skills.isReloads[3] = true; 
                     modules.skills.timer(3);   
-                    if(modules.hero.orientation == 1){
-                        modules.hero.heroImg.frameY = 0;
-                    }else{
-                        modules.hero.heroImg.frameY = 1;
-                    }
+                    // if(modules.hero.orientation == 1){
+                    //     modules.hero.heroImg.frameY = 0;
+                    // }else{
+                    //     modules.hero.heroImg.frameY = 1;
+                    // }
                     this.doArrow(elem, 30, 0, true);
                     this.doArrow(elem, 0, 20, true);
                     this.doArrow(elem, 0, -20, true);
@@ -279,7 +298,7 @@ export default class ActionsHero{
     doIncreaseMana(){
         // Вечный интервал для восстановления маны
         this.intervalIncrease = setInterval(function delay(){
-            if ( modules.hero.mp < modules.hero.maxMp && modules.render.startStopGame){
+            if ( modules.hero.mp < modules.hero.maxMp && modules.render.startStopGame && !modules.hero.block){
                 modules.hero.mp =  (modules.hero.mp + modules.hero.deltaMana <= modules.hero.maxMp)? (modules.hero.mp + modules.hero.deltaMana): modules.hero.maxMp;
                 modules.game.heroMp.innerText = modules.hero.mp; // увеличиваем ману
                 modules.game.heroMp.parentElement.style.width = String(modules.hero.mp / modules.hero.maxMp * 100) + "%"; // увеличиваем размер динамической полосы маны
@@ -318,6 +337,14 @@ export default class ActionsHero{
        
     }
 
+
+
+
+
+
+
+
+
     /* Перемещение героя */
     moving(){
         var coordinateHeroOnMapX = -modules.backrg.x + modules.hero.coordinate.x;
@@ -328,7 +355,7 @@ export default class ActionsHero{
         this.collisions = modules.mapCol.collisWithObj(
             (modules.hero.coordinate.x - modules.backrg.x) / 10, 
             (modules.hero.coordinate.y) / 10, 
-            (modules.hero.width) / 10, (modules.hero.height) / 10);
+            (modules.hero.width) / 10, (modules.hero.height) / 10, 'd');
 
         // Если персонаж в прыжке и сверху что-то есть
 
@@ -354,8 +381,9 @@ export default class ActionsHero{
             Условие ниже определяет конец фона, но оно не корректно опеделяет флаг при координате персонажа 200, 
             поэтому далее выстанавливаем вспомогательные условия (помечены комментарии с приставкой [1]). Место костылей, рассматриваем варианты замены */
 
-        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= modules.hero.offset && modules.game.width / 2 > -modules.backrg.x || // левая граница фона
-           -modules.backrg.x + modules.hero.offset <= modules.game.width && modules.hero.coordinate.x <= modules.hero.offset && modules.game.width / 2 <= -modules.backrg.x){ // правая граница фона
+        if(modules.backrg.x <= 0 && modules.hero.coordinate.x >= modules.hero.offset && modules.backrg.difference / 2 > -modules.backrg.x || // левая граница фона
+           -modules.backrg.x + modules.game.width - modules.hero.offset <= modules.mapCol.widthInTile * 10 && modules.hero.coordinate.x <= modules.hero.offset && 
+                                modules.backrg.difference / 2 <= -modules.backrg.x){ // правая граница фона
                 modules.backrg.endBackgr = false; // Можно двигать фон (кроме некоторых случаев, которые помечены комментариями с приставкой [1])
         }else{
             modules.backrg.endBackgr = true;    // Нельзя двигать фон
@@ -363,12 +391,16 @@ export default class ActionsHero{
 
         //---! Движение фона обратно движению персонажа !---
         if (this.leftPress && !this.isCollisionWithEvil() || this.leftPress && this.processJump){ //Если движемся влево
-
+            // console.log(this.collisions);
+            modules.hero.changeDirection();
             /* [1] - Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до левой границы холста 0 */
             if(modules.backrg.x < 0 && !modules.backrg.endBackgr){  
 
                 // движение !фона
                 modules.backrg.x += modules.backrg.k * modules.hero.dx;
+
+
+                
 
                 // движение !врагов относительно движения персонажа
                 modules.render.evils.forEach((elem) => {
@@ -388,9 +420,13 @@ export default class ActionsHero{
             } else {
                 modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
             }
+            // modules.hero.heroImg.frameX = 1
+            modules.hero.changeFrame(modules.hero.heroImg.frameX);
         }
 
         else if (this.rightPress && !this.isCollisionWithEvil() || this.rightPress && this.processJump ){ //если движется вправо
+            // console.log(this.collisions);
+            modules.hero.changeDirection();
 
             /* Смотрим на инвертированное значение флага endBackgr и проверяем не дошёл ли фон до правой границы карты. Тут работает магическое число 200, 
                     т. к. персонаж смещён от начала фона и образуется пустота при подходе вправо (если не ставить число 200) */
@@ -418,7 +454,8 @@ export default class ActionsHero{
             } else {
                 modules.hero.heroImg.frameX = 0;    // то возвращаемся к началу
             }
-
+            // modules.hero.heroImg.frameX = 0
+            modules.hero.changeFrame(modules.hero.heroImg.frameX);
         }
 
         

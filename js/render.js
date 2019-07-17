@@ -19,6 +19,7 @@ export default class Render{
         this.textDamag = [];
         this.startStopGame = true; // старт игры - true, пауза - false 
         this.endGame = false;       // конец игры
+        modules.backrg.backGameWidth = Math.round(modules.game.height * modules.backrg.aspect);
     }
     drawImages(){
         /* Метод, который отображет картинки через drawImage() */
@@ -32,16 +33,20 @@ export default class Render{
         );
         
 
-
+        // console.log('begin fon');
         // Отрисовка фона
-
-        modules.game.ctx.drawImage(
-            modules.backrg.backImg.image,
-            modules.backrg.x,
-            modules.backrg.y,
-            modules.game.height * modules.backrg.aspect,
-            modules.game.height
-        );
+        for(let i = 0; (i - 1) * modules.backrg.backImg.length * modules.backrg.backGameWidth < modules.mapCol.widthInTile * 10; i++){
+            for(let j = 0; j < modules.backrg.backImg.length; j++){
+                modules.game.ctx.drawImage(
+                    modules.backrg.backImg[j].image,
+                    modules.backrg.x + (i * modules.backrg.backImg.length + j) * modules.backrg.backGameWidth,
+                    modules.backrg.y,
+                    modules.game.height * modules.backrg.aspect,
+                    modules.game.height
+                );
+            }
+        } 
+        // console.log('end fon');
 
         //Отрисовка местности
 
@@ -65,6 +70,29 @@ export default class Render{
                 kx += x2;
             }
         });
+
+        // левая рука персонажа
+
+
+        modules.game.ctx.save();
+        modules.game.ctx.translate(modules.hero.coordinate.x + modules.hero.hands.left.coordinate.x, modules.hero.coordinate.y + modules.hero.hands.left.coordinate.y);
+
+        modules.game.ctx.rotate(-modules.hero.hands.left.rotate * Math.PI / 180);
+
+        modules.game.ctx.drawImage(
+            modules.hero.hands.img.image,
+            modules.hero.hands.width * modules.hero.hands.left.frame[0],
+            modules.hero.hands.height * modules.hero.hands.left.frame[1],
+            modules.hero.hands.width,
+            modules.hero.hands.height,
+            modules.hero.hands.left.coordinate.anchorX[modules.hero.orientation === 1? 1: 0], 
+            modules.hero.hands.left.coordinate.anchorY[modules.hero.orientation === 1? 1: 0],
+            modules.hero.hands.width,
+            modules.hero.hands.height
+        )
+        modules.game.ctx.restore();
+
+
         /* Отрисовка героя */
         modules.game.ctx.drawImage(
             modules.hero.heroImg.image,

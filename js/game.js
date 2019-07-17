@@ -6,7 +6,7 @@ export default class Game{
     /* 
         floor - координаты нижней границы перемещения (Number)
     */
-    constructor(floor){
+    constructor(level){
         this.username;
         this.minutes;
         this.seconds;
@@ -20,16 +20,27 @@ export default class Game{
         this.ctx = this.canvasField.getContext("2d");
         this.heroHp = document.querySelector(".conditions .hp .fill span");
         this.heroMp = document.querySelector(".conditions .mp .fill span");
-        
-        /* Размеры игрового поля */
-        this.width = 1000;
-        this.height = 400;
+        switch(level){
+            case 0:
+                /* Размеры игрового поля */
+                this.width = 1000;
+                this.height = 400;
 
-        //this.widthMap = modules.backrg.backImg.image.width - 118;
-       
-        this.ceilingCoordinate = floor - 100;
-        this.floorCoordinate = floor;
+                //this.widthMap = modules.backrg.backImg.image.width - 118;
+
+                this.floorCoordinate = 249;
+            break;
+            case 1:
+                /* Размеры игрового поля */
+                this.width = 1000;
+                this.height = 400;
         
+                //this.widthMap = modules.backrg.backImg.image.width - 118;
+               
+                this.floorCoordinate = 180;
+                
+            break;
+        }
         /* Установка разморов игрового поля */
         this.canvasField.setAttribute("width", this.width + "px");
         this.canvasField.setAttribute("height", this.height + "px");

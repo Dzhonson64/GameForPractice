@@ -11,12 +11,12 @@ import Bonuses from "./bonuses.js";
 import Map from "./map.js";
 import Skills from "./skills.js";
 
-export let game = new Game(180);
-export let mapCol = new Map(1);
+export let game = new Game(0);
+export let mapCol = new Map(0);
+export let backrg = new Background(0);
 export let render = new Render();
 export let bonuses = new Bonuses();
 export let skills = new Skills();
-export let backrg = new Background("../img/test_back.png");
 export let hero = new Hero(100, game.floorCoordinate);
 
 

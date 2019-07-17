@@ -146,7 +146,7 @@ export default class ActionsEvil{
         obj.orientation = 1;
         
         if (obj.rightMove && obj.collisions[1] === 0){
-            if (coordinateEvilOnMapX + obj.dx + 3/2 * obj.width <= modules.backrg.backImg.image.width){
+            if (coordinateEvilOnMapX + obj.dx + 3/2 * obj.width <= modules.mapCol.widthInTile * 10){
                 /* Справа нет границы карты */
 
                 if (this.isCollisionWithHero(obj) && !this.processJump && obj.orient === 1){

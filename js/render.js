@@ -76,21 +76,42 @@ export default class Render{
 
 
         modules.game.ctx.save();
-        modules.game.ctx.translate(modules.hero.coordinate.x + modules.hero.hands.left.coordinate.x, modules.hero.coordinate.y + modules.hero.hands.left.coordinate.y);
+        if(modules.hero.orientation === 1){
+            // левая рука персонажа
+            modules.game.ctx.translate(modules.hero.coordinate.x + modules.hero.hands.left.coordinate.x, modules.hero.coordinate.y + modules.hero.hands.left.coordinate.y);
 
-        modules.game.ctx.rotate(-modules.hero.hands.left.rotate * Math.PI / 180);
-
-        modules.game.ctx.drawImage(
-            modules.hero.hands.img.image,
-            modules.hero.hands.width * modules.hero.hands.left.frame[0],
-            modules.hero.hands.height * modules.hero.hands.left.frame[1],
-            modules.hero.hands.width,
-            modules.hero.hands.height,
-            modules.hero.hands.left.coordinate.anchorX[modules.hero.orientation === 1? 1: 0], 
-            modules.hero.hands.left.coordinate.anchorY[modules.hero.orientation === 1? 1: 0],
-            modules.hero.hands.width,
-            modules.hero.hands.height
-        )
+            modules.game.ctx.rotate(-modules.hero.hands.left.rotate * Math.PI / 180);
+    
+            modules.game.ctx.drawImage(
+                modules.hero.hands.img.image,
+                modules.hero.hands.width * modules.hero.hands.left.frame[0],
+                modules.hero.hands.height * modules.hero.hands.left.frame[1],
+                modules.hero.hands.width,
+                modules.hero.hands.height,
+                modules.hero.hands.left.coordinate.anchorX[modules.hero.orientation === 1? 1: 0], 
+                modules.hero.hands.left.coordinate.anchorY[modules.hero.orientation === 1? 1: 0],
+                modules.hero.hands.width,
+                modules.hero.hands.height
+            );
+        }else{
+            // правая рука персонажа
+            modules.game.ctx.translate(modules.hero.coordinate.x + modules.hero.hands.right.coordinate.x, 
+                                    modules.hero.coordinate.y + modules.hero.hands.right.coordinate.y);
+    
+            modules.game.ctx.rotate(-modules.hero.hands.right.rotate * Math.PI / 180);
+    
+            modules.game.ctx.drawImage(
+                modules.hero.hands.img.image,
+                modules.hero.hands.width * modules.hero.hands.right.frame[0],
+                modules.hero.hands.height * modules.hero.hands.right.frame[1],
+                modules.hero.hands.width,
+                modules.hero.hands.height,
+                modules.hero.hands.right.coordinate.anchorX[modules.hero.orientation === 1? 1: 0], 
+                modules.hero.hands.right.coordinate.anchorY[modules.hero.orientation === 1? 1: 0],
+                modules.hero.hands.width,
+                modules.hero.hands.height
+            );           
+        }
         modules.game.ctx.restore();
 
 
@@ -105,8 +126,53 @@ export default class Render{
             modules.hero.coordinate.y,
             modules.hero.width,
             modules.hero.height
-        )
+        );
+
+
         
+        modules.game.ctx.save();
+        if(modules.hero.orientation === 1){
+            // правая рука персонажа
+            // console.log(modules.hero.hands.right.rotate);
+            modules.game.ctx.translate(modules.hero.coordinate.x + modules.hero.hands.right.coordinate.x, 
+                                    modules.hero.coordinate.y + modules.hero.hands.right.coordinate.y);
+    
+            modules.game.ctx.rotate(-modules.hero.hands.right.rotate * Math.PI / 180);
+    
+            modules.game.ctx.drawImage(
+                modules.hero.hands.img.image,
+                modules.hero.hands.width * modules.hero.hands.right.frame[0],
+                modules.hero.hands.height * modules.hero.hands.right.frame[1],
+                modules.hero.hands.width,
+                modules.hero.hands.height,
+                modules.hero.hands.right.coordinate.anchorX[modules.hero.orientation === 1? 1: 0], 
+                modules.hero.hands.right.coordinate.anchorY[modules.hero.orientation === 1? 1: 0],
+                modules.hero.hands.width,
+                modules.hero.hands.height
+            );
+        }else{
+            // левая рука персонажа
+            modules.game.ctx.translate(modules.hero.coordinate.x + modules.hero.hands.left.coordinate.x, modules.hero.coordinate.y + modules.hero.hands.left.coordinate.y);
+
+            modules.game.ctx.rotate(-modules.hero.hands.left.rotate * Math.PI / 180);
+    
+            modules.game.ctx.drawImage(
+                modules.hero.hands.img.image,
+                modules.hero.hands.width * modules.hero.hands.left.frame[0],
+                modules.hero.hands.height * modules.hero.hands.left.frame[1],
+                modules.hero.hands.width,
+                modules.hero.hands.height,
+                modules.hero.hands.left.coordinate.anchorX[modules.hero.orientation === 1? 1: 0], 
+                modules.hero.hands.left.coordinate.anchorY[modules.hero.orientation === 1? 1: 0],
+                modules.hero.hands.width,
+                modules.hero.hands.height
+            );
+        }
+    
+        modules.game.ctx.restore();
+        
+
+
         /* Отрисовка врагов */
         this.evils.forEach( (elem) => {
             modules.game.ctx.drawImage(
@@ -120,7 +186,7 @@ export default class Render{
                 elem.width,
                 elem.height
             )
-        })
+        });
 
         /* Отрисовка стрел */
         this.weapons.forEach( (elem) => {
@@ -197,7 +263,7 @@ export default class Render{
                         }
                         if (this.weapons[j].isOutOfBordersCanvas() || flagHit){
                             /* Если стерела вылетела за границы холста или попала во врага */
-                            console.log('del ev arrow');
+                            // console.log('del ev arrow');
                             this.weapons.splice(j, 1);  // удаляем стрелу
                         }
                     }
@@ -217,11 +283,7 @@ export default class Render{
                         collisions.reduce(function(sum, current) {
                             return sum + current;
                         }, 0) !== 0){
-                            console.log('del arrow ', this.weapons[i].
-                            collisions, this.weapons[i].
-                            collisions.reduce(function(sum, current) {
-                                return sum + current;
-                            }, 0));
+                            
                         /* Если стерела вылетела за границы холста или столкнулась с местностью */
                         this.weapons.splice(i, 1);  // удаляем стрелу
                     }

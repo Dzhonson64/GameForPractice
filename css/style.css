@@ -248,7 +248,7 @@ body{
 .endScreen, .startScreen {
     padding: 0px;
     background-color: #365025;
-    min-height: 98vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;

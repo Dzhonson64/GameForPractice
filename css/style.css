@@ -1,0 +1,357 @@
+body{
+    font-weight: normal;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+}
+.conditions{
+    width: 300px;
+    padding: 0;
+}
+.infoBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.bonuses {
+    margin-top: 15px;
+}
+.bonuses .wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+}
+.bonuses h2{
+    text-align: center;
+    color: rgb(54, 80, 37);
+    margin: 0;
+}
+.bonuses .bonus{
+    position: relative;
+    cursor: pointer;
+    margin: 10px;
+    
+}
+.bonuses .bonus .timerBonus{
+    display: none;
+    color: #ffffff;
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    font-size: 25px;
+    margin: auto;
+    font-weight: 700;
+}
+.skills .skill .timerSkill{
+    display: none;
+    color: #ffffff;
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    font-size: 25px;
+    margin: auto;
+    font-weight: 700;
+}
+.bonuses .bonus.active .timerBonus, .skills .skill .timerSkill{
+    display: block;
+}
+.bonuses .bonus.active::before{
+    content: "";
+    display: flex;
+    width: 44px;
+    z-index: 10;
+    height: 48px;
+    background-color: rgba(54, 80, 37, 0.9);
+    justify-content: center;
+    align-items: center;
+    
+}
+.bonuses .bonus.active img {
+    position: absolute;
+    z-index: -9;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto
+}
+.bonuses .bonus.active{
+    box-shadow: 0 0 8px black;
+}
+.conditions .hp, .conditions .mp{
+    width: 100%;
+    position: relative;
+    margin: 0%;
+    padding: 0;
+    display: inline-block;
+    z-index: 0;
+}
+.bonuses .bonus.deactivated, .skill.deactivated {
+    opacity: 0.5;
+    cursor: default;
+}
+.conditions .hp .fill, .conditions .mp .fill{
+    width: 100%;
+    display: inline-block;
+    padding: 10px 0;
+}
+.conditions .hp .fill span, .conditions .mp .fill span{
+    padding-left: 15px;
+    text-indent: 15px;
+    z-index: 10;
+}
+.hp{
+    background: rgba(129, 0, 0, 0.973);
+    color: white;
+}
+.hp .fill{
+    background: rgb(255, 0, 0);
+}
+.mp{
+    background: rgb(19, 0, 88);
+    color: white;
+}
+.mp .fill{
+    background: rgb(4, 0, 228);
+}
+.fps, .score, .timer {
+    font-size: 22px;
+    background-color: #365025;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #ffffff;
+}
+.seconds {
+    display: none;
+    position: absolute;
+    color: #000000;
+    top: 10px;
+    right: -60px;
+}
+.pause{
+    cursor: pointer;
+    position: fixed;
+    color: #ffffff;
+    right: 20px;
+    top: 10px;
+    font-size: 31px;
+    padding: 10px 15px;
+    background-color: #365025;
+    border-radius: 50%;
+    transition: all 0.5s;
+}
+.pause .fa.none{
+    display: none;
+}
+.pause:hover{
+    background-color: #578b3e;
+    color: #bbd4ae;
+}
+
+
+.startScreen .typedInfo .name{
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-size: 2rem;
+}
+.startScreen .typedInfo .name input{
+    width: 250px;
+    font-size: 20px;
+    height: 20px;
+    margin-left: 15px;
+}
+.startScreen  .btnStart{
+    cursor: pointer;
+    margin-top: 50px;
+    background-color: #26381b;
+    font-size: 2.5rem;
+    border-radius: 10px;
+    color: #ffffff;
+    border: 5px solid #1d2b15;
+    padding: 10px 15px;
+    transition: all 0.5s;
+    margin-bottom: 50px;
+}
+.startScreen  .btnStart:hover{
+    background-color: #1d2b15;
+    box-shadow: 0 0 17px 2px black;
+}
+.startScreen .description{
+    width: 700px;
+}
+.startScreen .description h2{
+    text-align: center;
+    color: #ffffff;
+}
+.startScreen .description .content{
+    display: none;
+    color: #d4d4d4;
+}
+.startScreen .description .content p {
+    font-size: 1.1rem;
+}
+.startScreen .description .content h3{
+    color: #ffffff;
+    text-align: center;
+    margin-top: 100px;
+}
+.startScreen .description .content .controlMove,
+.startScreen .description .content .infoBonuses,
+.startScreen .description .content .infoSkills
+{
+    display: flex;
+    flex-direction: column;
+}
+.startScreen .description .content .controlMove .container,
+.startScreen .description .content .infoBonuses .container,
+.startScreen .description .content .infoSkills .container
+{
+    display: flex;
+    align-items: center;
+}
+.startScreen .description .content .controlMove .container p,
+.startScreen .description .content .infoBonuses .container p,
+.startScreen .description .content .infoSkills .container p
+{
+    margin-left: 10px;
+}
+.startScreen .description .content .controlMove img,
+.startScreen .description .content .infoBonuses img,
+.startScreen .description .content .infoSkills img
+{
+    width: 40px;
+}
+
+
+
+
+
+
+
+
+.endScreen, .startScreen {
+    padding: 0px;
+    background-color: #365025;
+    min-height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.game, .endScreen {
+    display: none;
+}
+.endScreen .info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.endScreen .endScore{
+    background-color: #26381b;
+    font-size: 2.5rem;
+    border-radius: 10px;
+    color: #ffffff;
+    border: 5px solid #1d2b15;
+    padding: 10px 15px;
+}
+.endScreen .nickname{
+    color: #ffffff;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+.endScreen .nickname span {
+    color: #eccf00;
+}
+.endScreen .tableGamers{
+    display: flex;
+    color: #ffffff;
+   
+
+}
+.endScreen h2{
+    margin-top: 50px;
+    color: #ffffff;
+}
+.endScreen .tableGamers p {
+    margin: 0;
+}
+.endScreen .idGamers p, .endScreen .time p, .endScreen .name p, .endScreen .scoreTable p{
+    padding: 5px 10px;
+}
+.endScreen .idGamers .title, .endScreen .time .title, .endScreen .name .title, .endScreen .scoreTable .title{
+    text-align: left;
+    font-size: 1.5rem;
+    padding: 10px 10px;
+    
+}
+.endScreen .idGamers, .endScreen .time, .endScreen .name, .endScreen .scoreTable{
+    
+    text-align: center;
+    font-size: 1.3rem;
+}
+.endScreen .idGamers .title{
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+.endScreen .time .title{
+    border-bottom: 1px solid #ffffff;
+}
+.endScreen .name .title{
+    border-left: 1px solid ;
+    border-bottom: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
+}
+.endScreen .scoreTable .title{
+    border-left: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.endScreen .idGamers p{
+    border-top: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
+}
+.endScreen .time p{
+    border-top: 1px solid #ffffff;
+}
+.endScreen .name p{
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
+}
+.endScreen .scoreTable p{
+    border-top: 1px solid #ffffff;
+}
+.endScreen .status{
+    color: #ffffff;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #2ebf00;
+}
+
+.game .username{
+    position: fixed;
+    color: #ffffff;
+    right: 20px;
+    top: 87px;
+    font-size: 25px;
+    padding: 10px 15px;
+    background-color: #365025;
+    border-radius: 10px;
+}
+
+.you{
+    color: #eccf00;
+}
+#more{
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.15rem;
+    color: #bad4a9;
+    transition: all 0.5s;
+}
+#more:hover{
+    color: #ffffff;
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="game" id = "game">
+        <canvas id = "canvas"></canvas>
+        <div class="infoBlock">
+            <div class="conditions">
+                <div class="hp">
+                    <div class="fill" id = "hp">
+                        <span>100 HP</span>
+                            
+                    </div>
+                    
+                </div>
+                <div class="seconds">
+                    <span id = "secondsMana"></span> sec
+                </div>
+            </div>
+            <div class="timer">
+                    Осталось 
+                    <span id = "minutesTimer">20</span>
+                    :
+                    <span id = "secondTimer">5</span>
+            </div>
+            <div class="score">
+                Score: <span id = "score">0</span>
+            </div>
+            <div class="fps">
+                <span id = "fps"></span> fps
+            </div>
+            
+            <div class="conditions">
+                <div class="mp">
+                    <div class="fill" id = "mana">
+                        <span>200</span> MP
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flexBlock">
+            <div class="bonuses" id = "bonuses">
+                <h2>Бонусы</h2>
+                <div class="wrapper">
+                    <div class = "bonus" id = "bonus1">
+                        <div class="timerBonus"><span>1.5</span></div>
+                        <img src="img/S_Holy03.png" alt="">
+                    </div>
+                    <div class = "bonus" id = "bonus2">
+                        <img src="img/S_Buff10.png" alt="">
+                    </div>
+                    <div class = "bonus" id = "bonus3">
+                        <div class="timerBonus"><span>5.0</span></div>
+                        <img src="img/S_Buff11.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pause" id = "pause">
+            <i class="fa fa-play none" aria-hidden="true"></i>
+            <i class="fa fa-pause" aria-hidden="true"></i>
+        </div>
+        <div class="username" id = "nickInGame">
+            Nick: <span></span>
+        </div>
+    </div>
+<div class="startScreen" id = "startScreen">
+    <div class="typedInfo">
+        <div class="name">
+            <span>Nick: </span>
+            <input type="text" id = "username" placeholder = "Введите ваш ник">
+        </div>
+    </div>
+    <div class="btnStart" id="btnStart">
+        Начать
+    </div>
+    <div class="description">
+        <h2 id = "titleDescript">Описание игры</h2>
+        <div class="content" id = "contentDescript">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit adipisci voluptates perspiciatis cupiditate eligendi inventore quos unde, enim nesciunt? Omnis natus alias quis corrupti dolore quos consequatur eveniet esse perspiciatis.</p>
+            <h3>Управление</h3>
+            <div class="controlMove">
+                <div class="container">
+                    <img src="img/Keyboards/key-W.png" alt=""><p> - прыжок главного героя</p>
+                </div>
+                <div class="container">
+                    <img src="img/Keyboards/key-A.png" alt=""><p> - перемещение влево главного героя</p>
+                </div>
+                <div class="container">
+                    <img src="img/Keyboards/key-D.png" alt=""><p> - перемещение вправо главного героя</p>
+                </div>
+                <div class="container">
+                    <img src="img/Keyboards/key-1.png" alt="">
+                    <img src="img/Keyboards/key-2.png" alt="">
+                    <img src="img/Keyboards/key-3.png" alt="">
+                    <img src="img/Keyboards/key-4.png" alt="">
+                    <p> - выбор соответствующей способности главного героя</p>
+                </div>
+                <div class="container">
+                    <img src="img/Keyboards/mouse_scroll.png" alt="">
+                    <p> - выбор соответствующей способности главного героя с помощью мыши</p>
+                </div>
+                <div class="container">
+                    <img src="img/Keyboards/mouseclick.png" alt="">
+                    <p> - применения соответсвующей способности в игре</p>
+                </div>
+            </div>
+            <h3>Способности</h3>
+            <div class="infoSkills">
+                <div class="container">
+                    <img src="img/skill1.png" alt=""><p> - стрельба из лука 1 стрелой. Перезарядка 2 секунды</p>
+                </div>
+                <div class="container">
+                    <img src="img/skill2.png" alt=""><p> - Блок. Защита от ударов врага. Без перезарядки </p>
+                </div>
+                <div class="container">
+                    <img src="img/skill3.png" alt=""><p> - стрельба из лука 3 стрелами. Перезарядка 5.3 секунды</p>
+                </div>
+                <div class="container">
+                    <img src="img/skill4.png" alt=""><p> - Град стрел. Перезарядка 15 секунд</p>
+                </div>
+            </div>
+            <h3>Бонусы</h3>
+            <div class="infoBonuses">
+                <div class="container">
+                    <img src="img/S_Holy03.png" alt=""><p> - в течение 1.5 секунды пополняется ХП на 1 за 0.1 секунду</p>
+                </div>
+                <div class="container">
+                    <img src="img/S_Buff10.png" alt=""><p> - быстрое и единоразовое пополненеи MP на 20</p>
+                </div>
+                <div class="container">
+                    <img src="img/S_Buff11.png" alt=""><p> - в течение 5 секунды действует увеличение скорости</p>
+                </div>
+            </div>
+        </div>
+        <p id = "more">показать</p>
+    </div>
+</div>
+<div class="endScreen" id = "endScreen">
+    <div class="info">
+        <div class="status" id = "status"><span></span></div>
+        <div class="nickname" id = "nickname">Your nick: <span></span></div>
+        <div class="endScore" id = "endScore">Score: <span><span></div>
+
+        <h2>Таблица результатов</h2>
+        <div class="tableGamers" id = "tableGamers">
+            
+            <div class="idGamers" id="idGamers">
+                <p class = "title">Номер позиции</p>
+            </div>
+            <div class="time" id ="timerGamers">
+                <p class = "title">Время</p>
+            </div>
+            <div class="name" id = "tableName">
+                <p class = "title">Nickname</p>
+            </div>
+            <div class="scoreTable" id = "tableScore">
+                <p class = "title">Score</p>
+            </div>
+        </div>
+    </div>
+    
+</div>
+    
+    <script type = "module" src = "js/modules.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+</html>
